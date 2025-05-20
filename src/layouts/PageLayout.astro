@@ -21,27 +21,23 @@ const { metadata } = Astro.props;
         { text: "About", href: "#about" },
         { text: "Resume", href: "#resume" },
         { text: "Porfolio", href: "#porfolio" },
-        { text: "Blog", href: "#blog" },
-        { text: "Github", href: "https://github.com/onwidget" },
+      ]}
+      actions={[
+        { text: "Hire Me", href: "/contact", variant: "primary" }, // Ejemplo de botón de acción
       ]}
       isSticky
       showRssFeed
       showToggleTheme
+      position="center"
     />
   </slot>
-  <main>
+  <main class="pt-12">
     <slot />
   </main>
   <slot name="footer">
     <Footer
       SiteName="Maximiliano Neira"
       socialLinks={[
-        // {
-        //   ariaLabel: "Github",
-        //   icon: "tabler:brand-github",
-        //   href: "https://github.com/onwidget",
-        // },
-        // { ariaLabel: "Twitter", icon: "tabler:brand-twitter", href: "#" },
         { ariaLabel: "LinkedIn", icon: "tabler:brand-linkedin", href: "#" },
       ]}
       footNote="© 2025 Powered by NicNeira"

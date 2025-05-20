@@ -1,29 +1,35 @@
 ---
 import ToggleTheme from "../components/common/ToggleTheme.astro";
-// import ToggleMenu from "~/components/common/ToggleMenu.astro";
-
-// hireButton
-// import Button from "~/components/ui/Button.astro";
+import Button from "../components/ui/Button.astro";
 
 import { trimSlash } from "../utils/utils.js";
 import ToggleMenu from "./common/ToggleMenu.astro";
 import Logo from "./Logo.astro";
 import { Icon } from "astro-icon/components";
 
-interface Link {
+// Actualizada para coincidir mejor con las props de Button.astro
+interface ActionLink {
+  text: string;
+  href: string;
+  variant?: "primary" | "secondary" | "tertiary" | "link";
+  icon?: string;
+  target?: "_blank" | "_self" | "_parent" | "_top";
+  type?: "button" | "submit" | "reset";
+  class?: string; // Para clases adicionales
+}
+
+interface MenuLink {
   text?: string;
   href?: string;
   ariaLabel?: string;
   icon?: string;
-}
-
-interface MenuLink extends Link {
   links?: Array<MenuLink>;
 }
 
 export interface Props {
   id?: string;
   links?: Array<MenuLink>;
+  actions?: Array<ActionLink>; // Usar la nueva interfaz ActionLink
   isSticky?: boolean;
   isDark?: boolean;
   isFullWidth?: boolean;
@@ -35,6 +41,7 @@ export interface Props {
 const {
   id = "header",
   links = [],
+  actions = [],
   isSticky = false,
   isDark = false,
   isFullWidth = false,
@@ -48,16 +55,35 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
 <header
   class:list={[
-    { sticky: isSticky, relative: !isSticky, dark: isDark },
-    "top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-[opacity] ease-in-out",
+    "fixed",
+    "top-0",
+    "z-40",
+    "flex-none",
+    "mx-auto",
+    "w-full",
+    "transition-[opacity]",
+    "ease-in-out",
+    {
+      "bg-white dark:bg-slate-900": !isDark,
+      "bg-slate-900 dark:bg-white": isDark,
+    },
+    "border-b",
+    "border-gray-200",
+    "dark:border-slate-700",
   ]}
   {...isSticky ? { "data-aw-sticky-header": true } : {}}
   {...id ? { id } : {}}
 >
-  <div class="absolute inset-0"></div>
   <div
     class:list={[
-      "relative text-default py-3 px-3 md:px-6 mx-auto w-full",
+      "relative",
+      "text-default",
+      "dark:text-white",
+      "py-3",
+      "px-3",
+      "md:px-6",
+      "mx-auto",
+      "w-full",
       {
         "md:flex md:justify-between": position !== "center",
       },
@@ -73,6 +99,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       class:list={[
         { "mr-auto rtl:mr-0 rtl:ml-auto": position === "right" },
         "flex justify-between items-center",
+        // Ajustar el ancho para la posición central para que no colisione con los elementos de la derecha
+        { "md:w-auto": position === "center" },
       ]}
     >
       <a class="flex items-center" href={"/"} aria-label="Home">
@@ -82,9 +110,11 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         <ToggleMenu />
       </div>
     </div>
+
+    {/* Menú móvil */}
     <div
       id="mobile-menu-content"
-      class="hidden md:hidden flex-col items-center mt-4"
+      class="hidden md:hidden flex-col items-center fixed top-[52px] left-0 right-0 bg-white dark:bg-slate-900 z-30 shadow-lg md:relative md:top-auto md:left-auto md:right-auto md:bg-transparent md:dark:bg-transparent md:z-auto md:p-0 md:shadow-none"
     >
       <nav
         class="w-full flex flex-col items-center text-default overflow-y-auto"
@@ -103,23 +133,19 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               >
                 {subLinks?.length ? (
                   <>
-                    <button
-                      type="button"
-                      class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center justify-center w-full whitespace-nowrap"
-                      onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')"
-                    >
+                    <button class="font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center w-full justify-center">
                       {text}
                       <Icon
                         name="tabler:chevron-down"
-                        class="w-3.5 h-3.5 ml-1 rtl:ml-0 rtl:mr-1 transition-transform duration-200"
+                        class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5"
                       />
                     </button>
-                    <ul class="mobile-dropdown-menu hidden pl-4 w-full">
+                    <ul class="hidden bg-gray-100 dark:bg-slate-800 w-full">
                       {subLinks.map(({ text: text2, href: href2 }) => (
                         <li>
                           <a
                             class:list={[
-                              "hover:text-link dark:hover:text-white py-2 px-5 block whitespace-no-wrap w-full text-center",
+                              "font-medium hover:text-link dark:hover:text-white px-4 py-2 flex items-center w-full justify-center text-base",
                               { "aw-link-active": href2 === currentPath },
                             ]}
                             href={href2}
@@ -133,7 +159,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                 ) : (
                   <a
                     class:list={[
-                      "hover:text-link dark:text-white dark:hover:text-blue-500 px-4 py-3 flex items-center justify-center w-full whitespace-nowrap",
+                      "font-medium hover:text-link dark:hover:text-blue-500 px-4 py-3 flex items-center w-full justify-center",
                       { "aw-link-active": href === currentPath },
                     ]}
                     href={href}
@@ -146,52 +172,72 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           }
         </ul>
       </nav>
-      <div class="flex flex-col items-center mt-4 space-y-4 w-full px-4">
-        {
-          showToggleTheme && (
-            <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />
-          )
-        }
-        <button class="w-full">
-          <span
-            class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
-            aria-label="Hire me"
-          >
-            <span class="text-sm font-semibold">Hire me</span>
-          </span>
-        </button>
+      <div class="w-full border-t border-gray-200 dark:border-slate-700">
+        <div class="flex w-full justify-between p-3">
+          {
+            actions.length > 0 && (
+              <div class=" flex justify-center">
+                {actions.map((actionProps) => (
+                  <Button
+                    text={actionProps.text}
+                    href={actionProps.href}
+                    variant={actionProps.variant || "primary"}
+                    icon={actionProps.icon}
+                    target={actionProps.target}
+                    type={actionProps.type}
+                    class={` max-w-xs ${actionProps.class || ""}`}
+                  />
+                ))}
+              </div>
+            )
+          }
+          {
+            showToggleTheme && (
+              <div class=" text-center  ">
+                <ToggleTheme />
+              </div>
+            )
+          }
+        </div>
       </div>
     </div>
 
+    {/* Navegación principal para Desktop */}
     <nav
-      class="items-center w-full md:w-auto hidden md:flex text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
-      aria-label="Main navigation desktop"
-      id="desktop-menu-nav"
+      class:list={[
+        "items-center md:flex hidden text-default overflow-x-auto md:overflow-visible",
+        // Ajustar justificación basada en la posición para evitar colisión
+        { "md:justify-center": position === "center" && links.length > 0 },
+        { "md:w-full": position === "center" && links.length > 0 }, // Ocupar espacio disponible si está centrado
+      ]}
+      aria-label="Main navigation"
     >
       <ul
-        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
+        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-base tracking-[0.01rem] font-medium items-stretch"
       >
         {
           links.map(({ text, href, links: subLinks }) => (
-            <li class={subLinks?.length ? "dropdown" : ""}>
+            <li
+              class:list={[
+                { dropdown: subLinks?.length },
+                "md:mr-1.5 rtl:md:mr-0 rtl:md:ml-1.5",
+              ]}
+            >
               {subLinks?.length ? (
                 <>
-                  <button
-                    type="button"
-                    class="hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap"
-                  >
+                  <button class="font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center">
                     {text}
                     <Icon
                       name="tabler:chevron-down"
                       class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
                     />
                   </button>
-                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-dark rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-white/90 md:min-w-[200px] drop-shadow-xl">
+                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-dark rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:shadow-xl md:border md:border-gray-200 dark:md:border-gray-700 md:min-w-[200px] py-2 md:px-1 md:mt-2">
                     {subLinks.map(({ text: text2, href: href2 }) => (
                       <li>
                         <a
                           class:list={[
-                            "first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap",
+                            "font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center w-full",
                             { "aw-link-active": href2 === currentPath },
                           ]}
                           href={href2}
@@ -205,7 +251,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               ) : (
                 <a
                   class:list={[
-                    "hover:text-link dark:text-white dark:hover:text-blue-500 px-4 py-3 flex items-center whitespace-nowrap",
+                    "font-medium hover:text-link dark:hover:text-blue-500 px-4 py-3 flex items-center",
                     { "aw-link-active": href === currentPath },
                   ]}
                   href={href}
@@ -218,32 +264,41 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         }
       </ul>
     </nav>
+
+    {/* Contenedor para ToggleTheme y Actions en Desktop */}
     <div
       class:list={[
-        { "ml-auto rtl:ml-0 rtl:mr-auto": position === "left" },
-        "hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end",
+        "hidden md:flex items-center",
+        // Ajustar la justificación y el orden basado en la posición del header
+        { "justify-end": position === "center" || position === "right" },
+        { "justify-start": position === "left" },
+        { "md:col-start-3 md:row-start-1": position === "center" }, // Asegurar que esté en la tercera columna si el layout es grid
       ]}
-      id="desktop-actions"
     >
-      <div class="items-center flex justify-between w-full md:w-auto">
-        <div class="hidden md:flex items-center">
-          {
-            showToggleTheme && (
-              <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />
-            )
-          }
-        </div>
-        <div class="hidden md:block ml-4 rtl:ml-0 rtl:mr-4">
-          <button>
-            <span
-              class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
-              aria-label="Hire me"
-            >
-              <span class="text-sm font-semibold">Hire me</span>
-            </span>
-          </button>
-        </div>
-      </div>
+      {
+        actions.length > 0 && (
+          <div class="ml-2">
+            {actions.map((actionProps) => (
+              <Button
+                text={actionProps.text}
+                href={actionProps.href}
+                variant={actionProps.variant || "primary"}
+                icon={actionProps.icon}
+                target={actionProps.target}
+                type={actionProps.type}
+                class={actionProps.class}
+              />
+            ))}
+          </div>
+        )
+      }
+      {
+        showToggleTheme && (
+          <div class="ml-2">
+            <ToggleTheme />
+          </div>
+        )
+      }
     </div>
   </div>
 </header>
@@ -251,14 +306,63 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 <script>
   const toggleMenuButton = document.querySelector("[data-aw-toggle-menu]");
   const mobileMenuContent = document.getElementById("mobile-menu-content");
+  const dropdownMobileButtons = document.querySelectorAll(
+    ".dropdown-mobile > button"
+  );
 
   if (toggleMenuButton && mobileMenuContent) {
     toggleMenuButton.addEventListener("click", () => {
+      const isExpanded = toggleMenuButton.classList.toggle("expanded");
+      toggleMenuButton.setAttribute("aria-expanded", String(isExpanded));
       mobileMenuContent.classList.toggle("hidden");
       mobileMenuContent.classList.toggle("flex");
-      toggleMenuButton.classList.toggle("expanded");
-      const isExpanded = toggleMenuButton.classList.contains("expanded");
-      toggleMenuButton.setAttribute("aria-expanded", String(isExpanded));
+
+      if (!isExpanded) {
+        dropdownMobileButtons.forEach((button) => {
+          const submenu = button.nextElementSibling as HTMLElement | null;
+          if (submenu && !submenu.classList.contains("hidden")) {
+            submenu.classList.add("hidden");
+            button.querySelector("svg")?.classList.remove("rotate-180");
+          }
+        });
+      }
     });
   }
+
+  dropdownMobileButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      const submenu = button.nextElementSibling as HTMLElement | null;
+      submenu?.classList.toggle("hidden");
+      button.querySelector("svg")?.classList.toggle("rotate-180");
+    });
+  });
+
+  const dropdownButtons = document.querySelectorAll(".dropdown > button");
+  dropdownButtons.forEach((button) => {
+    const submenu = button.nextElementSibling as HTMLElement | null;
+    if (!submenu) return;
+
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      const isHidden = submenu.classList.toggle("md:hidden");
+      if (!isHidden) {
+        // Si se muestra el submenú, añadir clases para posicionarlo correctamente
+        // Esto puede necesitar ajustes basados en tu CSS específico para dropdown-menu
+        submenu.classList.add("md:absolute", "md:mt-2", "md:z-50");
+      }
+      button.querySelector("svg")?.classList.toggle("rotate-180");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (
+        submenu &&
+        !button.contains(e.target as Node) &&
+        !submenu.contains(e.target as Node)
+      ) {
+        submenu.classList.add("md:hidden");
+        button.querySelector("svg")?.classList.remove("rotate-180");
+      }
+    });
+  });
 </script>
