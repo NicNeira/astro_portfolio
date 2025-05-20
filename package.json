@@ -1,0 +1,19 @@
+{
+  "name": "maxi-portfolio",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@iconify-json/tabler": "^1.2.18",
+    "@tailwindcss/vite": "^4.1.7",
+    "astro": "^5.7.13",
+    "astro-icon": "^1.1.5",
+    "maxi-portfolio": "file:",
+    "tailwindcss": "^4.1.7"
+  }
+}

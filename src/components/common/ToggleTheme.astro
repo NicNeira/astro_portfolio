@@ -1,0 +1,62 @@
+---
+import { Icon } from "astro-icon/components";
+export interface Props {
+  iconClass?: string;
+}
+---
+
+<button
+  type="button"
+  class:list={[
+    "theme-toggle-button",
+    "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5",
+  ]}
+  aria-label="Toggle theme"
+>
+  <Icon name="tabler:sun" class="w-5 h-5 dark:hidden" />
+  <Icon name="tabler:moon" class="w-5 h-5 hidden dark:inline-block" />
+</button>
+
+<script>
+  const themeToggleButtons = document.querySelectorAll(".theme-toggle-button");
+
+  document
+    .getElementById("theme-toggle-button")
+    ?.addEventListener("click", () => {
+      if (localStorage.theme === "dark") {
+        localStorage.theme = "light";
+        document.documentElement.classList.remove("dark");
+      } else {
+        localStorage.theme = "dark";
+        document.documentElement.classList.add("dark");
+      }
+    });
+
+  // Define el tipo para el tema
+  type Theme = "light" | "dark";
+
+  const applyTheme = (theme: Theme) => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
+  themeToggleButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const currentTheme = localStorage.getItem("theme");
+      if (currentTheme === "dark") {
+        applyTheme("light");
+      } else {
+        applyTheme("dark");
+      }
+    });
+  });
+
+  // Script para restaurar el tema al cargar la página.
+  // Esto es importante para evitar el "flash of unstyled content" (FOUC).
+  // Idealmente, este script específico debería estar en el <head> de tu HTML para ejecutarse lo antes posible.
+</script>
