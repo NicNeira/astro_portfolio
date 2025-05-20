@@ -7,14 +7,15 @@ import Skill from "@components/Skill.astro";
 import CallToAction from "@components/CallToAction.astro";
 import Layout from "@layouts/PageLayout.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const profileName = "Maximiliano Neira";
 ---
 
 <Layout>
-  <!-- <Welcome /> -->
-
-  <Hero id="hero" title="Sarah Johnson" tagline="Personal Web Demo">
+  <Hero
+    id="hero"
+    title={profileName}
+    image="https://images.unsplash.com/photo-1619983081563-430f63602796?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
+  >
     <Fragment slot="subtitle">
       I'm a Graphic Designer passionate about crafting visual stories. <br /> With
       5 years of experience and a degree from New York University's School of Design.
@@ -22,35 +23,9 @@ import Layout from "@layouts/PageLayout.astro";
       realities.
     </Fragment>
   </Hero>
-  <Content
+  <!-- <Content
     id="about"
     columns={3}
-    items={[
-      {
-        icon: "tabler:brand-dribbble",
-        callToAction: {
-          target: "_blank",
-          text: "Dribbble",
-          href: "#",
-        },
-      },
-      {
-        icon: "tabler:brand-behance",
-        callToAction: {
-          target: "_blank",
-          text: "Behance",
-          href: "#",
-        },
-      },
-      {
-        icon: "tabler:brand-pinterest",
-        callToAction: {
-          target: "_blank",
-          text: "Pinterest",
-          href: "#",
-        },
-      },
-    ]}
     image={{
       src: "https://images.unsplash.com/photo-1491349174775-aaafddd81942?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
       alt: "Colorful Image",
@@ -58,30 +33,18 @@ import Layout from "@layouts/PageLayout.astro";
     }}
   >
     <Fragment slot="content">
-      <h2
-        class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2"
-      >
-        About me
-      </h2>
+      <h1
+        class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+        set:html={profileName}
+      />
       <p>
-        Welcome to my creative journey. My work is a testament to my commitment
-        to bringing ideas to life, where each pixel becomes a brushstroke in the
-        canvas of imagination.
+        I'm a Graphic Designer passionate about crafting visual stories. <br /> With
+        5 years of experience and a degree from New York University's School of Design.
+        I infuse vitality into brands and designs, transforming concepts into captivating
+        realities.
       </p>
-      <br />
-      <p>
-        I find inspiration in the world around me, whether through the pages of
-        a captivating novel, the intricate details of typography, or the vibrant
-        hues of nature during my outdoor escapades.
-      </p>
-      <br />
-      <p>If you're curious to dive deeper into my work, you can follow me:</p>
     </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
+  </Content> -->
   <!-- Steps Widget ****************** -->
 
   <Steps
