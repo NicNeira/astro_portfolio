@@ -1,5 +1,7 @@
 ---
+import BasicScripts from "@components/common/BasicScripts.astro";
 import "../styles/global.css";
+import ApplyColorMode from "@components/common/ApplyColorMode.astro";
 ---
 
 <!doctype html>
@@ -11,28 +13,11 @@ import "../styles/global.css";
     <meta name="generator" content={Astro.generator} />
     <title>🎬 Maximiliano Neira</title>
 
-    <script>
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-    </script>
+    <ApplyColorMode />
   </head>
   <body class="bg-white dark:bg-black transition-colors duration-400">
     <slot />
+
+    <BasicScripts />
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
