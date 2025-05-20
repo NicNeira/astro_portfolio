@@ -64,7 +64,7 @@ const gridLayoutClass =
                   <Icon
                     name={icon || defaultIcon}
                     class={twMerge(
-                      "w-7 h-7 mr-2 rtl:mr-0 rtl:ml-2", // Clases base del icono
+                      "w-7 h-7 mr-2 rtl:mr-0 rtl:ml-2 dark:text-blue-500", // Clases base del icono
                       defaultIconClass, // Clase global para iconos
                       itemClasses?.icon // Clase específica para este icono de item
                     )}
@@ -86,10 +86,19 @@ const gridLayoutClass =
                     text={callToAction.text}
                   />
                 )}
+                {title && (
+                  <h3
+                    class={twMerge(
+                      "text-lg font-semibold", // Clases base del título
+                      titleClass, // Clase global para títulos
+                      itemClasses?.title // Clase específica para este título de item
+                    )}
+                    set:html={title}
+                  />
+                )}
                 {description && (
                   <p
                     class={twMerge(
-                      // Usar callToAction para la condición de margen si item.title no se usa para el texto del título
                       `${callToAction ? "mt-3" : ""} text-muted`,
                       descriptionClass, // Clase global para descripciones
                       itemClasses?.description // Clase específica para esta descripción de item
@@ -97,7 +106,6 @@ const gridLayoutClass =
                     set:html={description}
                   />
                 )}
-                {/* El segundo bloque callToAction && Button se elimina para evitar duplicación */}
               </div>
             </div>
           </div>

@@ -62,9 +62,48 @@ export interface Image {
   alt?: string;
 }
 
+export interface Video {
+  src: string;
+  type?: string;
+}
+
 export interface Headline {
   title?: string;
   subtitle?: string;
   tagline?: string;
   classes?: Record<string, string>;
 }
+
+export interface Features extends Omit<Headline, 'classes'>, Widget {
+  image?: string | unknown;
+  video?: Video;
+  items?: Array<Item>;
+  columns?: number;
+  defaultIcon?: string;
+  callToAction1?: CallToAction;
+  callToAction2?: CallToAction;
+  isReversed?: boolean;
+  isBeforeContent?: boolean;
+  isAfterContent?: boolean;
+}
+
+export interface MetaData {
+  title?: string;
+  ignoreTitleTemplate?: boolean;
+  canonical?: string;
+  robots?: MetaDataRobots;
+  description?: string;
+  twitter?: MetaDataTwitter;
+}
+
+export interface MetaDataRobots {
+  index?: boolean;
+  follow?: boolean;
+}
+
+export interface MetaDataTwitter {
+  handle?: string;
+  site?: string;
+  cardType?: string;
+}
+

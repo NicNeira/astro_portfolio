@@ -1,0 +1,50 @@
+---
+import Layout from "@layouts/Layout.astro";
+
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+
+import type { MetaData } from "@utils/types";
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+---
+
+<Layout metadata={metadata}>
+  <slot name="header">
+    <Header
+      links={[
+        { text: "Home", href: "#" },
+        { text: "About", href: "#about" },
+        { text: "Resume", href: "#resume" },
+        { text: "Porfolio", href: "#porfolio" },
+        { text: "Blog", href: "#blog" },
+        { text: "Github", href: "https://github.com/onwidget" },
+      ]}
+      isSticky
+      showRssFeed
+      showToggleTheme
+    />
+  </slot>
+  <main>
+    <slot />
+  </main>
+  <slot name="footer">
+    <Footer
+      SiteName="Maximiliano Neira"
+      socialLinks={[
+        // {
+        //   ariaLabel: "Github",
+        //   icon: "tabler:brand-github",
+        //   href: "https://github.com/onwidget",
+        // },
+        // { ariaLabel: "Twitter", icon: "tabler:brand-twitter", href: "#" },
+        { ariaLabel: "LinkedIn", icon: "tabler:brand-linkedin", href: "#" },
+      ]}
+      footNote="© 2025 Powered by NicNeira"
+    />
+  </slot>
+</Layout>
