@@ -5,7 +5,7 @@ import ApplyColorMode from "@components/common/ApplyColorMode.astro";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="2xl:text-[20px]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -15,7 +15,9 @@ import ApplyColorMode from "@components/common/ApplyColorMode.astro";
 
     <ApplyColorMode />
   </head>
-  <body class="bg-white dark:bg-black transition-colors duration-400">
+  <body
+    class="antialiased text-default bg-page tracking-tight bg-white dark:bg-black transition-colors duration-400"
+  >
     <slot />
 
     <BasicScripts />
