@@ -1,0 +1,108 @@
+---
+import type { ItemGrid as Props } from "@utils/types";
+import { twMerge } from "tailwind-merge";
+import { Icon } from "astro-icon/components";
+import Button from "./Button.astro";
+
+const {
+  items = [],
+  columns = 3,
+  defaultIcon = "",
+  classes = {},
+} = Astro.props as Props;
+
+// Desestructuración de las clases globales con valores por defecto
+const {
+  container: containerClass = "",
+  panel: panelClass = "",
+  title: titleClass = "",
+  description: descriptionClass = "",
+  icon: defaultIconClass = "text-primary",
+  action: actionClass = "",
+} = classes;
+
+const columnClassesMap = {
+  2: "sm:grid-cols-2",
+  3: "lg:grid-cols-3 sm:grid-cols-2",
+  4: "lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2",
+};
+
+// Obtener las clases del grid dinámicamente, con un fallback a cadena vacía si `columns` no es una clave válida
+const gridLayoutClass =
+  columnClassesMap[columns as keyof typeof columnClassesMap] || "";
+---
+
+{
+  items && items.length > 0 && (
+    <div
+      class={twMerge(
+        "grid mx-auto gap-8 md:gap-y-12", // Clases base del grid
+        gridLayoutClass, // Clases dinámicas de columnas
+        containerClass // Clases personalizadas del contenedor
+      )}
+    >
+      {items.map(
+        ({
+          title,
+          description,
+          icon,
+          callToAction,
+          classes: itemClasses = {},
+        }) => (
+          <div class="intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            <div
+              class={twMerge(
+                "flex flex-row max-w-md", // Clases base del panel
+                panelClass, // Clase global para paneles
+                itemClasses?.panel // Clase específica para este panel de item
+              )}
+            >
+              {/* Contenedor del icono */}
+              {(icon || defaultIcon) && (
+                <div class="flex-shrink-0 flex justify-center">
+                  {" "}
+                  <Icon
+                    name={icon || defaultIcon}
+                    class={twMerge(
+                      "w-7 h-7 mr-2 rtl:mr-0 rtl:ml-2", // Clases base del icono
+                      defaultIconClass, // Clase global para iconos
+                      itemClasses?.icon // Clase específica para este icono de item
+                    )}
+                  />
+                </div>
+              )}
+              {/* Contenido textual del item */}
+              <div class="mt-0.5 flex-grow">
+                {callToAction && (
+                  <Button
+                    variant="link"
+                    class={twMerge(
+                      "text-xl font-bold", // Clases base del título
+                      titleClass, // Clase global para títulos
+                      itemClasses?.title // Clase específica para este título de item
+                    )}
+                    href={callToAction.href}
+                    target={callToAction.target}
+                    text={callToAction.text}
+                  />
+                )}
+                {description && (
+                  <p
+                    class={twMerge(
+                      // Usar callToAction para la condición de margen si item.title no se usa para el texto del título
+                      `${callToAction ? "mt-3" : ""} text-muted`,
+                      descriptionClass, // Clase global para descripciones
+                      itemClasses?.description // Clase específica para esta descripción de item
+                    )}
+                    set:html={description}
+                  />
+                )}
+                {/* El segundo bloque callToAction && Button se elimina para evitar duplicación */}
+              </div>
+            </div>
+          </div>
+        )
+      )}
+    </div>
+  )
+}
