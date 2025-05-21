@@ -91,12 +91,13 @@ const hasImage = isImageArray || isImageObject || isImageString;
         {
           Astro.slots.has("image") ? (
             <slot name="image" />
-          ) : isImageArray ? (
-            <ImageCarousel
-              images={image}
-              carouselId={`carousel-${crypto.randomUUID()}`}
-            />
-          ) : isImageObject ? (
+          ) : // : isImageArray ? (
+          //   <ImageCarousel
+          //     images={image}
+          //     carouselId={`carousel-${crypto.randomUUID()}`}
+          //   />
+          // )
+          isImageObject ? (
             <div class="w-full mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
               <div
                 class="relative m-auto"
