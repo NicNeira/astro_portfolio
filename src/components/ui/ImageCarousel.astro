@@ -1,0 +1,80 @@
+---
+// Tipado opcional para mayor claridad y autocompletado
+export interface Props {
+  images: { src: string; alt?: string }[];
+  carouselId?: string;
+}
+
+// Extraemos las props
+const { images = [], carouselId } = Astro.props;
+
+const prevBtnId = `prev-${carouselId}`;
+const nextBtnId = `next-${carouselId}`;
+---
+
+<section class="relative w-full">
+  <!-- Pista deslizante -->
+  <div
+    id={carouselId}
+    class="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-4 [&::-webkit-scrollbar]:hidden scrollbar-hide"
+  >
+    {
+      images.map(({ src, alt = "" }, idx) => (
+        <figure
+          class="shrink-0 w-full snap-center overflow-hidden rounded-xl"
+          style="scroll-snap-align:center"
+        >
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            class="w-full h-auto object-cover"
+          />
+        </figure>
+      ))
+    }
+  </div>
+
+  <!-- Boton anterior -->
+  <button
+    id={prevBtnId}
+    class="absolute left-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center size-10 rounded-full bg-gray-800/50 hover:bg-gray-800/80 text-white"
+    aria-label="Imagen anterior"
+  >
+    ‹
+  </button>
+
+  <!-- Boton siguiente -->
+  <button
+    id={nextBtnId}
+    class="absolute right-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center size-10 rounded-full bg-gray-800/50 hover:bg-gray-800/80 text-white"
+    aria-label="Imagen siguiente"
+  >
+    ›
+  </button>
+</section>
+
+<!-- Script inyectado inline: solo se ejecuta en el navegador -->
+<script is:inline define:vars={{ carouselId, prevBtnId, nextBtnId }}>
+  // Obtenemos los elementos del DOM
+  const track = document.getElementById(carouselId); // Corregido: pasar como string
+  const prevBtn = document.getElementById(prevBtnId); // Corregido: pasar como string
+  const nextBtn = document.getElementById(nextBtnId); // Corregido: pasar como string
+
+  // Calculamos el ancho de un slide (incluye gap de Tailwind)
+  function slideWidth() {
+    const first = track?.firstElementChild;
+    if (!first) return 0;
+    const style = window.getComputedStyle(first);
+    const gap = parseFloat(style.marginRight); // gap-4 = 1rem = 16px
+    return first.getBoundingClientRect().width + gap;
+  }
+
+  // Eventos de navegacion
+  nextBtn?.addEventListener("click", () => {
+    track?.scrollBy({ left: slideWidth(), behavior: "smooth" });
+  });
+  prevBtn?.addEventListener("click", () => {
+    track?.scrollBy({ left: -slideWidth(), behavior: "smooth" });
+  });
+</script>

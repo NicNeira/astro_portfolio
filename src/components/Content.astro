@@ -1,10 +1,11 @@
 ---
+import { Image } from "astro:assets";
+
 import Headline from "@components/ui/Headline.astro";
-
 import WidgetWrapper from "@components/ui/WidgetWrapper.astro";
-
 import ItemGrid from "@components/ui/ItemGrid.astro";
 import Button from "./ui/Button.astro";
+import ImageCarousel from "@components/ui/ImageCarousel.astro"; // Importar ImageCarousel
 
 const {
   title = await Astro.slots.render("title"),
@@ -14,7 +15,7 @@ const {
   callToAction,
   items = [],
   columns,
-  image = await Astro.slots.render("image"),
+  image = await Astro.slots.render("image"), // puede ser string, objeto o array de objetos
   isReversed = false,
   isAfterContent = false,
 
@@ -23,6 +24,15 @@ const {
   classes = {},
   bg = await Astro.slots.render("bg"),
 } = Astro.props;
+
+// Determinar el tipo de contenido de la imagen
+const isImageArray =
+  Array.isArray(image) &&
+  image.every((img) => typeof img === "object" && img !== null && img.src);
+const isImageObject =
+  typeof image === "object" && image !== null && !isImageArray && image.src;
+const isImageString = typeof image === "string" && image.trim() !== "";
+const hasImage = isImageArray || isImageObject || isImageString;
 ---
 
 <WidgetWrapper
@@ -62,7 +72,7 @@ const {
 
         <ItemGrid
           items={items}
-          columns={columns}
+          columns={columns || 1}
           defaultIcon="tabler:check"
           classes={{
             container: `gap-y-4 md:gap-y-8`,
@@ -79,22 +89,34 @@ const {
       </div>
       <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
         {
-          image && (
-            <div class="relative m-auto max-w-4xl">
-              {typeof image === "string" ? (
-                <Fragment set:html={image} />
-              ) : (
-                <img
-                  class="mx-auto w-full rounded-lg bg-gray-500 shadow-lg object-cover"
-                  width={500}
-                  height={500}
-                  alt={image.alt || "Content image"}
+          isImageArray ? (
+            <ImageCarousel
+              images={image}
+              carouselId={`carousel-${crypto.randomUUID()}`}
+            />
+          ) : isImageObject ? (
+            <div class="w-full mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+              <div
+                class="relative m-auto"
+                style={`max-width: ${image.width}px;`}
+              >
+                <Image
+                  class="rounded-md"
                   src={image.src}
-                  loading="lazy"
+                  alt={image.alt || ""}
+                  width={image.width || 1024}
+                  height={image.height || 576}
+                  style="display: block; width: 100%; height: auto;"
                 />
-              )}
+              </div>
             </div>
-          )
+          ) : isImageString ? (
+            <div class="w-full mt-8 md:mt-0 intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+              <div class="relative m-auto max-w-full md:max-w-none">
+                <Fragment set:html={image} />
+              </div>
+            </div>
+          ) : null
         }
       </div>
     </div>
