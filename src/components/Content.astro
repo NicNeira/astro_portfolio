@@ -89,7 +89,9 @@ const hasImage = isImageArray || isImageObject || isImageString;
       </div>
       <div aria-hidden="true" class="mt-10 md:mt-0 md:basis-1/2">
         {
-          isImageArray ? (
+          Astro.slots.has("image") ? (
+            <slot name="image" />
+          ) : isImageArray ? (
             <ImageCarousel
               images={image}
               carouselId={`carousel-${crypto.randomUUID()}`}
