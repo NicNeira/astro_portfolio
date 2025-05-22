@@ -61,15 +61,12 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     "flex-none",
     "mx-auto",
     "w-full",
-    "transition-[opacity]",
+    "transition-all",
     "ease-in-out",
     {
-      "bg-white dark:bg-slate-900": !isDark,
-      "bg-slate-900 dark:bg-white": isDark,
+      "bg-white dark:bg-black": !isDark,
+      "bg-black dark:bg-white": isDark,
     },
-    "border-b",
-    "border-gray-200",
-    "dark:border-slate-700",
   ]}
   {...isSticky ? { "data-aw-sticky-header": true } : {}}
   {...id ? { id } : {}}
@@ -114,10 +111,10 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     {/* Menú móvil */}
     <div
       id="mobile-menu-content"
-      class="hidden md:hidden flex-col items-center fixed top-[52px] left-0 right-0 bg-white dark:bg-slate-900 z-30 shadow-lg md:relative md:top-auto md:left-auto md:right-auto md:bg-transparent md:dark:bg-transparent md:z-auto md:p-0 md:shadow-none"
+      class="hidden md:hidden flex-col items-center fixed top-0 pt-[52px] left-0 right-0 h-screen bg-black z-30 shadow-lg md:relative md:top-auto md:left-auto md:right-auto md:bg-transparent md:dark:bg-transparent md:z-auto md:p-0 md:shadow-none"
     >
       <nav
-        class="w-full flex flex-col items-center text-default overflow-y-auto"
+        class="w-full flex flex-col items-center text-default overflow-y-auto h-[calc(100vh-52px-56px)]"
         aria-label="Main navigation mobile"
       >
         <ul
@@ -176,7 +173,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         <div class="flex w-full justify-between p-3">
           {
             actions.length > 0 && (
-              <div class=" flex justify-center">
+              <div class="hidden">
                 {actions.map((actionProps) => (
                   <Button
                     text={actionProps.text}
@@ -309,6 +306,36 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   const dropdownMobileButtons = document.querySelectorAll(
     ".dropdown-mobile > button"
   );
+  const header = document.querySelector("header");
+
+  // Función para manejar la visibilidad del borde según la posición de scroll
+  const handleHeaderBorder = () => {
+    if (!header) return;
+
+    if (window.scrollY === 0) {
+      // Si estamos en la parte superior, quitar el borde
+      header.classList.remove(
+        "border-b",
+        "border-gray-200",
+        "dark:border-slate-700"
+      );
+      header.classList.add("border-b-0");
+    } else {
+      // Si hay scroll, restaurar el borde
+      header.classList.add(
+        "border-b",
+        "border-gray-200",
+        "dark:border-slate-700"
+      );
+      header.classList.remove("border-b-0");
+    }
+  };
+
+  // Inicializar el estado del borde al cargar la página
+  handleHeaderBorder();
+
+  // Agregar event listener para el scroll
+  window.addEventListener("scroll", handleHeaderBorder);
 
   if (toggleMenuButton && mobileMenuContent) {
     toggleMenuButton.addEventListener("click", () => {
