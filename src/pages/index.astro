@@ -16,12 +16,14 @@ import {
 } from "@utils/projectsData.ts";
 
 const profileName = "Maximiliano Neira";
+const subTitle = "Art Director – Actor – Filmmaker";
 ---
 
 <Layout>
   <Hero
     id="hero"
     title={profileName}
+    subtitle={subTitle}
     image={{
       src: ProfilePhoto,
       alt: "Tech Design Image",
@@ -29,11 +31,13 @@ const profileName = "Maximiliano Neira";
       height: 156,
     }}
   >
-    <Fragment slot="subtitle">
-      I'm a Graphic Designer passionate about crafting visual stories. <br /> With
-      5 years of experience and a degree from New York University's School of Design.
-      I infuse vitality into brands and designs, transforming concepts into captivating
-      realities.
+    <Fragment slot="paragraph">
+      Soy director de arte, actor y cineasta. Vivo en Santiago de Chile. Ademas
+      de participar en cortometrajes y proyectos artisticos propios, comparto
+      habitualmente contenido sobre diseño interior y arquitectura porque me
+      interesa la estetica de espacios y objetos. Actualmente estoy titulado de
+      la carrera de Cinematografia y Produccion de Cine y Video en el Instituto
+      Profesional ARCOS
     </Fragment>
   </Hero>
   <Content
@@ -47,19 +51,25 @@ const profileName = "Maximiliano Neira";
     <Fragment slot="content">
       <h1
         class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-        set:html={"About Me"}
+        set:html={"Sobre mí"}
       />
       <p>
-        I'm a Graphic Designer passionate about crafting visual stories. <br /> With
-        5 years of experience and a degree from New York University's School of Design.
-        I infuse vitality into brands and designs, transforming concepts into captivating
-        realities.
+        Desde el primer proyecto universitario descubri que mi pasion es crear
+        conceptos visuales que cuenten historias precisas y emocionantes. He
+        trabajado con manualidades, utileria, escenografia, ambientacion y
+        vestuario, siempre con el reto de aportar creatividad y exactitud en
+        cada detalle.
+      </p>
+      <p class="mt-2">
+        Cada rodaje es una oportunidad para aprender algo nuevo sobre moda,
+        diseño, arquitectura e historia del arte. Tambien disfruto actuar ante
+        camara, experiencia que nutre mi mirada detras de escena.
       </p>
     </Fragment>
   </Content>
 
   <!-- Steps  -->
-  <Steps
+  <!-- <Steps
     id="resume"
     title="Work experience"
     items={[
@@ -85,14 +95,15 @@ const profileName = "Maximiliano Neira";
       },
     ]}
     classes={{ container: "max-w-3xl", items: "dark:text-white" }}
-  />
+  /> -->
 
   <Steps
     id="resume"
-    title="Education"
+    title="Educación y Experiencia"
     items={[
       {
-        title: `Master of Fine Arts in Graphic Design <br /> <span class="font-normal">New York University's School of Design</span> <br /> <span class="text-sm font-normal">2018 - 2020</span>`,
+        title: `Estudiante de Cine <br /> <span class="font-normal">Instituto Profesional ARCOS</span> <br /> <span class="text-sm font-normal">2021 - 2024</span>`,
+        description: `Formación en dirección de arte; participación constante en cortometrajes estudiantiles. <br /> <a href="https://www.arcos.cl/carreras/cine/" target="_blank" class="text-primary hover:underline">arcos.cl</a>`,
         icon: "tabler:school",
         classes: {
           title: "dark:text-white",
@@ -100,8 +111,36 @@ const profileName = "Maximiliano Neira";
         },
       },
       {
-        title: `Bachelor of Arts in Graphic Design <br /> <span class="font-normal">New York University's School of Design</span> <br /> <span class="text-sm font-normal">2014 - 2018</span>`,
-        icon: "tabler:school",
+        title: `Director de arte y creador <br /> <span class="font-normal">La Casa de Hojas (instalación interactiva)</span> <br /> <span class="text-sm font-normal">abr 2024 - jul 2024</span>`,
+        description: `Instalación con cinco televisores de año 2000 que permiten al público construir versiones propias de la narrativa; destaca uso de contrastes arquitectónicos.`,
+        icon: "tabler:palette",
+        classes: {
+          title: "dark:text-white",
+          description: "dark:text-gray-400",
+        },
+      },
+      {
+        title: `Director de arte <br /> <span class="font-normal">Ciudad Latente</span> <br /> <span class="text-sm font-normal">oct 2023 - dic 2023</span>`,
+        description: `Maqueta simbólica que confronta urbanización y humedales; combinación de puesta en escena y elementos contra-punto visual.`,
+        icon: "tabler:building-estate",
+        classes: {
+          title: "dark:text-white",
+          description: "dark:text-gray-400",
+        },
+      },
+      {
+        title: `Director de arte <br /> <span class="font-normal">Inhumano (cortometraje)</span> <br /> <span class="text-sm font-normal">mar 2023 - ago 2023</span>`,
+        description: `Escenografía reciclada y ambientación noir para realzar atmósfera distópica; trabajo con texturas de madera y pintura envejecida.`,
+        icon: "tabler:movie",
+        classes: {
+          title: "dark:text-white",
+          description: "dark:text-gray-400",
+        },
+      },
+      {
+        title: `Director de arte <br /> <span class="font-normal">Retrato Oval (cortometraje)</span> <br /> <span class="text-sm font-normal">ago 2022 - dic 2022</span>`,
+        description: `Decorado con ilustraciones de Mr. Doodle y referencia estética monocroma; explora obsesión y arte.`,
+        icon: "tabler:brush",
         classes: {
           title: "dark:text-white",
           description: "dark:text-gray-400",
@@ -110,91 +149,59 @@ const profileName = "Maximiliano Neira";
     ]}
     classes={{ container: "max-w-3xl" }}
   />
-
   <!-- Skills -->
   <Skill
     id="skills"
-    title="Skills"
-    subtitle="Discover the proficiencies that allow me to bring imagination to life through design."
+    title="Habilidades"
+    subtitle="Competencias profesionales que me permiten transformar ideas creativas en experiencias visuales impactantes."
     columns={3}
     defaultIcon="tabler:point-filled"
     items={[
       {
-        title: "Graphic design",
+        title: "Dirección de arte",
         description:
-          "Proficient in crafting visually appealing designs that convey messages effectively.",
+          "Conceptualización visual, creación de mood boards, paletas cromáticas, supervisión de escenografía y vestuario. Validado por habilidades en escenografía y creatividad en LinkedIn.",
+        icon: "tabler:palette",
         classes: {
           title: "dark:text-white",
           description: "dark:text-gray-400",
         },
       },
       {
-        title: "Branding and identity",
+        title: "Diseño y construcción de maquetas",
         description:
-          "Skilled at developing cohesive brand identities, including logos and brand guidelines.",
+          "Elaboración manual, detallado arquitectónico, presentación de maquetas a escala. Habilidad validada por contactos profesionales en LinkedIn.",
+        icon: "tabler:3d-cube-sphere",
         classes: {
           title: "dark:text-white",
           description: "dark:text-gray-400",
         },
       },
       {
-        title: "User-centered design",
+        title: "Composición visual cinematográfica",
         description:
-          "Experienced in creating user-friendly interfaces and optimizing user experiences.",
+          "Manejo de cámaras DSLR/Mirrorless y software DaVinci Resolve / Adobe Premiere. Habilidad validada por contactos académicos.",
+        icon: "tabler:camera",
         classes: {
           title: "dark:text-white",
           description: "dark:text-gray-400",
         },
       },
       {
-        title: "Adobe Creative Suite",
+        title: "Servicios ofrecidos",
         description:
-          "Skilled in using Photoshop, Illustrator, and InDesign to create and edit visual elements.",
+          "Filmación • Diseño visual • Diseño de interiores • Edición de video",
+        icon: "tabler:list-check",
         classes: {
           title: "dark:text-white",
           description: "dark:text-gray-400",
         },
       },
       {
-        title: "Typography",
+        title: "Idiomas",
         description:
-          "Adept in selecting and manipulating typefaces to enhance design aesthetics.",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: "Color theory",
-        description:
-          "Proficient in using color to evoke emotions and enhance visual harmony.",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: "Print and digital design",
-        description:
-          "Knowledgeable in designing for both print materials and digital platforms.",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: "Attention to detail",
-        description:
-          "Diligent in maintaining precision and quality in all design work.",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: "Adaptability",
-        description:
-          "Quick to adapt to new design trends, technologies, and client preferences.",
+          "Español nativo; inglés intermedio. Capacidad para comunicación efectiva en set internacional.",
+        icon: "tabler:language",
         classes: {
           title: "dark:text-white",
           description: "dark:text-gray-400",
@@ -243,12 +250,12 @@ const profileName = "Maximiliano Neira";
 
   <!-- CallToAction Widget *********** -->
   <CallToAction
-    title="Let's create together"
-    subtitle="Ready to transform your vision into captivating designs?"
+    title="Si quieres saber más sobre mí"
+    subtitle="No dudes en contactarme para discutir ideas, proyectos o colaboraciones."
     actions={[
       {
         variant: "primary",
-        text: "Hire me",
+        text: "Contáctame",
         href: "/contact",
       },
     ]}

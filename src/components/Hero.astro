@@ -9,6 +9,7 @@ const {
   content = await Astro.slots.render("content"),
   actions = await Astro.slots.render("actions"),
   image = await Astro.slots.render("image"),
+  paragraph = await Astro.slots.render("paragraph"),
 
   id,
   bg = await Astro.slots.render("bg"),
@@ -87,11 +88,27 @@ const hasImage = isImageObject || isImageString;
               subtitle && (
                 <p
                   class:list={[
-                    "text-xl text-muted mb-6 dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
+                    "text-xl text-muted  dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
                     { "md:text-left": image },
                   ]}
                   set:html={subtitle}
                 />
+              )
+            }
+
+            {/* Renderizar el párrafo si existe */}
+            {
+              paragraph && (
+                <div class="mt-4">
+                  <p
+                    class:list={[
+                      "text-muted dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
+                      { "md:text-left": image },
+                    ]}
+                  >
+                    <Fragment set:html={paragraph} />
+                  </p>
+                </div>
               )
             }
           </div>

@@ -1,0 +1,85 @@
+---
+// Recibe un array de strings que serán rotados
+const { texts, className = "" } = Astro.props;
+---
+
+<div class={`animated-subtitle-wrapper ${className}`}>
+  <div class="animated-subtitle-container">
+    {texts.map((text: string, index: number) => (
+      <p class="animated-subtitle-item" data-index={index}>{text}</p>
+    ))}
+  </div>
+</div>
+
+<style>
+  .animated-subtitle-wrapper {
+    position: relative;
+    height: 2em;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .animated-subtitle-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .animated-subtitle-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    animation-fill-mode: forwards;
+  }
+
+  .animated-subtitle-item.active {
+    opacity: 1;
+    transform: translateY(0);
+    background-image: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  // Animación para subtítulos
+  function setupAnimations() {
+    const containers = document.querySelectorAll('.animated-subtitle-container');
+    
+    containers.forEach(container => {
+      const items = container.querySelectorAll('.animated-subtitle-item');
+      if (items.length === 0) return;
+      
+      let currentIndex = 0;
+      
+      // Activar el primer elemento
+      items[0].classList.add('active');
+      
+      // Rotar entre subtítulos
+      setInterval(() => {
+        // Ocultar actual
+        items[currentIndex].classList.remove('active');
+        
+        // Actualizar índice
+        currentIndex = (currentIndex + 1) % items.length;
+        
+        // Mostrar siguiente
+        items[currentIndex].classList.add('active');
+      }, 3000); // Cambiar cada 3 segundos
+    });
+  }
+  
+  // Ejecutar cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', setupAnimations);
+  
+  // También ejecutar si el script se carga después del evento DOMContentLoaded
+  if (document.readyState === 'complete') {
+    setupAnimations();
+  }
+</script>

@@ -3,14 +3,14 @@ import contentCityLatente from "@assets/images/ciudadLatente/IMG-20231125-WA0032
 import contentInhumano from "@assets/images/inhumano/IMG_20240406_211940.jpg"
 import contentRetratoOval from "@assets/images/retratoOval/IMG-20221116-WA0011.jpg";
 
-export const portfolioSectionTitle = "Elevating visual narratives";
+export const portfolioSectionTitle = "Elevando narrativas visuales";
 export const portfolioSectionSubtitle =
-  "Embark on a design journey that surpasses pixels, entering a realm of imagination. Explore my portfolio, where passion and creativity converge to shape enthralling visual narratives.";
+"Embárcate en un viaje de diseño que trasciende los píxeles y te adentra en el mundo de la imaginación. Explora mi portafolio, donde la pasión y la creatividad convergen para crear narrativas visuales cautivadoras.";
 
 export const ContentProjects = [
   {
     id: "la-casa-de-hojas",
-    projectTitleHTML: "La Casa de Hojas :",
+    projectTitleHTML: "La Casa de Hojas",
     description: `"La Casa de Hojas" es una instalación artística que explora la historia de un individuo cuya casa crece de manera expansiva y descontrolada con el paso del tiempo. A medida que los años transcurren, el residente descubre nuevos pasillos, habitaciones y pisos, cada uno con estilos arquitectónicos notablemente distintos. Esta narrativa refleja el crecimiento descontrolado de una ciudad o la urbanización a través de la experiencia de este personaje que habita en un espacio extraño y en constante cambio.`,
     href: "/portfolio/la-casa-de-hojas",
     image: {
@@ -20,7 +20,7 @@ export const ContentProjects = [
   },
   {
     id: "ciudad-latente",
-    projectTitleHTML: "Ciudad Latente:",
+    projectTitleHTML: "Ciudad Latente",
     description: `A través de un recorrido contemplativo observamos como el olvidado humedal de batuco es amenazado por la urbanización y la invasión del hombre guiado por una persona que nació y se crío en el pueblo. Para retratar esta amenaza se hizo uso del simbolismo, a traves de la creación de una maqueta que representará la ciudad capitalista y diversos elementos que generarán contra punto visual.`,
     href: "/portfolio/ciudad-latente",
     image: {
@@ -30,7 +30,7 @@ export const ContentProjects = [
   },
   {
     id: "inhumano",
-    projectTitleHTML: "Inhumano: <br />",
+    projectTitleHTML: "Inhumano",
     description: `El proyecto "Inhumano" es un cortometraje que planea mostrar lo más bajo del ser humano , por lo cual se usará un lenguaje visual enfocado en el ambiente y la atmósfera que produce la misma sobre el espectador . Para el lugar se barajaron varias ideas , pero se decidió por la idea más arriesgada , hacer la escenografía, reutilizando materiales , madera y pintura.
 
         Para la ambientación se recurrió a materiales que dieran texturas pobre y vieja , se quería crear un ambiente descuidado y sucio. Tanto el espacio como la caracterización de los personajes , buscaban potenciar esta idea distopica y noir.`,
@@ -42,7 +42,7 @@ export const ContentProjects = [
   },
   {
     id: "retrato-oval",
-    projectTitleHTML: "Retrato Oval:",
+    projectTitleHTML: "Retrato Oval",
     description: `Un estudiante de arcos busca contactar con el artista (Boisvert) que lo inspiro a dedicarse al cine y la animación, un viaje a la admiración que lentamente se transforma en obsesión con el paso de los días.
 
         La escenografía está decorada por ilustraciones del artista mr.Doodle en combinación con las obras del mismismo Boisvert
