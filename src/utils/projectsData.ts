@@ -1,5 +1,7 @@
-
-
+import contentLeafHouse from "@assets/images/casaHojas/IMG_1010.jpg";
+import contentCityLatente from "@assets/images/ciudadLatente/IMG-20231125-WA0032.jpg";
+import contentInhumano from "@assets/images/inhumano/IMG_20240406_211940.jpg"
+import contentRetratoOval from "@assets/images/retratoOval/IMG-20221116-WA0011.jpg";
 
 export const portfolioSectionTitle = "Elevating visual narratives";
 export const portfolioSectionSubtitle =
@@ -12,7 +14,7 @@ export const ContentProjects = [
     description: `"La Casa de Hojas" es una instalación artística que explora la historia de un individuo cuya casa crece de manera expansiva y descontrolada con el paso del tiempo. A medida que los años transcurren, el residente descubre nuevos pasillos, habitaciones y pisos, cada uno con estilos arquitectónicos notablemente distintos. Esta narrativa refleja el crecimiento descontrolado de una ciudad o la urbanización a través de la experiencia de este personaje que habita en un espacio extraño y en constante cambio.`,
     href: "/portfolio/la-casa-de-hojas",
     image: {
-      src: "https://picsum.photos/id/1018/1200/800",
+      src: contentLeafHouse,
       alt: "Beautiful landscape with a lake and mountains",
     },
   },
@@ -22,7 +24,7 @@ export const ContentProjects = [
     description: `A través de un recorrido contemplativo observamos como el olvidado humedal de batuco es amenazado por la urbanización y la invasión del hombre guiado por una persona que nació y se crío en el pueblo. Para retratar esta amenaza se hizo uso del simbolismo, a traves de la creación de una maqueta que representará la ciudad capitalista y diversos elementos que generarán contra punto visual.`,
     href: "/portfolio/ciudad-latente",
     image: {
-      src: "https://picsum.photos/id/1015/1200/800",
+      src: contentCityLatente,
       alt: "Sandy beach with turquoise water",
     },
   },
@@ -34,7 +36,7 @@ export const ContentProjects = [
         Para la ambientación se recurrió a materiales que dieran texturas pobre y vieja , se quería crear un ambiente descuidado y sucio. Tanto el espacio como la caracterización de los personajes , buscaban potenciar esta idea distopica y noir.`,
     href: "/portfolio/inhumano",
     image: {
-      src: "https://picsum.photos/id/1025/1200/800",
+      src: contentInhumano,
       alt: "Cute pug dog looking at the camera",
     },
   },
@@ -47,21 +49,11 @@ export const ContentProjects = [
         El tratamiento se piensa en lo estético de la imagen, y en la importancia de este mundo que muchas veces se nos presenta en blanco y negro. Tanto la simbología de Boisvert y la estética de Doodle, profundizan con el relato, generándole forma y estructura visual acorde a lo que se quiere demostrar.`,
     href: "/portfolio/retrato-oval",
     image: {
-      src: "https://picsum.photos/id/1018/1200/800",
+      src: contentRetratoOval,
       alt: "Beautiful landscape with a lake and mountains",
     },
   },
-  {
-    id: "inhumano-santiago",
-    projectTitleHTML:
-      'Inhumano: <br /><span class="text-2xl">En un Santiago desolador y decadente</span>',
-    description: `Redesigned the e-commerce website for an eco-conscious fashion brand, GreenVogue. The objective was to align the brand's online presence with its sustainable ethos and improve user experience.`,
-    href: "/portfolio/inhumano-santiago",
-    image: {
-      src: "https://picsum.photos/id/1040/1200/800",
-      alt: "Misty forest path in the morning",
-    },
-  },
+  
 ];
 
 export const SlugProjects = [
@@ -146,23 +138,5 @@ export const SlugProjects = [
       },
     ],
   },
-  {
-    id: "inhumano-santiago",
-    projectTitle: "Inhumano: En un Santiago desolador y decadente",
-    description: `Redesigned the e-commerce website for an eco-conscious fashion brand, GreenVogue. The objective was to align the brand's online presence with its sustainable ethos and improve user experience.`,
-    images: [
-      {
-        src: "https://picsum.photos/id/1018/1200/800",
-        alt: "Beautiful landscape with a lake and mountains",
-      },
-      {
-        src: "https://picsum.photos/id/1015/1200/800",
-        alt: "Sandy beach with turquoise water",
-      },
-      {
-        src: "https://picsum.photos/id/1025/1200/800",
-        alt: "Cute pug dog looking at the camera",
-      },
-    ],
-  },
+  
 ];

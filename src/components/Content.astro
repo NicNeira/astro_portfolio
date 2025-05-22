@@ -91,32 +91,36 @@ const hasImage = isImageArray || isImageObject || isImageString;
         {
           Astro.slots.has("image") ? (
             <slot name="image" />
-          ) : // : isImageArray ? (
-          //   <ImageCarousel
-          //     images={image}
-          //     carouselId={`carousel-${crypto.randomUUID()}`}
-          //   />
-          // )
-          isImageObject ? (
+          ) : isImageArray ? (
+            <ImageCarousel
+              images={image}
+              carouselId={`carousel-${crypto.randomUUID()}`}
+            />
+          ) : isImageObject ? (
             <div class="w-full mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
               <div
-                class="relative m-auto"
+                class="relative m-auto w-full"
                 style={`max-width: ${image.width}px;`}
               >
-                <Image
-                  class="rounded-md"
-                  src={image.src}
-                  alt={image.alt || ""}
-                  width={image.width || 1024}
-                  height={image.height || 576}
-                  style="display: block; width: 100%; height: auto;"
-                />
+                <div class="aspect-video relative overflow-hidden rounded-md">
+                  <Image
+                    class="absolute inset-0 w-full h-full object-cover object-center"
+                    src={image.src}
+                    alt={image.alt || ""}
+                    width={image.width || 1024}
+                    height={image.height || 576}
+                  />
+                </div>
               </div>
             </div>
           ) : isImageString ? (
             <div class="w-full mt-8 md:mt-0 intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
               <div class="relative m-auto max-w-full md:max-w-none">
-                <Fragment set:html={image} />
+                <div class="aspect-video relative overflow-hidden rounded-md">
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <Fragment set:html={image} />
+                  </div>
+                </div>
               </div>
             </div>
           ) : null

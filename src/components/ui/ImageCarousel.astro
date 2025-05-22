@@ -24,12 +24,14 @@ const nextBtnId = `next-${carouselId}`;
           class="shrink-0 w-full snap-center overflow-hidden rounded-xl"
           style="scroll-snap-align:center"
         >
-          <img
-            src={src}
-            alt={alt}
-            loading="lazy"
-            class="w-full h-auto object-cover"
-          />
+          <div class="aspect-video relative overflow-hidden">
+            <img
+              src={src}
+              alt={alt}
+              loading="lazy"
+              class="absolute inset-0 w-full h-full object-cover object-center"
+            />
+          </div>
         </figure>
       ))
     }
