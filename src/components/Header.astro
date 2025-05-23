@@ -7,7 +7,6 @@ import ToggleMenu from "./common/ToggleMenu.astro";
 import Logo from "./Logo.astro";
 import { Icon } from "astro-icon/components";
 
-// Actualizada para coincidir mejor con las props de Button.astro
 interface ActionLink {
   text: string;
   href: string;
@@ -15,7 +14,7 @@ interface ActionLink {
   icon?: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
   type?: "button" | "submit" | "reset";
-  class?: string; // Para clases adicionales
+  class?: string;
 }
 
 interface MenuLink {
@@ -55,110 +54,79 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
 <header
   class:list={[
-    "fixed",
-    "top-0",
-    "z-50",
-    "flex-none",
-    "mx-auto",
-    "w-full",
-    "transition-all",
-    "ease-in-out",
-    {
-      "bg-white dark:bg-black": !isDark,
-      "bg-black dark:bg-white": isDark,
-    },
+    "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out",
+    "bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-transparent",
   ]}
   {...isSticky ? { "data-aw-sticky-header": true } : {}}
   {...id ? { id } : {}}
 >
   <div
     class:list={[
-      "relative",
-      "text-default",
-      "dark:text-white",
-      "py-3",
-      "px-3",
-      "md:px-6",
-      "mx-auto",
-      "w-full",
-      "flex",
-      "items-center",
-      "justify-between",
-      {
-        "max-w-7xl": !isFullWidth,
-      },
+      "container mx-auto px-4 sm:px-6 lg:px-8",
+      { "max-w-7xl": !isFullWidth },
     ]}
   >
-    {/* Logo - Solo para mobile, en desktop también se muestra */}
-    <div class="flex-shrink-0">
-      <a class="flex items-center" href={"/"} aria-label="Home">
-        <Logo />
-      </a>
-    </div>
-
-    {/* Botón hamburguesa - Solo mobile, posicionado a la derecha */}
-    <div class="flex items-center md:hidden">
-      <ToggleMenu />
-    </div>
-
-    {/* Menú móvil */}
-    <div
-      id="mobile-menu-content"
-      class:list={[
-        "hidden md:hidden flex-col fixed top-[60px] left-0 right-0 h-[calc(100vh-60px)] z-20 shadow-lg",
-        {
-          "bg-white dark:bg-black": !isDark,
-          "bg-black dark:bg-white": isDark,
-        },
-      ]}
-    >
-      <nav
-        class="flex-1 flex flex-col items-center text-default overflow-y-auto"
-        aria-label="Main navigation mobile"
-      >
-        <ul
-          class="flex flex-col items-center w-full text-xl tracking-[0.01rem] font-medium pt-8 pb-4"
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a
+          href="/"
+          class="flex items-center space-x-2 group"
+          aria-label="Ir al inicio"
         >
+          <Logo />
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:block">
+        <ul class="flex items-center space-x-1">
           {
             links.map(({ text, href, links: subLinks }) => (
-              <li
-                class:list={[
-                  "w-full text-center",
-                  { "dropdown-mobile": subLinks?.length },
-                ]}
-              >
+              <li class="relative group">
                 {subLinks?.length ? (
-                  <>
-                    <button class="font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center w-full justify-center">
+                  <div class="dropdown">
+                    <button
+                      class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
+                      aria-expanded="false"
+                    >
                       {text}
                       <Icon
                         name="tabler:chevron-down"
-                        class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5"
+                        class="w-4 h-4 ml-1 transition-transform duration-200 group-hover:rotate-180"
                       />
                     </button>
-                    <ul class="hidden bg-gray-100 dark:bg-slate-800 w-full">
-                      {subLinks.map(({ text: text2, href: href2 }) => (
-                        <li>
+                    <div class="dropdown-menu absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0">
+                      <div class="py-2">
+                        {subLinks.map(({ text: text2, href: href2 }) => (
                           <a
-                            class:list={[
-                              "font-medium hover:text-link dark:hover:text-white px-4 py-2 flex items-center w-full justify-center text-base",
-                              { "aw-link-active": href2 === currentPath },
-                            ]}
                             href={href2}
+                            class:list={[
+                              "block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200",
+                              {
+                                "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400":
+                                  href2 === currentPath,
+                              },
+                            ]}
                           >
                             {text2}
                           </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 ) : (
                   <a
-                    class:list={[
-                      "font-medium hover:text-link dark:hover:text-blue-500 px-4 py-3 flex items-center w-full justify-center",
-                      { "aw-link-active": href === currentPath },
-                    ]}
                     href={href}
+                    class:list={[
+                      "px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                      {
+                        "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20":
+                          href === currentPath,
+                        "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800":
+                          href !== currentPath,
+                      },
+                    ]}
                   >
                     {text}
                   </a>
@@ -168,252 +136,407 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           }
         </ul>
       </nav>
-      <div
-        class="w-full border-t border-gray-200 dark:border-slate-700 mt-auto"
-      >
-        <div class="flex flex-col w-full p-4 gap-4">
-          {
-            showToggleTheme && (
-              <div class="flex justify-center">
-                <ToggleTheme />
-              </div>
-            )
-          }
-          {
-            actions.length > 0 && (
-              <div class="w-full">
-                {actions.map((actionProps) => (
-                  <Button
-                    text={actionProps.text}
-                    href={actionProps.href}
-                    variant={actionProps.variant || "primary"}
-                    icon={actionProps.icon}
-                    target={actionProps.target}
-                    type={actionProps.type}
-                    class={`w-full ${actionProps.class || ""}`}
-                  />
-                ))}
-              </div>
-            )
-          }
-        </div>
-      </div>
-    </div>
 
-    {/* Navegación principal para Desktop */}
-    <nav
-      class:list={[
-        "items-center md:flex hidden text-default overflow-x-auto md:overflow-visible",
-        "flex-1",
-        "justify-center",
-        "mx-4",
-      ]}
-      aria-label="Main navigation"
-    >
-      <ul
-        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-base tracking-[0.01rem] font-medium items-stretch justify-center"
-      >
+      <!-- Desktop Actions & Theme Toggle -->
+      <div class="hidden md:flex items-center space-x-3">
         {
-          links.map(({ text, href, links: subLinks }) => (
-            <li
-              class:list={[
-                { dropdown: subLinks?.length },
-                "md:mr-1.5 rtl:md:mr-0 rtl:md:ml-1.5",
-              ]}
-            >
-              {subLinks?.length ? (
-                <>
-                  <button class="font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap">
-                    {text}
-                    <Icon
-                      name="tabler:chevron-down"
-                      class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
-                    />
-                  </button>
-                  <ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-dark rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:shadow-xl md:border md:border-gray-200 dark:md:border-gray-700 md:min-w-[200px] py-2 md:px-1 md:mt-2">
-                    {subLinks.map(({ text: text2, href: href2 }) => (
-                      <li>
-                        <a
-                          class:list={[
-                            "font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center w-full whitespace-nowrap",
-                            { "aw-link-active": href2 === currentPath },
-                          ]}
-                          href={href2}
-                        >
-                          {text2}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <a
-                  class:list={[
-                    "font-medium hover:text-link dark:hover:text-blue-500 px-4 py-3 flex items-center whitespace-nowrap",
-                    { "aw-link-active": href === currentPath },
-                  ]}
-                  href={href}
-                >
-                  {text}
-                </a>
-              )}
-            </li>
+          showToggleTheme && (
+            <div class="flex items-center">
+              <ToggleTheme />
+            </div>
+          )
+        }
+        {
+          actions.map((action) => (
+            <Button
+              text={action.text}
+              href={action.href}
+              variant={action.variant || "primary"}
+              icon={action.icon}
+              target={action.target}
+              type={action.type}
+              class={`${action.class || ""} text-sm`}
+            />
           ))
         }
-      </ul>
-    </nav>
+      </div>
 
-    {/* Contenedor para ToggleTheme y Actions en Desktop */}
-    <div
-      class:list={[
-        "hidden md:flex items-center",
-        "flex-shrink-0",
-        "justify-end",
-      ]}
-    >
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden" onclick="event.stopPropagation();">
+        <ToggleMenu />
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden"
+  >
+    <div class="container mx-auto px-4 py-4 space-y-4">
+      <!-- Mobile Navigation -->
       {
-        showToggleTheme && (
-          <div class="ml-2">
-            <ToggleTheme />
-          </div>
+        links.length > 0 && (
+          <nav>
+            <ul class="space-y-1">
+              {links.map(({ text, href, links: subLinks }) => (
+                <li>
+                  {subLinks?.length ? (
+                    <div class="mobile-dropdown">
+                      <button
+                        type="button"
+                        class="flex items-center justify-between w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors duration-200"
+                      >
+                        {text}
+                        <Icon
+                          name="tabler:chevron-down"
+                          class="w-4 h-4 transition-transform duration-200"
+                        />
+                      </button>
+                      <div class="mobile-submenu hidden pl-4 mt-2 space-y-1">
+                        {subLinks.map(({ text: text2, href: href2 }) => (
+                          <a
+                            href={href2}
+                            class:list={[
+                              "block px-4 py-2 text-sm rounded-lg transition-colors duration-200",
+                              {
+                                "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20":
+                                  href2 === currentPath,
+                                "text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800":
+                                  href2 !== currentPath,
+                              },
+                            ]}
+                          >
+                            {text2}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <a
+                      href={href}
+                      class:list={[
+                        "flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-colors duration-200",
+                        {
+                          "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20":
+                            href === currentPath,
+                          "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800":
+                            href !== currentPath,
+                        },
+                      ]}
+                    >
+                      {text}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
         )
       }
-      {
-        actions.length > 0 && (
-          <div class="ml-2">
-            {actions.map((actionProps) => (
-              <Button
-                text={actionProps.text}
-                href={actionProps.href}
-                variant={actionProps.variant || "primary"}
-                icon={actionProps.icon}
-                target={actionProps.target}
-                type={actionProps.type}
-                class={actionProps.class}
-              />
-            ))}
-          </div>
-        )
-      }
+
+      <!-- Mobile Actions & Theme Toggle -->
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
+        {
+          showToggleTheme && (
+            <div class="flex justify-center">
+              <ToggleTheme />
+            </div>
+          )
+        }
+        {
+          actions.length > 0 && (
+            <div class="space-y-3">
+              {actions.map((action) => (
+                <Button
+                  text={action.text}
+                  href={action.href}
+                  variant={action.variant || "primary"}
+                  icon={action.icon}
+                  target={action.target}
+                  type={action.type}
+                  class={`w-full ${action.class || ""}`}
+                />
+              ))}
+            </div>
+          )
+        }
+      </div>
     </div>
   </div>
 </header>
 
 <script>
-  const toggleMenuButton = document.querySelector("[data-aw-toggle-menu]");
-  const mobileMenuContent = document.getElementById("mobile-menu-content");
-  const dropdownMobileButtons = document.querySelectorAll(
-    ".dropdown-mobile > button"
-  );
-  const header = document.querySelector("header");
+  function initializeHeader() {
+    const header = document.querySelector("header");
+    const toggleButton = document.querySelector("[data-aw-toggle-menu]");
+    const mobileMenu = document.getElementById("mobile-menu");
 
-  // Función para cerrar el menú móvil
-  const closeMobileMenu = () => {
-    if (toggleMenuButton && mobileMenuContent) {
-      toggleMenuButton.classList.remove("expanded");
-      toggleMenuButton.setAttribute("aria-expanded", "false");
-      mobileMenuContent.classList.add("hidden");
-      mobileMenuContent.classList.remove("flex");
+    // Header scroll effect
+    function updateHeaderOnScroll() {
+      if (!header) return;
 
-      // Cerrar todos los submenús
-      dropdownMobileButtons.forEach((button) => {
-        const submenu = button.nextElementSibling as HTMLElement | null;
-        if (submenu && !submenu.classList.contains("hidden")) {
-          submenu.classList.add("hidden");
-          button.querySelector("svg")?.classList.remove("rotate-180");
+      if (window.scrollY > 10) {
+        header.classList.add("border-gray-200", "dark:border-gray-700");
+        header.classList.remove("border-transparent");
+      } else {
+        header.classList.remove("border-gray-200", "dark:border-gray-700");
+        header.classList.add("border-transparent");
+      }
+    }
+
+    // Initialize header state
+    updateHeaderOnScroll();
+    window.addEventListener("scroll", updateHeaderOnScroll);
+
+    // Mobile menu toggle
+    if (toggleButton && mobileMenu) {
+      // Asegurar estado inicial correcto
+      mobileMenu.classList.add("hidden");
+      toggleButton.classList.remove("expanded");
+      toggleButton.setAttribute("aria-expanded", "false");
+
+      toggleButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation(); // Prevenir otros listeners
+
+        const isHidden = mobileMenu.classList.contains("hidden");
+
+        if (isHidden) {
+          // Abrir menú
+          mobileMenu.classList.remove("hidden");
+          mobileMenu.style.display = "block";
+          toggleButton.classList.add("expanded");
+          toggleButton.setAttribute("aria-expanded", "true");
+          document.body.style.overflow = "hidden";
+        } else {
+          // Cerrar menú
+          mobileMenu.classList.add("hidden");
+          toggleButton.classList.remove("expanded");
+          toggleButton.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
         }
       });
     }
-  };
 
-  // Función para manejar la visibilidad del borde según la posición de scroll
-  const handleHeaderBorder = () => {
-    if (!header) return;
+    // Mobile dropdown functionality
+    const mobileDropdowns = document.querySelectorAll(
+      ".mobile-dropdown button"
+    );
 
-    if (window.scrollY === 0) {
-      // Si estamos en la parte superior, quitar el borde
-      header.classList.remove(
-        "border-b",
-        "border-gray-200",
-        "dark:border-slate-700"
-      );
-      header.classList.add("border-b-0");
-    } else {
-      // Si hay scroll, restaurar el borde
-      header.classList.add(
-        "border-b",
-        "border-gray-200",
-        "dark:border-slate-700"
-      );
-      header.classList.remove("border-b-0");
-    }
-  };
+    mobileDropdowns.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const submenu = button.nextElementSibling;
+        const icon = button.querySelector("svg");
 
-  // Inicializar el estado del borde al cargar la página
-  handleHeaderBorder();
+        if (submenu) {
+          submenu.classList.toggle("hidden");
+          icon?.classList.toggle("rotate-180");
+        }
+      });
+    });
 
-  // Agregar event listener para el scroll
-  window.addEventListener("scroll", handleHeaderBorder);
+    // Close mobile menu when clicking on links
+    const mobileLinks = mobileMenu?.querySelectorAll("a");
 
-  if (toggleMenuButton && mobileMenuContent) {
-    toggleMenuButton.addEventListener("click", () => {
-      const isExpanded = toggleMenuButton.classList.toggle("expanded");
-      toggleMenuButton.setAttribute("aria-expanded", String(isExpanded));
-      mobileMenuContent.classList.toggle("hidden");
-      mobileMenuContent.classList.toggle("flex");
+    mobileLinks?.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+          mobileMenu.classList.add("hidden");
+          toggleButton?.classList.remove("expanded");
+          toggleButton?.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
+        }
+      });
+    });
 
-      if (!isExpanded) {
-        dropdownMobileButtons.forEach((button) => {
-          const submenu = button.nextElementSibling as HTMLElement | null;
-          if (submenu && !submenu.classList.contains("hidden")) {
-            submenu.classList.add("hidden");
-            button.querySelector("svg")?.classList.remove("rotate-180");
-          }
+    // Close mobile menu when clicking outside (con delay para evitar conflictos)
+    setTimeout(() => {
+      document.addEventListener("click", (e) => {
+        // Verificar si el clic fue en el toggle button o su contenido
+        if (toggleButton?.contains(e.target as Node)) {
+          return;
+        }
+
+        if (
+          mobileMenu &&
+          !mobileMenu.contains(e.target as Node) &&
+          !mobileMenu.classList.contains("hidden")
+        ) {
+          mobileMenu.classList.add("hidden");
+          toggleButton?.classList.remove("expanded");
+          toggleButton?.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
+        }
+      });
+    }, 100); // Delay de 100ms para evitar conflictos
+
+    // Handle window resize to ensure proper mobile menu state
+    window.addEventListener("resize", () => {
+      const isMobile = window.innerWidth < 768; // md breakpoint
+
+      if (!isMobile && mobileMenu && !mobileMenu.classList.contains("hidden")) {
+        // Si cambiamos a desktop y el menú móvil está abierto, cerrarlo
+        mobileMenu.classList.add("hidden");
+        toggleButton?.classList.remove("expanded");
+        toggleButton?.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      }
+    });
+
+    // Desktop dropdown functionality with hover
+    const desktopDropdowns = document.querySelectorAll(".dropdown");
+
+    desktopDropdowns.forEach((dropdown) => {
+      const button = dropdown.querySelector("button");
+      const menu = dropdown.querySelector(".dropdown-menu");
+
+      if (button && menu) {
+        let timeout: NodeJS.Timeout;
+
+        dropdown.addEventListener("mouseenter", () => {
+          clearTimeout(timeout);
+          menu.classList.remove("opacity-0", "invisible", "translate-y-1");
+          menu.classList.add("opacity-100", "visible", "translate-y-0");
+          button.setAttribute("aria-expanded", "true");
+        });
+
+        dropdown.addEventListener("mouseleave", () => {
+          timeout = setTimeout(() => {
+            menu.classList.add("opacity-0", "invisible", "translate-y-1");
+            menu.classList.remove("opacity-100", "visible", "translate-y-0");
+            button.setAttribute("aria-expanded", "false");
+          }, 150);
         });
       }
     });
   }
 
-  dropdownMobileButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      const submenu = button.nextElementSibling as HTMLElement | null;
-      submenu?.classList.toggle("hidden");
-      button.querySelector("svg")?.classList.toggle("rotate-180");
-    });
+  // Clean up function
+  function cleanupHeader() {
+    const mobileMenu = document.getElementById("mobile-menu");
+    const toggleButton = document.querySelector("[data-aw-toggle-menu]");
+
+    if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+      mobileMenu.classList.add("hidden");
+      toggleButton?.classList.remove("expanded");
+      toggleButton?.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    }
+  }
+
+  // Initialize when DOM is loaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeHeader);
+  } else {
+    initializeHeader();
+  }
+
+  // Re-initialize on page navigation (for SPA-like behavior)
+  document.addEventListener("astro:page-load", () => {
+    cleanupHeader();
+    initializeHeader();
   });
 
-  const dropdownButtons = document.querySelectorAll(".dropdown > button");
-  dropdownButtons.forEach((button) => {
-    const submenu = button.nextElementSibling as HTMLElement | null;
-    if (!submenu) return;
-
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      const isHidden = submenu.classList.toggle("md:hidden");
-      if (!isHidden) {
-        // Si se muestra el submenú, añadir clases para posicionarlo correctamente
-        // Esto puede necesitar ajustes basados en tu CSS específico para dropdown-menu
-        submenu.classList.add("md:absolute", "md:mt-2", "md:z-50");
-      }
-      button.querySelector("svg")?.classList.toggle("rotate-180");
-    });
-
-    document.addEventListener("click", (e) => {
-      if (
-        submenu &&
-        !button.contains(e.target as Node) &&
-        !submenu.contains(e.target as Node)
-      ) {
-        submenu.classList.add("md:hidden");
-        button.querySelector("svg")?.classList.remove("rotate-180");
-      }
-    });
-  });
-
-  // Cerrar menú móvil al hacer clic en cualquier link
-  const mobileMenuLinks = document.querySelectorAll("#mobile-menu-content a");
-  mobileMenuLinks.forEach((link) => {
-    link.addEventListener("click", closeMobileMenu);
-  });
+  // Cleanup on page unload
+  document.addEventListener("astro:before-preparation", cleanupHeader);
 </script>
+
+<style>
+  /* Asegurar que el header sea visible en todas las resoluciones */
+  header {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Smooth transitions for dropdowns */
+  .dropdown-menu {
+    transition:
+      opacity 0.2s ease-in-out,
+      visibility 0.2s ease-in-out,
+      transform 0.2s ease-in-out;
+  }
+
+  /* Mobile menu animation */
+  #mobile-menu {
+    transition: max-height 0.3s ease-out;
+  }
+
+  #mobile-menu.hidden {
+    max-height: 0;
+    overflow: hidden;
+    display: none;
+  }
+
+  #mobile-menu:not(.hidden) {
+    max-height: 100vh;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Asegurar que el menú móvil solo se muestre en mobile */
+  @media (min-width: 768px) {
+    #mobile-menu {
+      display: none !important;
+    }
+  }
+
+  /* Asegurar que el toggle menu solo se muestre en mobile */
+  @media (min-width: 768px) {
+    [data-aw-toggle-menu] {
+      display: none !important;
+    }
+  }
+
+  /* Active link indicator */
+  .aw-link-active {
+    position: relative;
+  }
+
+  .aw-link-active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 1px;
+  }
+
+  /* Focus styles for accessibility */
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid rgb(59 130 246);
+    outline-offset: 2px;
+  }
+
+  /* Prevenir parpadeo del header */
+  .container {
+    min-height: inherit;
+  }
+
+  /* Asegurar transiciones suaves */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+</style>
