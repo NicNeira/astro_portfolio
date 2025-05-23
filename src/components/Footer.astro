@@ -45,15 +45,29 @@ const {
     <div class="gap-4 gap-y-8 sm:gap-8 pt-8 md:pt-12">
       <div class="">
         <div class="mb-2">
-          <a class="font-bold text-xl md:text-center" href={"/"}>{SiteName}</a>
+          <a
+            class="font-bold text-xl md:text-center inline-block"
+            href={"/"}
+            rel="home"
+            aria-label={`Ir a la página principal de ${SiteName}`}
+          >
+            {SiteName}
+          </a>
         </div>
-        <div class="text-sm text-muted flex gap-1">
+        <div class="text-sm text-muted flex gap-1 justify-center flex-wrap">
           {
             secondaryLinks.map(({ text, href }, index) => (
               <>
-                {index !== 0 ? " · " : ""}
+                {index !== 0 ? (
+                  <span class="select-none" aria-hidden="true">
+                    {" "}
+                    ·{" "}
+                  </span>
+                ) : (
+                  ""
+                )}
                 <a
-                  class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out "
+                  class="text-muted hover:text-gray-700 dark:text-gray-400 hover:underline transition duration-150 ease-in-out inline-block"
                   href={href}
                   set:html={text}
                 />
@@ -66,16 +80,27 @@ const {
     <div class="flex flex-col items-center justify-center pb-6 md:pb-8">
       {
         socialLinks?.length ? (
-          <ul class="flex justify-center mb-4 -ml-2 rtl:ml-0 rtl:-mr-2">
+          <ul
+            class="flex justify-center mb-4 -ml-2 rtl:ml-0 rtl:-mr-2"
+            role="list"
+          >
             {socialLinks.map(({ ariaLabel, href, text, icon }) => (
               <li>
                 <a
-                  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center"
+                  class="text-muted dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 inline-flex items-center min-w-[40px] min-h-[40px] justify-center"
                   aria-label={ariaLabel}
                   href={href}
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {icon && <Icon name={icon} class="w-5 h-5" />}
+                  {icon && (
+                    <Icon
+                      name={icon}
+                      class="w-5 h-5 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {text && <span class="sr-only">{text}</span>}
                   <Fragment set:html={text} />
                 </a>
               </li>
@@ -88,9 +113,27 @@ const {
 
       <div class="text-sm dark:text-muted text-center">
         <Fragment
-          set:html={"Powered by <a href='https://www.linkedin.com/in/nicolas-neira-lopez/' target='_blank' class='font-bold underline text-blue-500 dark:text-blue-400'>NicNeira</a> "}
+          set:html={"Powered by <a href='https://www.linkedin.com/in/nicolas-neira-lopez/' target='_blank' rel='noopener noreferrer' class='font-bold underline text-blue-500 dark:text-blue-400'>NicNeira</a> "}
         />
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  footer {
+    contain: layout style;
+  }
+
+  /* Prevenir layout shift reservando espacio para iconos */
+  .flex.justify-center.mb-4 {
+    min-height: 56px;
+  }
+
+  /* Optimización para carga de iconos */
+  [data-icon] {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+</style>

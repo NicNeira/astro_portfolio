@@ -1,0 +1,40 @@
+/*
+  # Cache Control Headers
+  Cache-Control: public, max-age=31536000, immutable
+  
+# Cache for HTML files
+/*.html
+  Cache-Control: public, max-age=300
+
+# Cache for static assets
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache for images
+*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+*.jpeg
+  Cache-Control: public, max-age=31536000, immutable
+*.png
+  Cache-Control: public, max-age=31536000, immutable
+*.webp
+  Cache-Control: public, max-age=31536000, immutable
+*.avif
+  Cache-Control: public, max-age=31536000, immutable
+*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+# Compression
+*.js
+  Content-Encoding: gzip
+*.css
+  Content-Encoding: gzip
+*.html
+  Content-Encoding: gzip
+
+# Security Headers
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=() 

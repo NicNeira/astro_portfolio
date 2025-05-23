@@ -1,0 +1,98 @@
+---
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: "lazy" | "eager";
+  priority?: boolean;
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  class: className = "",
+  loading = "lazy",
+  priority = false,
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+} = Astro.props;
+
+// Generar diferentes tamaños de imagen
+const srcWebP = src.replace(/\.(jpg|jpeg|png)$/i, ".webp");
+const srcAvif = src.replace(/\.(jpg|jpeg|png)$/i, ".avif");
+
+// Si es una imagen prioritaria, precargarla
+const preloadLink = priority
+  ? `<link rel="preload" as="image" href="${srcWebP}" />`
+  : "";
+---
+
+<Fragment set:html={preloadLink} />
+
+<picture class={className}>
+  <!-- AVIF para navegadores compatibles -->
+  <source srcset={srcAvif} type="image/avif" sizes={sizes} />
+
+  <!-- WebP para navegadores compatibles -->
+  <source srcset={srcWebP} type="image/webp" sizes={sizes} />
+
+  <!-- Fallback original -->
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={priority ? "eager" : loading}
+    decoding="async"
+    style="aspect-ratio: auto;"
+    class="w-full h-auto object-cover"
+  />
+</picture>
+
+<style>
+  picture {
+    display: block;
+  }
+
+  img {
+    transition: opacity 0.3s ease;
+  }
+
+  img[loading="lazy"] {
+    opacity: 0;
+  }
+
+  img[loading="lazy"].loaded {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  // Intersection Observer para lazy loading suave
+  const images = document.querySelectorAll('img[loading="lazy"]');
+
+  const imageObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const img = entry.target as HTMLImageElement;
+          img.addEventListener("load", () => {
+            img.classList.add("loaded");
+          });
+          observer.unobserve(img);
+        }
+      });
+    },
+    {
+      rootMargin: "50px 0px",
+      threshold: 0.1,
+    }
+  );
+
+  images.forEach((img) => imageObserver.observe(img));
+</script>
+
