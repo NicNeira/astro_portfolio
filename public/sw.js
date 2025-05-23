@@ -1,65 +1,95 @@
-const CACHE_NAME = 'maxi-portfolio-v1';
-const STATIC_CACHE = 'static-v1';
-const DYNAMIC_CACHE = 'dynamic-v1';
+const CACHE_VERSION = 'v2';
+const STATIC_CACHE = `static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `dynamic-${CACHE_VERSION}`;
+const IMAGE_CACHE = `images-${CACHE_VERSION}`;
 
-// Lista de archivos críticos para cache
+// Estrategia de cache más específica
 const STATIC_ASSETS = [
   '/',
   '/favicon.svg',
-  // Agregar aquí rutas críticas
 ];
 
-// Estrategia de cache
+// Patrones de URLs para cache
+const CACHE_PATTERNS = {
+  static: /\.(css|js|woff2?|ttf|eot)$/,
+  images: /\.(jpg|jpeg|png|webp|avif|svg|gif)$/,
+  pages: /\.html$/,
+};
+
+// Instalación optimizada
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
+    Promise.all([
+      caches.open(STATIC_CACHE).then(cache => cache.addAll(STATIC_ASSETS)),
+      self.skipWaiting()
+    ])
   );
 });
 
+// Activación con limpieza de cache viejo
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys()
-      .then(keys => {
-        return Promise.all(
-          keys.map(key => {
-            if (key !== STATIC_CACHE && key !== DYNAMIC_CACHE) {
-              return caches.delete(key);
-            }
-          })
-        );
-      })
-      .then(() => self.clients.claim())
+    Promise.all([
+      caches.keys().then(keys =>
+        Promise.all(
+          keys
+            .filter(key => key.includes('static-') || key.includes('dynamic-') || key.includes('images-'))
+            .filter(key => !key.includes(CACHE_VERSION))
+            .map(key => caches.delete(key))
+        )
+      ),
+      self.clients.claim()
+    ])
   );
 });
 
+// Estrategia de fetch optimizada
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  const url = new URL(request.url);
 
-  // Cache first para assets estáticos
-  if (request.url.includes('/assets/') || request.url.includes('.css') || request.url.includes('.js')) {
+  // Solo cachear requests del mismo origen
+  if (url.origin !== location.origin) return;
+
+  // Estrategia Cache First para assets estáticos
+  if (CACHE_PATTERNS.static.test(url.pathname)) {
     event.respondWith(
-      caches.match(request)
-        .then(response => {
-          return response || fetch(request)
-            .then(fetchResponse => {
-              const responseClone = fetchResponse.clone();
-              caches.open(STATIC_CACHE)
-                .then(cache => cache.put(request, responseClone));
-              return fetchResponse;
-            });
-        })
+      caches.match(request).then(response => {
+        return response || fetch(request).then(fetchResponse => {
+          if (fetchResponse.ok) {
+            const responseClone = fetchResponse.clone();
+            caches.open(STATIC_CACHE).then(cache => cache.put(request, responseClone));
+          }
+          return fetchResponse;
+        });
+      })
     );
   }
-  // Network first para contenido dinámico
-  else {
+
+  // Estrategia Cache First para imágenes
+  else if (CACHE_PATTERNS.images.test(url.pathname)) {
+    event.respondWith(
+      caches.match(request).then(response => {
+        return response || fetch(request).then(fetchResponse => {
+          if (fetchResponse.ok) {
+            const responseClone = fetchResponse.clone();
+            caches.open(IMAGE_CACHE).then(cache => cache.put(request, responseClone));
+          }
+          return fetchResponse;
+        });
+      })
+    );
+  }
+
+  // Estrategia Network First para páginas HTML
+  else if (CACHE_PATTERNS.pages.test(url.pathname) || url.pathname === '/') {
     event.respondWith(
       fetch(request)
         .then(response => {
-          const responseClone = response.clone();
-          caches.open(DYNAMIC_CACHE)
-            .then(cache => cache.put(request, responseClone));
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(DYNAMIC_CACHE).then(cache => cache.put(request, responseClone));
+          }
           return response;
         })
         .catch(() => caches.match(request))

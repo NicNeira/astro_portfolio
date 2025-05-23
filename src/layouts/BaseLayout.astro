@@ -17,15 +17,10 @@ const siteName = "Maxi Portfolio";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} | {siteName}</title>
 
-    <!-- Preload critical resources -->
-    <link
-      rel="preload"
-      href="/fonts/main.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <!-- Preload recursos críticos primero -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
     <!-- Meta tags -->
     <meta name="description" content={description} />
@@ -49,17 +44,19 @@ const siteName = "Maxi Portfolio";
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Resource hints -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-
-    <!-- Critical CSS inlined will be handled by build process -->
+    <!-- CSS Crítico inline -->
     <style>
-      /* Critical CSS - Above the fold content */
+      /* CSS Crítico - Above the fold content */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
       html {
         scroll-behavior: smooth;
+        line-height: 1.15;
+        -webkit-text-size-adjust: 100%;
       }
-
       body {
         font-family:
           system-ui,
@@ -68,15 +65,97 @@ const siteName = "Maxi Portfolio";
         line-height: 1.6;
         margin: 0;
         padding: 0;
+        color: #374151;
       }
 
-      /* Prevent layout shift for images */
+      /* Layout containers críticos */
+      .relative {
+        position: relative;
+      }
+      .max-w-7xl {
+        max-width: 80rem;
+      }
+      .mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .py-12 {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+      }
+
+      /* Flex utilities críticos */
+      .flex {
+        display: flex;
+      }
+      .flex-col {
+        flex-direction: column;
+      }
+      .flex-col-reverse {
+        flex-direction: column-reverse;
+      }
+      .items-center {
+        align-items: center;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+
+      /* Typography crítico */
+      .text-5xl {
+        font-size: 3rem;
+        line-height: 1;
+      }
+      .font-bold {
+        font-weight: 700;
+      }
+      .text-xl {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+
+      /* Responsive utilities críticos */
+      @media (min-width: 768px) {
+        .md\\:flex-row {
+          flex-direction: row;
+        }
+        .md\\:w-1\\/2 {
+          width: 50%;
+        }
+        .md\\:gap-8 {
+          gap: 2rem;
+        }
+        .md\\:text-6xl {
+          font-size: 3.75rem;
+          line-height: 1;
+        }
+        .md\\:text-left {
+          text-align: left;
+        }
+        .md\\:py-20 {
+          padding-top: 5rem;
+          padding-bottom: 5rem;
+        }
+      }
+
+      /* Prevent layout shift para imágenes */
       img {
         max-width: 100%;
         height: auto;
+        display: block;
       }
 
-      /* Loading skeleton */
+      /* Skeleton básico */
       .loading-skeleton {
         background: linear-gradient(
           90deg,
@@ -85,10 +164,9 @@ const siteName = "Maxi Portfolio";
           #f0f0f0 75%
         );
         background-size: 200% 100%;
-        animation: loading 1.5s infinite;
+        animation: skeleton 1.5s infinite;
       }
-
-      @keyframes loading {
+      @keyframes skeleton {
         0% {
           background-position: 200% 0;
         }
@@ -97,7 +175,7 @@ const siteName = "Maxi Portfolio";
         }
       }
 
-      /* Reduce motion for users who prefer it */
+      /* Reduce motion */
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
@@ -106,18 +184,79 @@ const siteName = "Maxi Portfolio";
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
         }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* Dark mode support crítico */
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #0f172a;
+          color: #e2e8f0;
+        }
       }
     </style>
+
+    <!-- Preload CSS no crítico después del contenido above-the-fold -->
+    <link
+      rel="preload"
+      as="style"
+      href="/_astro/contact.css"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript><link rel="stylesheet" href="/_astro/contact.css" /></noscript>
   </head>
   <body>
     <main>
       <slot />
     </main>
 
-    <!-- Performance monitoring -->
-    <script>
-      // Web Vitals tracking simplificado
-      console.log("Performance monitoring activo");
+    <!-- Scripts optimizados para performance -->
+    <script type="module">
+      // Cargar CSS no crítico de forma asíncrona
+      function loadCSS(href) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = href;
+        document.head.appendChild(link);
+      }
+
+      // Intersection Observer para animaciones
+      if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("animate-in");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: "50px" }
+        );
+
+        // Observar elementos animables cuando el DOM esté listo
+        document.addEventListener("DOMContentLoaded", () => {
+          document.querySelectorAll(".intersect-once").forEach((el) => {
+            observer.observe(el);
+          });
+        });
+      }
+
+      // Performance monitoring simplificado
+      if ("performance" in window) {
+        window.addEventListener("load", () => {
+          setTimeout(() => {
+            const navigation = performance.getEntriesByType("navigation")[0];
+            console.log(
+              "Página cargada en:",
+              navigation.loadEventEnd - navigation.startTime,
+              "ms"
+            );
+          }, 0);
+        });
+      }
     </script>
   </body>
 </html>

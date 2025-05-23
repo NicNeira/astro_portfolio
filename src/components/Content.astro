@@ -103,15 +103,18 @@ const hasImage = isImageArray || isImageObject || isImageString;
             <div class="w-full mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
               <div
                 class="relative m-auto w-full"
-                style={`max-width: ${image.width}px;`}
+                style={`max-width: ${Math.min(image.width || 600, 600)}px; aspect-ratio: ${(image.width || 600) / (image.height || 400)};`}
               >
                 <div class="aspect-video relative overflow-hidden rounded-md">
                   <Image
-                    class="absolute inset-0 w-full h-full object-cover object-center"
+                    class="w-full h-full object-cover object-center"
                     src={image.src}
                     alt={image.alt || ""}
-                    width={image.width || 1024}
-                    height={image.height || 576}
+                    width={Math.min(image.width || 600, 600)}
+                    height={Math.min(image.height || 400, 400)}
+                    loading="lazy"
+                    decoding="async"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
               </div>

@@ -3,16 +3,54 @@ import BasicScripts from "@components/common/BasicScripts.astro";
 import "../styles/global.css";
 import ApplyColorMode from "@components/common/ApplyColorMode.astro";
 import { ClientRouter } from "astro:transitions";
+import type { MetaData } from "@utils/types";
+
+export interface Props {
+  metadata?: MetaData;
+}
+
+const { metadata } = Astro.props;
+const siteName = "Maximiliano Neira";
+const defaultTitle =
+  "🎬 Maximiliano Neira - Director de Arte, Actor y Cineasta";
+const defaultDescription =
+  "Director de arte, actor y cineasta de Santiago, Chile. Especializado en conceptualización visual, escenografía y dirección de arte para cortometrajes.";
+
+const title = metadata?.title || defaultTitle;
+const description = metadata?.description || defaultDescription;
 ---
 
 <!doctype html>
-<html lang="en" class="2xl:text-[20px]">
+<html lang="es" class="2xl:text-[20px]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>🎬 Maximiliano Neira</title>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteName} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Canonical URL -->
+    {metadata?.canonical && <link rel="canonical" href={metadata.canonical} />}
+
+    <!-- Robots -->
+    <meta
+      name="robots"
+      content={metadata?.robots
+        ? `${metadata.robots.index ? "index" : "noindex"},${metadata.robots.follow ? "follow" : "nofollow"}`
+        : "index,follow"}
+    />
 
     <ApplyColorMode />
     <ClientRouter />

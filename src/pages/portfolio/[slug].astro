@@ -13,9 +13,15 @@ export async function getStaticPaths() {
 
 // Obtiene el proyecto actual de las props
 const { project } = Astro.props;
+
+const metadata = {
+  title: `${project.projectTitle} - Maximiliano Neira`,
+  description: `${project.description.substring(0, 150)}... Proyecto de dirección de arte por Maximiliano Neira.`,
+  canonical: `https://maximiliano-neira.com/portfolio/${project.id}`,
+};
 ---
 
-<Layout>
+<Layout metadata={metadata}>
   <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
     <h1
       class="text-4xl font-bold text-center mb-8 transition-colors duration-400 dark:text-white"

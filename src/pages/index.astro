@@ -17,18 +17,25 @@ import {
 
 const profileName = "Maximiliano Neira";
 const subTitle = "Art Director – Actor – Filmmaker";
+
+const metadata = {
+  title: `${profileName} - ${subTitle}`,
+  description:
+    "Director de arte, actor y cineasta de Santiago, Chile. Especializado en conceptualización visual, escenografía y dirección de arte para cortometrajes. Titulado en Cinematografía y Producción de Cine y Video del Instituto Profesional ARCOS.",
+  canonical: "https://maximiliano-neira.com/",
+};
 ---
 
-<Layout>
+<Layout metadata={metadata}>
   <Hero
     id="hero"
     title={profileName}
     subtitle={subTitle}
     image={{
       src: ProfilePhoto,
-      alt: "Tech Design Image",
-      width: 281,
-      height: 156,
+      alt: "Retrato de Maximiliano Neira, director de arte y cineasta",
+      width: 400,
+      height: 400,
     }}
   >
     <Fragment slot="paragraph">

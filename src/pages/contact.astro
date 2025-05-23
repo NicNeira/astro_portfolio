@@ -12,9 +12,16 @@ const contactSubtitle =
 // Enlace para el form de Formspree (puedes crear uno gratuito en https://formspree.io)
 // Reemplaza "FORMSPREE_ID" con tu ID real después de registrarte
 const web3Action = "https://api.web3forms.com/submit";
+
+const metadata = {
+  title: "Contacto - Maximiliano Neira",
+  description:
+    "Ponte en contacto con Maximiliano Neira para proyectos de dirección de arte, cinematografía y colaboraciones creativas. Director de arte y cineasta en Santiago, Chile.",
+  canonical: "https://maximiliano-neira.com/contact",
+};
 ---
 
-<Layout>
+<Layout metadata={metadata}>
   <div class="py-16 md:py-20">
     <div class="max-w-2xl mx-auto px-4 sm:px-6">
       <div class="text-center max-w-3xl mx-auto">
