@@ -17,25 +17,9 @@ export interface Props {
   <Icon name="tabler:moon" class="w-5 h-5 hidden dark:inline-block" />
 </button>
 
-<script>
-  const themeToggleButtons = document.querySelectorAll(".theme-toggle-button");
-
-  document
-    .getElementById("theme-toggle-button")
-    ?.addEventListener("click", () => {
-      if (localStorage.theme === "dark") {
-        localStorage.theme = "light";
-        document.documentElement.classList.remove("dark");
-      } else {
-        localStorage.theme = "dark";
-        document.documentElement.classList.add("dark");
-      }
-    });
-
-  // Define el tipo para el tema
-  type Theme = "light" | "dark";
-
-  const applyTheme = (theme: Theme) => {
+<script is:inline>
+  // Función para aplicar el tema
+  function applyTheme(theme) {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -43,20 +27,35 @@ export interface Props {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
     }
-  };
+  }
 
-  themeToggleButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const currentTheme = localStorage.getItem("theme");
-      if (currentTheme === "dark") {
-        applyTheme("light");
-      } else {
-        applyTheme("dark");
-      }
+  // Función para inicializar el toggle theme
+  function initThemeToggle() {
+    const themeToggleButtons = document.querySelectorAll(
+      ".theme-toggle-button"
+    );
+
+    themeToggleButtons.forEach((button) => {
+      // Remover listeners existentes para evitar duplicados
+      button.removeEventListener("click", handleThemeToggle);
+      // Agregar el listener
+      button.addEventListener("click", handleThemeToggle);
     });
-  });
+  }
 
-  // Script para restaurar el tema al cargar la página.
-  // Esto es importante para evitar el "flash of unstyled content" (FOUC).
-  // Idealmente, este script específico debería estar en el <head> de tu HTML para ejecutarse lo antes posible.
+  // Handler para el toggle
+  function handleThemeToggle() {
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme === "dark") {
+      applyTheme("light");
+    } else {
+      applyTheme("dark");
+    }
+  }
+
+  // Inicializar al cargar la página
+  document.addEventListener("DOMContentLoaded", initThemeToggle);
+
+  // Reinicializar después de navegaciones de Astro
+  document.addEventListener("astro:page-load", initThemeToggle);
 </script>

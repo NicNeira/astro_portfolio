@@ -57,7 +57,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   class:list={[
     "fixed",
     "top-0",
-    "z-40",
+    "z-50",
     "flex-none",
     "mx-auto",
     "w-full",
@@ -81,29 +81,19 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       "md:px-6",
       "mx-auto",
       "w-full",
-      {
-        "md:flex md:justify-between": position !== "center",
-      },
-      {
-        "md:grid md:grid-cols-3 md:items-center": position === "center",
-      },
+      "flex",
+      "items-center",
+      "justify-between",
       {
         "max-w-7xl": !isFullWidth,
       },
     ]}
   >
-    <div
-      class:list={[
-        { "mr-auto rtl:mr-0 rtl:ml-auto": position === "right" },
-        "flex justify-between items-center",
-        // Ajustar el ancho para la posición central para que no colisione con los elementos de la derecha
-        { "md:w-auto": position === "center" },
-      ]}
-    >
+    <div class:list={["flex justify-between items-center", "flex-shrink-0"]}>
       <a class="flex items-center" href={"/"} aria-label="Home">
         <Logo />
       </a>
-      <div class="flex items-center md:hidden">
+      <div class="flex items-center md:hidden gap-2">
         <ToggleMenu />
       </div>
     </div>
@@ -111,14 +101,14 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     {/* Menú móvil */}
     <div
       id="mobile-menu-content"
-      class="hidden md:hidden flex-col items-center fixed top-0 pt-[52px] left-0 right-0 h-screen bg-black z-30 shadow-lg md:relative md:top-auto md:left-auto md:right-auto md:bg-transparent md:dark:bg-transparent md:z-auto md:p-0 md:shadow-none"
+      class="hidden md:hidden flex-col fixed top-[60px] left-0 right-0 h-[calc(100vh-60px)] bg-black z-20 shadow-lg"
     >
       <nav
-        class="w-full flex flex-col items-center text-default overflow-y-auto h-[calc(100vh-52px-56px)]"
+        class="flex-1 flex flex-col items-center text-default overflow-y-auto"
         aria-label="Main navigation mobile"
       >
         <ul
-          class="flex flex-col items-center w-full text-xl tracking-[0.01rem] font-medium"
+          class="flex flex-col items-center w-full text-xl tracking-[0.01rem] font-medium pt-8 pb-4"
         >
           {
             links.map(({ text, href, links: subLinks }) => (
@@ -169,11 +159,13 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           }
         </ul>
       </nav>
-      <div class="w-full border-t border-gray-200 dark:border-slate-700">
-        <div class="flex w-full justify-between p-3">
+      <div
+        class="w-full border-t border-gray-200 dark:border-slate-700 mt-auto"
+      >
+        <div class="flex flex-col w-full p-4 gap-4">
           {
             actions.length > 0 && (
-              <div class="hidden">
+              <div class="w-full">
                 {actions.map((actionProps) => (
                   <Button
                     text={actionProps.text}
@@ -182,7 +174,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                     icon={actionProps.icon}
                     target={actionProps.target}
                     type={actionProps.type}
-                    class={` max-w-xs ${actionProps.class || ""}`}
+                    class={`w-full ${actionProps.class || ""}`}
                   />
                 ))}
               </div>
@@ -190,7 +182,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
           }
           {
             showToggleTheme && (
-              <div class=" text-center  ">
+              <div class="flex justify-center">
                 <ToggleTheme />
               </div>
             )
@@ -203,14 +195,14 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     <nav
       class:list={[
         "items-center md:flex hidden text-default overflow-x-auto md:overflow-visible",
-        // Ajustar justificación basada en la posición para evitar colisión
-        { "md:justify-center": position === "center" && links.length > 0 },
-        { "md:w-full": position === "center" && links.length > 0 }, // Ocupar espacio disponible si está centrado
+        "flex-1",
+        "justify-center",
+        "mx-4",
       ]}
       aria-label="Main navigation"
     >
       <ul
-        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-base tracking-[0.01rem] font-medium items-stretch"
+        class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-base tracking-[0.01rem] font-medium items-stretch justify-center"
       >
         {
           links.map(({ text, href, links: subLinks }) => (
@@ -222,7 +214,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
             >
               {subLinks?.length ? (
                 <>
-                  <button class="font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center">
+                  <button class="font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center whitespace-nowrap">
                     {text}
                     <Icon
                       name="tabler:chevron-down"
@@ -234,7 +226,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
                       <li>
                         <a
                           class:list={[
-                            "font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center w-full",
+                            "font-medium hover:text-link dark:hover:text-white px-4 py-3 flex items-center w-full whitespace-nowrap",
                             { "aw-link-active": href2 === currentPath },
                           ]}
                           href={href2}
@@ -248,7 +240,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
               ) : (
                 <a
                   class:list={[
-                    "font-medium hover:text-link dark:hover:text-blue-500 px-4 py-3 flex items-center",
+                    "font-medium hover:text-link dark:hover:text-blue-500 px-4 py-3 flex items-center whitespace-nowrap",
                     { "aw-link-active": href === currentPath },
                   ]}
                   href={href}
@@ -266,15 +258,13 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     <div
       class:list={[
         "hidden md:flex items-center",
-        // Ajustar la justificación y el orden basado en la posición del header
-        { "justify-end": position === "center" || position === "right" },
-        { "justify-start": position === "left" },
-        { "md:col-start-3 md:row-start-1": position === "center" }, // Asegurar que esté en la tercera columna si el layout es grid
+        "flex-shrink-0",
+        "justify-end",
       ]}
     >
       {
         actions.length > 0 && (
-          <div class="ml-2">
+          <div class="ml-2 hidden md:hidden">
             {actions.map((actionProps) => (
               <Button
                 text={actionProps.text}
@@ -307,6 +297,25 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
     ".dropdown-mobile > button"
   );
   const header = document.querySelector("header");
+
+  // Función para cerrar el menú móvil
+  const closeMobileMenu = () => {
+    if (toggleMenuButton && mobileMenuContent) {
+      toggleMenuButton.classList.remove("expanded");
+      toggleMenuButton.setAttribute("aria-expanded", "false");
+      mobileMenuContent.classList.add("hidden");
+      mobileMenuContent.classList.remove("flex");
+
+      // Cerrar todos los submenús
+      dropdownMobileButtons.forEach((button) => {
+        const submenu = button.nextElementSibling as HTMLElement | null;
+        if (submenu && !submenu.classList.contains("hidden")) {
+          submenu.classList.add("hidden");
+          button.querySelector("svg")?.classList.remove("rotate-180");
+        }
+      });
+    }
+  };
 
   // Función para manejar la visibilidad del borde según la posición de scroll
   const handleHeaderBorder = () => {
@@ -391,5 +400,11 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         button.querySelector("svg")?.classList.remove("rotate-180");
       }
     });
+  });
+
+  // Cerrar menú móvil al hacer clic en cualquier link
+  const mobileMenuLinks = document.querySelectorAll("#mobile-menu-content a");
+  mobileMenuLinks.forEach((link) => {
+    link.addEventListener("click", closeMobileMenu);
   });
 </script>
