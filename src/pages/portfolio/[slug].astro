@@ -31,14 +31,34 @@ const metadata = {
     </h1>
 
     <div
-      class="mb-8 transition-all duration-500 image-container"
+      class="mb-8 transition-all duration-500 image-container max-w-3xl mx-auto"
       transition:name={`image-${project.id}`}
     >
-      <img
-        src={project.images[0].src}
-        alt={project.images[0].alt}
-        class="w-full rounded-lg shadow-lg"
-      />
+      {
+        project.video ? (
+          <div class="aspect-video w-full">
+            <iframe
+              src={project.video}
+              title={`Video de ${project.projectTitle}`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; cc_load_policy=0"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              class="w-full h-full rounded-lg shadow-lg"
+            />
+          </div>
+        ) : (
+          <div
+            class="aspect-video w-full overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
+            data-index="0"
+          >
+            <Image
+              src={project.images[0].src}
+              alt={project.images[0].alt}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        )
+      }
     </div>
 
     <div
@@ -53,15 +73,20 @@ const metadata = {
     <h2 class="text-2xl font-bold mb-4 dark:text-white">Galería</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
       {
-        project.images.slice(1).map((image) => (
-          <div class="overflow-hidden rounded-lg shadow-lg">
-            <img
-              src={image.src}
-              alt={image.alt}
-              class="w-full h-auto transition-transform duration-300 hover:scale-105"
-            />
-          </div>
-        ))
+        (project.video ? project.images : project.images.slice(1)).map(
+          (image, index) => (
+            <div
+              class="aspect-video overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
+              data-index={project.video ? index : index + 1}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          )
+        )
       }
     </div>
 
@@ -74,4 +99,277 @@ const metadata = {
       </a>
     </div>
   </div>
+
+  <!-- Modal Lightbox -->
+  <div id="lightbox" class="lightbox-overlay">
+    <div class="lightbox-container">
+      <button id="lightbox-close" class="lightbox-close" aria-label="Cerrar"
+        >×</button
+      >
+      <button
+        id="lightbox-prev"
+        class="lightbox-nav lightbox-prev"
+        aria-label="Imagen anterior">‹</button
+      >
+      <button
+        id="lightbox-next"
+        class="lightbox-nav lightbox-next"
+        aria-label="Imagen siguiente">›</button
+      >
+      <img id="lightbox-image" class="lightbox-image" alt="" />
+      <div class="lightbox-counter">
+        <span id="lightbox-current">1</span> / <span id="lightbox-total"
+          >{project.images.length}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .lightbox-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .lightbox-overlay.active {
+      background-color: rgba(0, 0, 0, 0.9);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lightbox-image {
+      max-width: 70vw;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      transform: scale(0.8);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+    .lightbox-overlay.active .lightbox-image {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      background: none;
+      border: none;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      z-index: 1001;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease 0.1s;
+    }
+    .lightbox-overlay.active .lightbox-close {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .lightbox-close:hover {
+      color: #ff6b6b;
+    }
+
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      font-size: 32px;
+      color: white;
+      cursor: pointer;
+      z-index: 1001;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      font-family: monospace;
+      line-height: 1;
+      text-align: center;
+      vertical-align: middle;
+      opacity: 0;
+      transition: all 0.3s ease 0.2s;
+    }
+    .lightbox-overlay.active .lightbox-nav {
+      opacity: 1;
+    }
+
+    .lightbox-overlay.active .lightbox-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .lightbox-prev {
+      left: 120px;
+    }
+
+    .lightbox-next {
+      right: 120px;
+    }
+
+    .lightbox-counter {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 16px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transition: all 0.3s ease 0.15s;
+    }
+    .lightbox-overlay.active .lightbox-counter {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .lightbox-image {
+        max-width: 85vw;
+        max-height: 60vh;
+      }
+
+      .lightbox-close {
+        top: 20px;
+        right: 20px;
+        font-size: 30px;
+      }
+
+      .lightbox-nav {
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .lightbox-prev {
+        left: 20px;
+      }
+
+      .lightbox-next {
+        right: 20px;
+      }
+
+      .lightbox-counter {
+        bottom: 20px;
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+
+  <script define:vars={{ images: project.images }}>
+    let currentImageIndex = 0;
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCurrent = document.getElementById("lightbox-current");
+    const lightboxTotal = document.getElementById("lightbox-total");
+    const closeBtn = document.getElementById("lightbox-close");
+    const prevBtn = document.getElementById("lightbox-prev");
+    const nextBtn = document.getElementById("lightbox-next");
+
+    // Configurar el total de imágenes
+    lightboxTotal.textContent = images.length;
+
+    // Añadir event listeners a todas las imágenes de la galería
+    const galleryImages = document.querySelectorAll(".gallery-image");
+    galleryImages.forEach((imageContainer) => {
+      imageContainer.addEventListener("click", () => {
+        const imageIndex = parseInt(imageContainer.getAttribute("data-index"));
+        openLightbox(imageIndex);
+      });
+    });
+
+    function openLightbox(index) {
+      currentImageIndex = index;
+      updateLightboxImage();
+      lightbox.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("active");
+      setTimeout(() => {
+        document.body.style.overflow = "auto";
+      }, 300);
+    }
+
+    function updateLightboxImage() {
+      const currentImage = images[currentImageIndex];
+      lightboxImage.src = currentImage.src.src || currentImage.src;
+      lightboxImage.alt = currentImage.alt;
+      lightboxCurrent.textContent = currentImageIndex + 1;
+    }
+
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+      updateLightboxImage();
+    }
+
+    function prevImage() {
+      currentImageIndex =
+        (currentImageIndex - 1 + images.length) % images.length;
+      updateLightboxImage();
+    }
+
+    // Event listeners
+    closeBtn.addEventListener("click", closeLightbox);
+    nextBtn.addEventListener("click", nextImage);
+    prevBtn.addEventListener("click", prevImage);
+
+    // Cerrar al hacer click en el overlay
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Navegación con teclado
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("active")) return;
+
+      switch (e.key) {
+        case "Escape":
+          closeLightbox();
+          break;
+        case "ArrowRight":
+          nextImage();
+          break;
+        case "ArrowLeft":
+          prevImage();
+          break;
+      }
+    });
+  </script>
 </Layout>
