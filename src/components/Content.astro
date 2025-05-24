@@ -23,7 +23,6 @@ const {
   id,
   isDark = false,
   classes = {},
-  bg = await Astro.slots.render("bg"),
 } = Astro.props;
 
 // Determinar el tipo de contenido de la imagen
@@ -40,7 +39,6 @@ const hasImage = isImageArray || isImageObject || isImageString;
   id={id}
   isDark={isDark}
   containerClass={`max-w-7xl mx-auto ${isAfterContent ? "pt-0 md:pt-0 lg:pt-0" : ""} ${classes?.container ?? ""}`}
-  bg={bg}
 >
   <Headline
     title={title}
