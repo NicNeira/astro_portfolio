@@ -1,0 +1,278 @@
+---
+import { Icon } from "astro-icon/components";
+import { languages, getLangFromUrl } from "@utils/i18n";
+
+const currentLang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+
+// Función para generar URLs de idiomas
+function getLocalizedPath(lang: string, currentPath: string) {
+  const pathSegments = currentPath.split("/").filter(Boolean);
+
+  // Si la primera parte es un código de idioma, reemplazarla
+  if (pathSegments[0] && pathSegments[0] in languages) {
+    pathSegments[0] = lang;
+  } else if (lang !== "es") {
+    // Si no hay idioma en la URL y no es español, agregar el idioma
+    pathSegments.unshift(lang);
+  }
+
+  // Para español, no agregar prefijo
+  if (lang === "es") {
+    return (
+      "/" + pathSegments.filter((segment) => !(segment in languages)).join("/")
+    );
+  }
+
+  return "/" + pathSegments.join("/");
+}
+
+// Función para obtener la bandera del idioma actual
+function getFlagEmoji(lang: string) {
+  switch (lang) {
+    case "es":
+      return "🇪🇸";
+    case "en":
+      return "🇺🇸";
+    case "de":
+      return "🇩🇪";
+    default:
+      return "🌐";
+  }
+}
+---
+
+<div class="relative inline-block text-left">
+  <div>
+    <button
+      type="button"
+      class="settings-toggle-button inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 dark:text-gray-400 hover:cursor-pointer focus:outline-none transition-all duration-200"
+      id="settings-menu"
+      aria-expanded="false"
+      aria-haspopup="true"
+      aria-label="Configuraciones"
+    >
+      <Icon name="tabler:settings" class="w-5 h-5" />
+    </button>
+  </div>
+
+  <div
+    class="settings-dropdown origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700 focus:outline-none hidden"
+    id="settings-dropdown"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="settings-menu"
+    tabindex="-1"
+  >
+    <div class="py-2" role="none">
+      <!-- Sección de Tema -->
+      <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-200"
+            >Tema</span
+          >
+          <button
+            type="button"
+            class="theme-toggle-button inline-flex items-center justify-center w-8 h-8 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 hover:cursor-pointer transition-colors duration-200"
+            aria-label="Cambiar tema"
+          >
+            <Icon name="tabler:sun" class="w-4 h-4 dark:hidden" />
+            <Icon
+              name="tabler:moon"
+              class="w-4 h-4 hidden dark:inline-block dark:text-white"
+            />
+          </button>
+        </div>
+      </div>
+
+      <!-- Sección de Idioma -->
+      <div class="px-4 py-2">
+        <span
+          class="text-sm font-medium text-gray-700 dark:text-gray-200 block mb-2"
+          >Idioma</span
+        >
+        <div class="space-y-1">
+          {
+            Object.entries(languages).map(([lang, name]) => (
+              <a
+                href={getLocalizedPath(lang, currentPath)}
+                class={`${
+                  currentLang === lang
+                    ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                } group flex items-center px-3 py-2 text-sm rounded-md transition-colors duration-200 cursor-pointer`}
+                role="menuitem"
+                tabindex="-1"
+              >
+                <span class="text-lg mr-3">{getFlagEmoji(lang)}</span>
+                <span class="flex-1">{name}</span>
+                {currentLang === lang && (
+                  <Icon
+                    name="tabler:check"
+                    class="w-4 h-4 text-indigo-600 dark:text-indigo-400"
+                  />
+                )}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Función para aplicar el tema
+  function applyTheme(theme) {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }
+
+  // Funcionalidad del dropdown de configuraciones
+  function initSettingsButton() {
+    console.log("Initializing settings button...");
+
+    const settingsButton = document.getElementById("settings-menu");
+    const settingsDropdown = document.getElementById("settings-dropdown");
+
+    console.log("Settings button:", settingsButton);
+    console.log("Settings dropdown:", settingsDropdown);
+
+    if (!settingsButton || !settingsDropdown) {
+      console.error("Settings elements not found!");
+      return;
+    }
+
+    // Remover listeners existentes para evitar duplicados
+    const oldButton = settingsButton.cloneNode(true);
+    settingsButton.parentNode.replaceChild(oldButton, settingsButton);
+
+    // Obtener la nueva referencia
+    const newSettingsButton = document.getElementById("settings-menu");
+
+    if (!newSettingsButton) {
+      console.error("Could not get new settings button reference");
+      return;
+    }
+
+    // Toggle del dropdown de configuraciones
+    newSettingsButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("Settings button clicked!");
+
+      const isHidden = settingsDropdown.classList.contains("hidden");
+      console.log("Is hidden:", isHidden);
+
+      if (isHidden) {
+        settingsDropdown.classList.remove("hidden");
+        newSettingsButton.setAttribute("aria-expanded", "true");
+        console.log("Dropdown opened");
+      } else {
+        settingsDropdown.classList.add("hidden");
+        newSettingsButton.setAttribute("aria-expanded", "false");
+        console.log("Dropdown closed");
+      }
+    });
+
+    // Funcionalidad del toggle de tema
+    const themeToggleButtons = settingsDropdown.querySelectorAll(
+      ".theme-toggle-button"
+    );
+    console.log("Theme buttons found:", themeToggleButtons.length);
+
+    themeToggleButtons.forEach((button) => {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Theme toggle clicked!");
+
+        const currentTheme = localStorage.getItem("theme") || "light";
+        console.log("Current theme:", currentTheme);
+
+        if (currentTheme === "dark") {
+          applyTheme("light");
+        } else {
+          applyTheme("dark");
+        }
+      });
+    });
+
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener("click", function (event) {
+      if (
+        event.target &&
+        !newSettingsButton.contains(event.target as Node) &&
+        !settingsDropdown.contains(event.target as Node)
+      ) {
+        settingsDropdown.classList.add("hidden");
+        newSettingsButton.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // Cerrar dropdown al presionar Escape
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        settingsDropdown.classList.add("hidden");
+        newSettingsButton.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // Cerrar dropdown al hacer clic en enlaces de idioma
+    const languageLinks = settingsDropdown.querySelectorAll("a[href]");
+    languageLinks.forEach((link) => {
+      link.addEventListener("click", function () {
+        settingsDropdown.classList.add("hidden");
+        newSettingsButton.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    console.log("Settings button initialized successfully!");
+  }
+
+  // Inicializar cuando el DOM esté listo
+  document.addEventListener("DOMContentLoaded", initSettingsButton);
+
+  // Reinicializar después de navegaciones de Astro
+  document.addEventListener("astro:page-load", initSettingsButton);
+
+  // Backup: inicializar inmediatamente si el DOM ya está listo
+  if (document.readyState !== "loading") {
+    setTimeout(initSettingsButton, 100);
+  }
+</script>
+
+<style>
+  .settings-dropdown {
+    transition:
+      opacity 0.2s ease-in-out,
+      visibility 0.2s ease-in-out,
+      transform 0.2s ease-in-out;
+    z-index: 50;
+  }
+
+  .settings-dropdown.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px) scale(0.95);
+  }
+
+  .settings-dropdown:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .settings-toggle-button:hover {
+    transform: rotate(45deg);
+  }
+
+  .settings-toggle-button {
+    transition: all 0.2s ease-in-out;
+  }
+</style>

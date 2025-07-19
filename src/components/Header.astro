@@ -1,12 +1,12 @@
 ---
-import ToggleTheme from "../components/common/ToggleTheme.astro";
-import LanguageSelector from "../components/common/LanguageSelector.astro";
+import SettingsButton from "../components/common/SettingsButton.astro";
 import Button from "../components/ui/Button.astro";
 
 import { trimSlash } from "../utils/utils.js";
 import ToggleMenu from "./common/ToggleMenu.astro";
 import Logo from "./Logo.astro";
 import { Icon } from "astro-icon/components";
+import { getLangFromUrl, defaultLang } from "../utils/i18n";
 
 interface ActionLink {
   text: string;
@@ -33,7 +33,6 @@ export interface Props {
   isSticky?: boolean;
   isDark?: boolean;
   isFullWidth?: boolean;
-  showToggleTheme?: boolean;
   showRssFeed?: boolean;
   position?: string;
 }
@@ -45,12 +44,20 @@ const {
   isSticky = false,
   isDark = false,
   isFullWidth = false,
-  showToggleTheme = false,
   showRssFeed = false,
   position = "center",
 } = Astro.props;
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const currentLang = getLangFromUrl(Astro.url);
+
+// Generar URL de home según el idioma actual
+function getHomeUrl(lang: string) {
+  if (lang === defaultLang) {
+    return "/";
+  }
+  return `/${lang}/`;
+}
 ---
 
 <header
@@ -71,7 +78,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
       <!-- Logo -->
       <div class="flex-shrink-0">
         <a
-          href="/"
+          href={getHomeUrl(currentLang)}
           class="flex items-center space-x-2 group"
           aria-label="Ir al inicio"
         >
@@ -138,16 +145,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         </ul>
       </nav>
 
-      <!-- Desktop Actions & Theme Toggle -->
+      <!-- Desktop Actions & Settings -->
       <div class="hidden md:flex items-center space-x-3">
-        <LanguageSelector />
-        {
-          showToggleTheme && (
-            <div class="flex items-center">
-              <ToggleTheme />
-            </div>
-          )
-        }
         {
           actions.map((action) => (
             <Button
@@ -161,6 +160,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
             />
           ))
         }
+        <SettingsButton />
       </div>
 
       <!-- Mobile Menu Button -->
@@ -237,15 +237,8 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
         )
       }
 
-      <!-- Mobile Actions & Theme Toggle -->
+      <!-- Mobile Actions & Settings -->
       <div class="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
-        {
-          showToggleTheme && (
-            <div class="flex justify-center">
-              <ToggleTheme />
-            </div>
-          )
-        }
         {
           actions.length > 0 && (
             <div class="space-y-3">
@@ -263,6 +256,9 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
             </div>
           )
         }
+        <div class="flex justify-center">
+          <SettingsButton />
+        </div>
       </div>
     </div>
   </div>
