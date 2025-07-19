@@ -1,0 +1,249 @@
+---
+import Layout from "@layouts/PageLayout.astro";
+import { getSlugProjects } from "@utils/projectsData";
+import { useTranslations } from "@utils/i18n";
+import { Image } from "astro:assets";
+
+const lang = "de";
+const t = useTranslations(lang);
+
+// Función para generar rutas estáticas para el SSG
+export async function getStaticPaths() {
+  const t = useTranslations("de");
+  const projects = getSlugProjects(t);
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+// Obtiene el proyecto actual de las props
+const { project } = Astro.props;
+
+const metadata = {
+  title: `${project.projectTitle} - Maximiliano Neira`,
+  description: `${project.description.substring(0, 150)}... Art Direction Projekt von Maximiliano Neira.`,
+  canonical: `https://maximiliano-neira.com/de/portfolio/${project.id}`,
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <h1
+      class="text-4xl font-bold text-center mb-8 transition-colors duration-400 dark:text-white"
+      transition:name={`title-${project.id}`}
+    >
+      {project.projectTitle}
+    </h1>
+
+    <div
+      class="mb-8 transition-all duration-500 image-container max-w-3xl mx-auto"
+      transition:name={`image-${project.id}`}
+    >
+      {
+        project.video ? (
+          <div class="aspect-video w-full">
+            <iframe
+              src={project.video}
+              title={`Video von ${project.projectTitle}`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; cc_load_policy=0"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+              class="w-full h-full rounded-lg shadow-lg"
+            />
+          </div>
+        ) : (
+          <div
+            class="aspect-video w-full overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
+            data-index="0"
+          >
+            <Image
+              src={project.images[0].src}
+              alt={project.images[0].alt}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        )
+      }
+    </div>
+
+    <div
+      class="prose max-w-none dark:prose-invert mb-12 transition-all duration-300"
+      transition:name={`description-${project.id}`}
+    >
+      <p class="text-lg leading-relaxed dark:text-gray-300">
+        {project.description}
+      </p>
+    </div>
+
+    <h2 class="text-2xl font-bold mb-4 dark:text-white">Galerie</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      {
+        (project.video ? project.images : project.images.slice(1)).map(
+          (image, index) => (
+            <div
+              class="aspect-video overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
+              data-index={project.video ? index : index + 1}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          )
+        )
+      }
+    </div>
+
+    <div class="text-center">
+      <a
+        href="/de/#porfolio"
+        class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
+      >
+        <span class="mr-2">←</span> Zurück zur Startseite
+      </a>
+    </div>
+  </div>
+
+  <!-- Galería Modal -->
+  <div
+    id="galleryModal"
+    class="fixed inset-0 bg-black bg-opacity-90 z-[100] hidden flex items-center justify-center"
+  >
+    <div class="relative max-w-4xl max-h-full p-4">
+      <button
+        id="closeModal"
+        class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 z-10"
+      >
+        ✕
+      </button>
+      <button
+        id="prevImage"
+        class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 z-10"
+      >
+        ❮
+      </button>
+      <button
+        id="nextImage"
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl hover:text-gray-300 z-10"
+      >
+        ❯
+      </button>
+      <img
+        id="modalImage"
+        src=""
+        alt=""
+        class="max-w-full max-h-full object-contain"
+      />
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Gallery functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const galleryImages = document.querySelectorAll(".gallery-image");
+    const modal = document.getElementById("galleryModal");
+    const modalImage = document.getElementById(
+      "modalImage"
+    ) as HTMLImageElement;
+    const closeModal = document.getElementById("closeModal");
+    const prevButton = document.getElementById("prevImage");
+    const nextButton = document.getElementById("nextImage");
+
+    let currentImageIndex = 0;
+    let totalImages = galleryImages.length;
+
+    function openModal(index) {
+      currentImageIndex = index;
+      updateModalImage();
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModalFunc() {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "auto";
+    }
+
+    function updateModalImage() {
+      const imageElement = galleryImages[currentImageIndex].querySelector(
+        "img"
+      ) as HTMLImageElement;
+      modalImage.src = imageElement.src;
+      modalImage.alt = imageElement.alt;
+    }
+
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % totalImages;
+      updateModalImage();
+    }
+
+    function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+      updateModalImage();
+    }
+
+    // Event listeners
+    galleryImages.forEach((image, index) => {
+      image.addEventListener("click", () => openModal(index));
+    });
+
+    closeModal.addEventListener("click", closeModalFunc);
+    nextButton.addEventListener("click", nextImage);
+    prevButton.addEventListener("click", prevImage);
+
+    // Close modal when clicking outside the image
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        closeModalFunc();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener("keydown", function (e) {
+      if (!modal.classList.contains("hidden")) {
+        switch (e.key) {
+          case "Escape":
+            closeModalFunc();
+            break;
+          case "ArrowLeft":
+            prevImage();
+            break;
+          case "ArrowRight":
+            nextImage();
+            break;
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .image-container {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .gallery-image {
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-image:hover {
+    transform: scale(1.02);
+  }
+
+  #galleryModal {
+    backdrop-filter: blur(5px);
+  }
+</style>
+

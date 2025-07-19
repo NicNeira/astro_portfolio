@@ -6,13 +6,13 @@ import Skill from "@components/Skill.astro";
 import CallToAction from "@components/CallToAction.astro";
 import Layout from "@layouts/PageLayout.astro";
 
-import ProfilePhoto from "../assets/images/profile.jpg";
-import AboutPhoto from "../assets/images/about.jpg";
+import ProfilePhoto from "../../assets/images/profile.jpg";
+import AboutPhoto from "../../assets/images/about.jpg";
 
 import { getContentProjects } from "@utils/projectsData";
-import { getLangFromUrl, useTranslations } from "@utils/i18n";
+import { useTranslations } from "@utils/i18n";
 
-const lang = getLangFromUrl(Astro.url);
+const lang = "en";
 const t = useTranslations(lang);
 
 const profileName = t("hero.name");
@@ -21,7 +21,7 @@ const subTitle = t("hero.subtitle");
 const metadata = {
   title: t("site.title"),
   description: t("site.description"),
-  canonical: "https://maximiliano-neira.com/",
+  canonical: "https://maximiliano-neira.com/en/",
 };
 
 const ContentProjects = getContentProjects(t, lang);
@@ -36,7 +36,7 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
     subtitle={subTitle}
     image={{
       src: ProfilePhoto,
-      alt: "Retrato de Maximiliano Neira, director de arte y cineasta",
+      alt: "Portrait of Maximiliano Neira, art director and filmmaker",
       width: 400,
       height: 400,
     }}
@@ -45,35 +45,6 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
       {t("hero.description")}
     </Fragment>
   </Hero>
-
-  <!-- <Content
-    id="about"
-    items={ContentProjects}
-    title={portfolioSectionTitle}
-    subtitle={portfolioSectionSubtitle}
-    isReversed
-    image={{
-      src: AboutPhoto,
-      alt: "About Maximiliano Neira, art director and filmmaker",
-      width: 500,
-      height: 500,
-    }}
-  >
-    <Fragment slot="content">
-      <h3
-        class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2"
-      >
-        {t("general.years-experience")}
-      </h3>
-      <p>
-        <br />{t("general.collaboration-description")}
-      </p>
-    </Fragment>
-
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-slate-800"></div>
-    </Fragment>
-  </Content> -->
 
   <Content
     id="about"
@@ -96,35 +67,6 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
       </p>
     </Fragment>
   </Content>
-
-  <!-- Steps  -->
-  <!-- <Steps
-    id="resume"
-    title="Work experience"
-    items={[
-      {
-        title:
-          'Graphic Designer <br /> <span class="font-normal">ABC Design Studio, New York, NY</span> <br /> <span class="text-sm font-normal">2021 - Present</span>',
-        description: `Collaborate with clients to understand design requirements and objectives. <br /> Develop branding solutions, including logos, color palettes, and brand guidelines. <br /> Design marketing materials such as brochures, posters, and digital assets. <br /> Create visually appealing user interfaces for websites and applications.`,
-        icon: "tabler:briefcase",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title:
-          'Junior Graphic Designer <br /> <span class="font-normal">XYZ Creative Agency, Los Angeles, CA</span> <br /> <span class="text-sm font-normal">2018 - 2021</span>',
-        description: `Assisted senior designers in creating design concepts and visual assets. <br /> Contributed to the development of brand identities and marketing collateral. <br /> Collaborated with the marketing team to ensure consistent design across campaigns. <br /> Gained hands-on experience in various design software and tools.`,
-        icon: "tabler:briefcase",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-    ]}
-    classes={{ container: "max-w-3xl", items: "dark:text-white" }}
-  /> -->
 
   <Steps
     id="resume"
@@ -178,6 +120,7 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
     ]}
     classes={{ container: "max-w-3xl" }}
   />
+
   <!-- Skills -->
   <Skill
     id="skills"
@@ -233,6 +176,7 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
       },
     ]}
   />
+
   <!-- Projects -->
   {
     ContentProjects.map((project, index) => (
@@ -280,7 +224,7 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
       {
         variant: "primary",
         text: t("cta.button"),
-        href: `${lang === "es" ? "" : "/" + lang}/contact`,
+        href: "/en/contact",
       },
     ]}
   />

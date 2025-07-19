@@ -1,5 +1,6 @@
 ---
 import ToggleTheme from "../components/common/ToggleTheme.astro";
+import LanguageSelector from "../components/common/LanguageSelector.astro";
 import Button from "../components/ui/Button.astro";
 
 import { trimSlash } from "../utils/utils.js";
@@ -139,6 +140,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 
       <!-- Desktop Actions & Theme Toggle -->
       <div class="hidden md:flex items-center space-x-3">
+        <LanguageSelector />
         {
           showToggleTheme && (
             <div class="flex items-center">

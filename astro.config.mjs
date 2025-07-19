@@ -6,6 +6,13 @@ import compress from 'astro-compress';
 
 // https://astro.build/config
 export default defineConfig({
+  i18n: {
+    defaultLocale: "es",
+    locales: ["es", "en", "de"],
+    routing: {
+      prefixDefaultLocale: false
+    }
+  },
   integrations: [
     icon({
       include: {

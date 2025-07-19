@@ -17,6 +17,7 @@ const {
   items = [],
   columns,
   image = await Astro.slots.render("image"), // puede ser string, objeto o array de objetos
+  video, // nuevo prop para videos
   isReversed = false,
   isAfterContent = false,
 
@@ -33,6 +34,11 @@ const isImageObject =
   typeof image === "object" && image !== null && !isImageArray && image.src;
 const isImageString = typeof image === "string" && image.trim() !== "";
 const hasImage = isImageArray || isImageObject || isImageString;
+
+// Determinar si hay contenido de video
+const isVideoObject = typeof video === "object" && video !== null && video.src;
+const isVideoString = typeof video === "string" && video.trim() !== "";
+const hasVideo = isVideoObject || isVideoString;
 ---
 
 <WidgetWrapper
@@ -92,6 +98,27 @@ const hasImage = isImageArray || isImageObject || isImageString;
         {
           Astro.slots.has("image") ? (
             <slot name="image" />
+          ) : hasVideo ? (
+            <div class="w-full mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+              <div class="relative m-auto w-full max-w-2xl">
+                <div class="aspect-video relative overflow-hidden rounded-md">
+                  <video
+                    class="w-full h-full object-cover object-center"
+                    controls
+                    preload="metadata"
+                    poster={
+                      isVideoObject && video.poster ? video.poster : undefined
+                    }
+                  >
+                    <source
+                      src={isVideoObject ? video.src : video}
+                      type="video/mp4"
+                    />
+                    Tu navegador no soporta la reproducción de videos.
+                  </video>
+                </div>
+              </div>
+            </div>
           ) : isImageArray ? (
             <ImageCarousel
               images={image}

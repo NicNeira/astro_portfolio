@@ -1,0 +1,195 @@
+---
+import Layout from "@layouts/PageLayout.astro";
+import { Image } from "astro:assets";
+import ContactImage from "../../assets/images/profile.jpg";
+import Button from "@components/ui/Button.astro";
+import { useTranslations } from "@utils/i18n";
+
+const lang = "en";
+const t = useTranslations(lang);
+
+// Enlace para el form de Formspree (puedes crear uno gratuito en https://formspree.io)
+// Reemplaza "FORMSPREE_ID" con tu ID real después de registrarte
+const web3Action = "https://api.web3forms.com/submit";
+
+const metadata = {
+  title: `${t("nav.contact")} - Maximiliano Neira`,
+  description:
+    "Get in touch with Maximiliano Neira for art direction, cinematography and creative collaboration projects. Art director and filmmaker in Santiago, Chile.",
+  canonical: "https://maximiliano-neira.com/en/contact",
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="py-16 md:py-20">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1
+          class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-white"
+        >
+          {t("contact.form.title")}
+        </h1>
+        <p class="text-xl text-muted dark:text-slate-400">
+          {t("contact.form.subtitle")}
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center gap-8 md:gap-16 mt-12">
+        <!-- Formulario de Contacto -->
+        <div class="w-full max-w-2xl">
+          <!-- // Styling Requires Tailwind CSS -->
+          <form
+            action={web3Action}
+            method="POST"
+            id="form"
+            class="needs-validation"
+            data-astro-reload
+            novalidate
+          >
+            <!-- Add your Web3Forms Access Key -->
+            <input
+              type="hidden"
+              name="access_key"
+              value="13379e9b-bc8c-4475-9190-90f4a1d1e6c2"
+            />
+
+            <input
+              type="checkbox"
+              class="hidden"
+              style="display:none"
+              name="botcheck"
+            />
+            <div class="mb-5">
+              <input
+                type="text"
+                placeholder={t("contact.form.name.placeholder")}
+                required
+                class="w-full px-4 py-3 border placeholder:text-slate-400 rounded-md outline-none focus:ring-4 border-slate-300 focus:border-slate-600 ring-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-slate-700"
+                name="name"
+              />
+              <div
+                class="empty-feedback invalid-feedback text-red-400 text-sm mt-1"
+              >
+                {t("contact.form.name.error")}
+              </div>
+            </div>
+            <div class="mb-5">
+              <label for="email_address" class="sr-only"
+                >{t("contact.form.email.placeholder")}</label
+              ><input
+                id="email_address"
+                type="email"
+                placeholder={t("contact.form.email.placeholder")}
+                name="email"
+                required
+                class="w-full px-4 py-3 border placeholder:text-slate-400 rounded-md outline-none focus:ring-4 border-slate-300 focus:border-slate-600 ring-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-slate-700"
+              />
+              <div class="empty-feedback text-red-400 text-sm mt-1">
+                {t("contact.form.email.error")}
+              </div>
+              <div class="invalid-feedback text-red-400 text-sm mt-1">
+                {t("contact.form.email.invalid")}
+              </div>
+            </div>
+            <div class="mb-3">
+              <textarea
+                name="message"
+                required
+                placeholder={t("contact.form.message.placeholder")}
+                class="w-full px-4 py-3 border placeholder:text-slate-400 rounded-md outline-none h-36 focus:ring-4 border-slate-300 focus:border-slate-600 ring-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-slate-700"
+              ></textarea>
+              <div
+                class="empty-feedback invalid-feedback text-red-400 text-sm mt-1"
+              >
+                {t("contact.form.message.error")}
+              </div>
+            </div>
+            <div class="flex justify-center w-full">
+              <Button type="submit" text={t("contact.form.send")} />
+            </div>
+            <div id="result" class="mt-3 text-center"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .invalid-feedback,
+    .empty-feedback {
+      display: none;
+    }
+
+    .was-validated :placeholder-shown:invalid ~ .empty-feedback {
+      display: block;
+    }
+
+    .was-validated :not(:placeholder-shown):invalid ~ .invalid-feedback {
+      display: block;
+    }
+
+    .is-invalid,
+    .was-validated :invalid {
+      border-color: #dc3545;
+    }
+  </style>
+
+  <script is:inline>
+    // use astro:page-load event if you are using View Transitions
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        const form = document.getElementById("form");
+        const result = document.getElementById("result");
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          form.classList.add("was-validated");
+          if (!form.checkValidity()) {
+            form.querySelectorAll(":invalid")[0].focus();
+            return;
+          }
+          const formData = new FormData(form);
+          const object = Object.fromEntries(formData);
+          const json = JSON.stringify(object);
+
+          result.innerHTML = "Sending...";
+
+          fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: json,
+          })
+            .then(async (response) => {
+              let json = await response.json();
+              if (response.status == 200) {
+                result.classList.add("text-green-500");
+                result.innerHTML = json.message;
+              } else {
+                console.log(response);
+                result.classList.add("text-red-500");
+                result.innerHTML = json.message;
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              result.innerHTML = "Something went wrong!";
+            })
+            .then(function () {
+              form.reset();
+              form.classList.remove("was-validated");
+              setTimeout(() => {
+                result.style.display = "none";
+              }, 5000);
+            });
+        });
+      },
+      { once: true }
+    );
+  </script>
+</Layout>
+

@@ -3,7 +3,6 @@ import contentCityLatente from "@assets/images/ciudadLatente/IMG-20231125-WA0032
 import contentInhumano from "@assets/images/inhumano/IMG_20240406_211940.webp"
 import contentRetratoOval from "@assets/images/retratoOval/IMG-20221116-WA0011.webp";
 
-
 import slugImageLaCasaDeHojas1 from "@assets/images/casaHojas/IMG_1010.webp";
 import slugImageLaCasaDeHojas2 from "@assets/images/casaHojas/IMG_1004.webp";
 import slugImageLaCasaDeHojas3 from "@assets/images/casaHojas/IMG_1056.webp";
@@ -107,9 +106,85 @@ const slugImagesRetratoOval = [
   },
 ];
 
+// Función para obtener datos de proyectos con traducciones
+export function getContentProjects(t: (key: string) => string, lang: string) {
+  return [
+    {
+      id: "la-casa-de-hojas",
+      projectTitleHTML: t('project.casa-hojas.title'),
+      description: t('project.casa-hojas.description'),
+      href: `${lang === 'es' ? '' : '/' + lang}/portfolio/la-casa-de-hojas`,
+      image: {
+        src: contentLeafHouse,
+        alt: "Beautiful landscape with a lake and mountains",
+      },
+    },
+    {
+      id: "ciudad-latente",
+      projectTitleHTML: t('project.ciudad-latente.title'),
+      description: t('project.ciudad-latente.description'),
+      href: `${lang === 'es' ? '' : '/' + lang}/portfolio/ciudad-latente`,
+      image: {
+        src: contentCityLatente,
+        alt: "Sandy beach with turquoise water",
+      },
+    },
+    {
+      id: "inhumano",
+      projectTitleHTML: t('project.inhumano.title'),
+      description: t('project.inhumano.description'),
+      href: `${lang === 'es' ? '' : '/' + lang}/portfolio/inhumano`,
+      image: {
+        src: contentInhumano,
+        alt: "Cute pug dog looking at the camera",
+      },
+    },
+    {
+      id: "retrato-oval",
+      projectTitleHTML: t('project.retrato-oval.title'),
+      description: t('project.retrato-oval.description'),
+      href: `${lang === 'es' ? '' : '/' + lang}/portfolio/retrato-oval`,
+      image: {
+        src: contentRetratoOval,
+        alt: "Beautiful landscape with a lake and mountains",
+      },
+    },
+  ];
+}
+
+export function getSlugProjects(t: (key: string) => string) {
+  return [
+    {
+      id: "la-casa-de-hojas",
+      projectTitle: t('project.casa-hojas.title'),
+      description: t('project.casa-hojas.description'),
+      images: slugImagesLaCasaDeHojas
+    },
+    {
+      id: "ciudad-latente",
+      projectTitle: t('project.ciudad-latente.title'),
+      description: t('project.ciudad-latente.description'),
+      images: slugImagesCiudadLatente
+    },
+    {
+      id: "inhumano",
+      projectTitle: t('project.inhumano.title'),
+      description: t('project.inhumano.description'),
+      images: slugImagesInhumano,
+      video: slugVideoInhumano
+    },
+    {
+      id: "retrato-oval",
+      projectTitle: t('project.retrato-oval.title'),
+      description: t('project.retrato-oval.description'),
+      images: slugImagesRetratoOval
+    },
+  ];
+}
+
+// Mantener exportaciones por compatibilidad (serán reemplazadas gradualmente)
 export const portfolioSectionTitle = "Elevando narrativas visuales";
-export const portfolioSectionSubtitle =
-"Embárcate en un viaje de diseño que trasciende los píxeles y te adentra en el mundo de la imaginación. Explora mi portafolio, donde la pasión y la creatividad convergen para crear narrativas visuales cautivadoras.";
+export const portfolioSectionSubtitle = "Embárcate en un viaje de diseño que trasciende los píxeles y te adentra en el mundo de la imaginación. Explora mi portafolio, donde la pasión y la creatividad convergen para crear narrativas visuales cautivadoras.";
 
 export const ContentProjects = [
   {

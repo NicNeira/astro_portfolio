@@ -5,25 +5,37 @@ import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 
 import type { MetaData } from "@utils/types";
+import { getLangFromUrl, useTranslations } from "@utils/i18n";
 
 export interface Props {
   metadata?: MetaData;
 }
 
 const { metadata } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Construir rutas según el idioma
+const basePrefix = lang === "es" ? "" : "/" + lang;
 ---
 
 <Layout metadata={metadata}>
   <slot name="header">
     <Header
       links={[
-        { text: "Inicio", href: "/#" },
-        { text: "Sobre mí", href: "/#about" },
-        { text: "Currículum", href: "/#resume" },
-        { text: "Habilidades", href: "/#skills" },
-        { text: "Portafolio", href: "/#porfolio" },
+        { text: t("nav.home"), href: `${basePrefix}/#` },
+        { text: t("about.title"), href: `${basePrefix}/#about` },
+        { text: t("experience.title"), href: `${basePrefix}/#resume` },
+        { text: t("skills.title"), href: `${basePrefix}/#skills` },
+        { text: t("nav.portfolio"), href: `${basePrefix}/#porfolio` },
       ]}
-      actions={[{ text: "Contactame", href: "/contact", variant: "primary" }]}
+      actions={[
+        {
+          text: t("nav.contact"),
+          href: `${basePrefix}/contact`,
+          variant: "primary",
+        },
+      ]}
       isSticky
       showRssFeed
       showToggleTheme
