@@ -34,6 +34,14 @@ const getKamtchatkaImageUrl = (index: number) => {
   return `${AZURE_KAMTCHATKA_BASE_URL}/kamtchatka%20(${index}).jpg`;
 };
 
+// Configuración de imágenes de trabajos extras desde Azure Storage
+const AZURE_EXTRA_WORKS_BASE_URL = "https://maxistorage.blob.core.windows.net/assets/extra-works";
+
+// Función para codificar correctamente las URLs de las imágenes de trabajos extras
+const getExtraWorkImageUrl = (index: number) => {
+  return `${AZURE_EXTRA_WORKS_BASE_URL}/trabajos-extras%20(${index}).jpg`;
+};
+
 const contentKamtchatka = {
   src: getKamtchatkaImageUrl(1),
   width: 1920,
@@ -44,6 +52,14 @@ const contentKamtchatka = {
 const slugImagesKamtchatka = Array.from({ length: 14 }, (_, index) => ({
   src: getKamtchatkaImageUrl(index + 1),
   alt: `Kamtchatka - Imagen ${index + 1}`,
+  width: 1920,
+  height: 1080,
+}));
+
+// Generar array de imágenes de trabajos extras (1-8)
+const extraWorksImages = Array.from({ length: 8 }, (_, index) => ({
+  src: getExtraWorkImageUrl(index + 1),
+  alt: `Trabajo extra ${index + 1}`,
   width: 1920,
   height: 1080,
 }));
@@ -220,6 +236,11 @@ export function getSlugProjects(t: (key: string) => string) {
       images: slugImagesKamtchatka
     },
   ];
+}
+
+// Función para obtener las imágenes de trabajos extras
+export function getExtraWorksImages() {
+  return extraWorksImages;
 }
 
 // Exportaciones por compatibilidad (pueden ser removidas en el futuro)

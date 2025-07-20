@@ -108,6 +108,10 @@ export const translations = {
     // General
     'general.view-project': 'Ver proyecto',
     'general.description': 'Description:',
+    
+    // Other Works Section
+    'other-works.title': 'Otros trabajos',
+    'other-works.subtitle': 'Una colección de trabajos adicionales que reflejan mi versatilidad y exploración creativa.',
 
     // About me
     'about.title': 'Sobre mí',
@@ -239,6 +243,10 @@ export const translations = {
     // General
     'general.view-project': 'View project',
     'general.description': 'Description:',
+    
+    // Other Works Section
+    'other-works.title': 'Other works',
+    'other-works.subtitle': 'A collection of additional works that reflect my versatility and creative exploration.',
 
     // About me
     'about.title': 'About me',
@@ -370,6 +378,10 @@ export const translations = {
     // General
     'general.view-project': 'Projekt ansehen',
     'general.description': 'Beschreibung:',
+    
+    // Other Works Section
+    'other-works.title': 'Andere Arbeiten',
+    'other-works.subtitle': 'Eine Sammlung zusätzlicher Arbeiten, die meine Vielseitigkeit und kreative Erkundung widerspiegeln.',
 
     // About me
     'about.title': 'Über mich',

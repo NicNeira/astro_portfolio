@@ -9,7 +9,7 @@ import Layout from "@layouts/PageLayout.astro";
 import ProfilePhoto from "../../assets/images/profile.jpg";
 import AboutPhoto from "../../assets/images/about.jpg";
 
-import { getContentProjects } from "@utils/projectsData";
+import { getContentProjects, getExtraWorksImages } from "@utils/projectsData";
 import { useTranslations } from "@utils/i18n";
 
 const lang = "en";
@@ -27,6 +27,10 @@ const metadata = {
 const ContentProjects = getContentProjects(t, lang);
 const portfolioSectionTitle = t("portfolio.title");
 const portfolioSectionSubtitle = t("portfolio.subtitle");
+
+const extraWorksImages = getExtraWorksImages();
+const otherWorksTitle = t("other-works.title");
+const otherWorksSubtitle = t("other-works.subtitle");
 ---
 
 <Layout metadata={metadata}>
@@ -244,6 +248,42 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
       </Content>
     ))
   }
+
+  <!-- Other Works Section *********** -->
+  <section class="py-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight dark:text-white mb-4"
+        >
+          {otherWorksTitle}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          {otherWorksSubtitle}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          extraWorksImages.map((image, index) => (
+            <div
+              class="aspect-video overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image hover:scale-105 transition-transform duration-300"
+              data-index={index}
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                width={image.width || 1920}
+                height={image.height || 1080}
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 
   <!-- CallToAction Widget *********** -->
   <CallToAction
