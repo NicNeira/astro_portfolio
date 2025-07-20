@@ -3,7 +3,6 @@ import { Image } from "astro:assets";
 
 import Headline from "@components/ui/Headline.astro";
 import WidgetWrapper from "@components/ui/WidgetWrapper.astro";
-import ItemGrid from "@components/ui/ItemGrid.astro";
 import Button from "./ui/Button.astro";
 import ImageCarousel from "@components/ui/ImageCarousel.astro"; // Importar ImageCarousel
 import type { Item } from "@utils/types";
@@ -135,8 +134,8 @@ const hasVideo = isVideoObject || isVideoString;
                     class="w-full h-full object-cover object-center"
                     src={image.src}
                     alt={image.alt || ""}
-                    width={Math.min(image.width || 600, 600)}
-                    height={Math.min(image.height || 400, 400)}
+                    width={image.width || 600}
+                    height={image.height || 400}
                     loading="lazy"
                     decoding="async"
                     sizes="(max-width: 768px) 100vw, 50vw"

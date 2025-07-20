@@ -60,6 +60,8 @@ const metadata = {
             <Image
               src={project.images[0].src}
               alt={project.images[0].alt}
+              width={project.images[0].width || 1920}
+              height={project.images[0].height || 1080}
               class="w-full h-full object-cover"
             />
           </div>
@@ -88,6 +90,8 @@ const metadata = {
               <Image
                 src={image.src}
                 alt={image.alt}
+                width={image.width || 1920}
+                height={image.height || 1080}
                 class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
               />
             </div>
@@ -246,4 +250,3 @@ const metadata = {
     backdrop-filter: blur(5px);
   }
 </style>
-

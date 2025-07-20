@@ -26,6 +26,28 @@ import slugImageRetratoOval4 from "@assets/images/retratoOval/IMG_20221017_21495
 
 const slugVideoInhumano = "https://www.youtube-nocookie.com/embed/WHOU6y4KiHo?si=gCuMb6C1rXqnsFGV";
 
+// Configuración de imágenes de Kamtchatka desde Azure Storage
+const AZURE_KAMTCHATKA_BASE_URL = "https://maxistorage.blob.core.windows.net/assets/kamtchatka";
+
+// Función para codificar correctamente las URLs de las imágenes
+const getKamtchatkaImageUrl = (index: number) => {
+  return `${AZURE_KAMTCHATKA_BASE_URL}/kamtchatka%20(${index}).jpg`;
+};
+
+const contentKamtchatka = {
+  src: getKamtchatkaImageUrl(1),
+  width: 1920,
+  height: 1080,
+};
+
+// Generar array de imágenes de Kamtchatka (1-14)
+const slugImagesKamtchatka = Array.from({ length: 14 }, (_, index) => ({
+  src: getKamtchatkaImageUrl(index + 1),
+  alt: `Kamtchatka - Imagen ${index + 1}`,
+  width: 1920,
+  height: 1080,
+}));
+
 const slugImagesLaCasaDeHojas = [
   {
     src: slugImageLaCasaDeHojas1,
@@ -155,8 +177,10 @@ export function getContentProjects(t: (key: string) => string, lang: string) {
       description: t('project.kamtchatka.description'),
       href: `${lang === 'es' ? '' : '/' + lang}/portfolio/kamtchatka`,
       image: {
-        src: contentRetratoOval,
-        alt: "Beautiful landscape with a lake and mountains",
+        src: contentKamtchatka.src,
+        alt: "Kamtchatka - Proyecto audiovisual",
+        width: contentKamtchatka.width,
+        height: contentKamtchatka.height,
       },
     },
   ];
@@ -167,78 +191,37 @@ export function getSlugProjects(t: (key: string) => string) {
     {
       id: "la-casa-de-hojas",
       projectTitle: t('project.casa-hojas.title'),
-      description: t('project.casa-hojas.description'),
+      description: t('project.casa-hojas.full-description'),
       images: slugImagesLaCasaDeHojas
     },
     {
       id: "ciudad-latente",
       projectTitle: t('project.ciudad-latente.title'),
-      description: t('project.ciudad-latente.description'),
+      description: t('project.ciudad-latente.full-description'),
       images: slugImagesCiudadLatente
     },
     {
       id: "inhumano",
       projectTitle: t('project.inhumano.title'),
-      description: t('project.inhumano.description'),
+      description: t('project.inhumano.full-description'),
       images: slugImagesInhumano,
       video: slugVideoInhumano
     },
     {
       id: "retrato-oval",
       projectTitle: t('project.retrato-oval.title'),
-      description: t('project.retrato-oval.description'),
+      description: t('project.retrato-oval.full-description'),
       images: slugImagesRetratoOval
     },
     {
       id: "kamtchatka",
       projectTitle: t('project.kamtchatka.title'),
-      description: t('project.kamtchatka.description'),
-      images: slugImagesRetratoOval
+      description: t('project.kamtchatka.full-description'),
+      images: slugImagesKamtchatka
     },
   ];
 }
 
-// Mantener exportaciones por compatibilidad (serán reemplazadas gradualmente)
+// Exportaciones por compatibilidad (pueden ser removidas en el futuro)
 export const portfolioSectionTitle = "Elevando narrativas visuales";
 export const portfolioSectionSubtitle = "Embárcate en un viaje de diseño que trasciende los píxeles y te adentra en el mundo de la imaginación. Explora mi portafolio, donde la pasión y la creatividad convergen para crear narrativas visuales cautivadoras.";
-
-
-
-export const SlugProjects = [
-  {
-    id: "la-casa-de-hojas",
-    projectTitle: "La Casa de Hojas",
-    description: `"La Casa de Hojas" es una instalación artística que explora la historia de un individuo cuya casa crece de manera expansiva y descontrolada con el paso del tiempo. A medida que los años transcurren, el residente descubre nuevos pasillos, habitaciones y pisos, cada uno con estilos arquitectónicos notablemente distintos. Esta narrativa refleja el crecimiento descontrolado de una ciudad o la urbanización a través de la experiencia de este personaje que habita en un espacio extraño y en constante cambio.`,
-      images: slugImagesLaCasaDeHojas
-  },
-  {
-    id: "ciudad-latente",
-    projectTitle: "Ciudad Latente",
-    description: `A través de un recorrido contemplativo observamos como el olvidado humedal de batuco es amenazado por la urbanización y la invasión del hombre guiado por una persona que nació y se crío en el pueblo. Para retratar esta amenaza se hizo uso del simbolismo, a traves de la creación de una maqueta que representará la ciudad capitalista y diversos elementos que generarán contra punto visual.`,
-    images: slugImagesCiudadLatente
-  },
-  {
-    id: "inhumano",
-    projectTitle: "Inhumano",
-    description: `El proyecto "Inhumano" es un cortometraje que planea mostrar lo más bajo del ser humano, por lo cual se usará un lenguaje visual enfocado en el ambiente y la atmósfera que produce la misma sobre el espectador. Para el lugar se barajaron varias ideas, pero se decidió por la idea más arriesgada, hacer la escenografía, reutilizando materiales, madera y pintura.
-
-        Para la ambientación se recurrió a materiales que dieran texturas pobre y vieja, se quería crear un ambiente descuidado y sucio. Tanto el espacio como la caracterización de los personajes, buscaban potenciar esta idea distopica y noir.`,
-    images: slugImagesInhumano,
-    video: slugVideoInhumano
-  },
-  {
-    id: "retrato-oval",
-    projectTitle: "Retrato Oval",
-    description: `Un estudiante de arcos busca contactar con el artista (Boisvert) que lo inspiro a dedicarse al cine y la animación, un viaje a la admiración que lentamente se transforma en obsesión con el paso de los días.
-
-        La escenografía está decorada por ilustraciones del artista mr.Doodle en combinación con las obras del mismismo Boisvert
-        El tratamiento se piensa en lo estético de la imagen, y en la importancia de este mundo que muchas veces se nos presenta en blanco y negro. Tanto la simbología de Boisvert y la estética de Doodle, profundizan con el relato, generándole forma y estructura visual acorde a lo que se quiere demostrar.`,
-    images: slugImagesRetratoOval
-  },
-  {
-    id: "kamtchatka",
-    projectTitle: "Kamtchatka",
-    description: `Gregorio, inmigrante ilegal, filma el suicidio de una mujer vendada en el mall Costanera; su cuerpo se fusiona grotescamente con ella y, atormentado y perseguido, regresa al lugar para grabar su propio salto al vacío.`,
-    images: slugImagesRetratoOval
-  },
-];
