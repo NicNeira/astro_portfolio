@@ -1,9 +1,10 @@
 ---
 import { Icon } from "astro-icon/components";
-import { languages, getLangFromUrl } from "@utils/i18n";
+import { languages, getLangFromUrl, useTranslations } from "@utils/i18n";
 
 const currentLang = getLangFromUrl(Astro.url);
 const currentPath = Astro.url.pathname;
+const t = useTranslations(currentLang);
 
 // Función para generar URLs de idiomas
 function getLocalizedPath(lang: string, currentPath: string) {
@@ -50,7 +51,7 @@ function getFlagEmoji(lang: string) {
       id="settings-menu"
       aria-expanded="false"
       aria-haspopup="true"
-      aria-label="Configuraciones"
+      aria-label={t("settings.menu")}
     >
       <Icon name="tabler:settings" class="w-5 h-5" />
     </button>
@@ -69,12 +70,12 @@ function getFlagEmoji(lang: string) {
       <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between">
           <span class="text-sm font-medium text-gray-700 dark:text-gray-200"
-            >Tema</span
+            >{t("settings.theme")}</span
           >
           <button
             type="button"
             class="theme-toggle-button inline-flex items-center justify-center w-8 h-8 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 hover:cursor-pointer transition-colors duration-200"
-            aria-label="Cambiar tema"
+            aria-label={t("settings.change-theme")}
           >
             <Icon name="tabler:sun" class="w-4 h-4 dark:hidden" />
             <Icon
@@ -89,7 +90,7 @@ function getFlagEmoji(lang: string) {
       <div class="px-4 py-2">
         <span
           class="text-sm font-medium text-gray-700 dark:text-gray-200 block mb-2"
-          >Idioma</span
+          >{t("settings.language")}</span
         >
         <div class="space-y-1">
           {
@@ -135,13 +136,8 @@ function getFlagEmoji(lang: string) {
 
   // Funcionalidad del dropdown de configuraciones
   function initSettingsButton() {
-    console.log("Initializing settings button...");
-
     const settingsButton = document.getElementById("settings-menu");
     const settingsDropdown = document.getElementById("settings-dropdown");
-
-    console.log("Settings button:", settingsButton);
-    console.log("Settings dropdown:", settingsDropdown);
 
     if (!settingsButton || !settingsDropdown) {
       console.error("Settings elements not found!");
@@ -164,19 +160,15 @@ function getFlagEmoji(lang: string) {
     newSettingsButton.addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
-      console.log("Settings button clicked!");
 
       const isHidden = settingsDropdown.classList.contains("hidden");
-      console.log("Is hidden:", isHidden);
 
       if (isHidden) {
         settingsDropdown.classList.remove("hidden");
         newSettingsButton.setAttribute("aria-expanded", "true");
-        console.log("Dropdown opened");
       } else {
         settingsDropdown.classList.add("hidden");
         newSettingsButton.setAttribute("aria-expanded", "false");
-        console.log("Dropdown closed");
       }
     });
 
@@ -184,16 +176,13 @@ function getFlagEmoji(lang: string) {
     const themeToggleButtons = settingsDropdown.querySelectorAll(
       ".theme-toggle-button"
     );
-    console.log("Theme buttons found:", themeToggleButtons.length);
 
     themeToggleButtons.forEach((button) => {
       button.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        console.log("Theme toggle clicked!");
 
         const currentTheme = localStorage.getItem("theme") || "light";
-        console.log("Current theme:", currentTheme);
 
         if (currentTheme === "dark") {
           applyTheme("light");
@@ -231,8 +220,6 @@ function getFlagEmoji(lang: string) {
         newSettingsButton.setAttribute("aria-expanded", "false");
       });
     });
-
-    console.log("Settings button initialized successfully!");
   }
 
   // Inicializar cuando el DOM esté listo

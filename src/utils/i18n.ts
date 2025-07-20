@@ -22,6 +22,7 @@ export const translations = {
     'hero.name': 'Maximiliano Neira',
     'hero.subtitle': 'Art Director – Actor – Filmmaker',
     'hero.description': 'Soy director de arte, actor y cineasta. Vivo en Santiago de Chile. Además de participar en cortometrajes y proyectos artísticos propios, comparto habitualmente contenido sobre diseño interior y arquitectura porque me interesa la estética de espacios y objetos. Actualmente estoy titulado de la carrera de Cinematografía y Producción de Cine y Video en el Instituto Profesional ARCOS',
+    'hero.download-cv': 'Descargar CV',
     
     // Portfolio Section
     'portfolio.title': 'Elevando narrativas visuales',
@@ -40,6 +41,9 @@ export const translations = {
     'project.retrato-oval.title': 'Retrato Oval',
     'project.retrato-oval.description': 'Un estudiante de arcos busca contactar con el artista (Boisvert) que lo inspiró a dedicarse al cine y la animación, un viaje a la admiración que lentamente se transforma en obsesión con el paso de los días.\n\nLa escenografía está decorada por ilustraciones del artista mr.Doodle en combinación con las obras del mismo Boisvert. El tratamiento se piensa en lo estético de la imagen, y en la importancia de este mundo que muchas veces se nos presenta en blanco y negro. Tanto la simbología de Boisvert y la estética de Doodle, profundizan con el relato, generándole forma y estructura visual acorde a lo que se quiere demostrar.',
     
+    'project.kamtchatka.title': 'Kamtchatka',
+    'project.kamtchatka.description': 'Gregorio, inmigrante ilegal, filma el suicidio de una mujer vendada en el mall Costanera; su cuerpo se fusiona grotescamente con ella y, atormentado y perseguido, regresa al lugar para grabar su propio salto al vacío.',
+
     // Contact
     'contact.title': 'Contacto',
     'contact.subtitle': 'Colaboremos juntos',
@@ -115,6 +119,12 @@ export const translations = {
     
     // Footer
     'footer.rights': 'Todos los derechos reservados.',
+    
+    // Settings
+    'settings.theme': 'Tema',
+    'settings.language': 'Idioma',
+    'settings.change-theme': 'Cambiar tema',
+    'settings.menu': 'Configuraciones',
   },
   
   en: {
@@ -132,6 +142,7 @@ export const translations = {
     'hero.name': 'Maximiliano Neira',
     'hero.subtitle': 'Art Director – Actor – Filmmaker',
     'hero.description': 'I am an art director, actor and filmmaker. I live in Santiago, Chile. In addition to participating in short films and my own artistic projects, I regularly share content about interior design and architecture because I am interested in the aesthetics of spaces and objects. I am currently graduated from the Cinematography and Film and Video Production career at the ARCOS Professional Institute',
+    'hero.download-cv': 'Download Resume',
     
     // Portfolio Section
     'portfolio.title': 'Elevating visual narratives',
@@ -149,6 +160,9 @@ export const translations = {
     
     'project.retrato-oval.title': 'Oval Portrait',
     'project.retrato-oval.description': 'An Arcos student seeks to contact the artist (Boisvert) who inspired him to dedicate himself to cinema and animation, a journey of admiration that slowly transforms into obsession as the days pass.\n\nThe scenery is decorated by illustrations by artist mr.Doodle in combination with works by Boisvert himself. The treatment is thought of in terms of the aesthetics of the image, and the importance of this world that is often presented to us in black and white. Both Boisvert\'s symbolism and Doodle\'s aesthetics deepen the story, giving it visual form and structure according to what we want to demonstrate.',
+
+    'project.kamtchatka.title': 'Kamtchatka',
+    'project.kamtchatka.description': 'Gregorio, an illegal immigrant, films the suicide of a bandaged woman in the Costanera mall; his body grotesquely merges with hers and, tormented and haunted, he returns to the site to record his own leap into the void.',
     
     // Contact
     'contact.title': 'Contact',
@@ -225,6 +239,12 @@ export const translations = {
     
     // Footer
     'footer.rights': 'All rights reserved.',
+    
+    // Settings
+    'settings.theme': 'Theme',
+    'settings.language': 'Language',
+    'settings.change-theme': 'Change theme',
+    'settings.menu': 'Settings'
   },
   
   de: {
@@ -242,6 +262,7 @@ export const translations = {
     'hero.name': 'Maximiliano Neira',
     'hero.subtitle': 'Art Director – Schauspieler – Filmemacher',
     'hero.description': 'Ich bin Art Director, Schauspieler und Filmemacher. Ich lebe in Santiago, Chile. Neben der Teilnahme an Kurzfilmen und eigenen künstlerischen Projekten teile ich regelmäßig Inhalte über Innenarchitektur und Architektur, weil mich die Ästhetik von Räumen und Objekten interessiert. Ich bin derzeit Absolvent des Studiengangs Kinematographie und Film- und Videoproduktion am ARCOS Professional Institute',
+    'hero.download-cv': 'Lebenslauf herunterladen',
     
     // Portfolio Section
     'portfolio.title': 'Visuelle Narrative erheben',
@@ -259,6 +280,9 @@ export const translations = {
     
     'project.retrato-oval.title': 'Ovales Porträt',
     'project.retrato-oval.description': 'Ein Arcos-Student versucht, den Künstler (Boisvert) zu kontaktieren, der ihn dazu inspirierte, sich dem Kino und der Animation zu widmen, eine Reise der Bewunderung, die sich mit den Tagen langsam in Obsession verwandelt.\n\nDie Szenerie ist mit Illustrationen des Künstlers mr.Doodle in Kombination mit Werken von Boisvert selbst dekoriert. Die Behandlung wird in Bezug auf die Ästhetik des Bildes und die Bedeutung dieser Welt gedacht, die uns oft in Schwarz und Weiß präsentiert wird. Sowohl Boisverts Symbolik als auch Doodles Ästhetik vertiefen die Geschichte und geben ihr visuelle Form und Struktur entsprechend dem, was wir zeigen wollen.',
+
+    'project.kamtchatka.title': 'Kamtchatka',
+    'project.kamtchatka.description': 'Gregorio, ein illegaler Einwanderer, filmt den Selbstmord einer bandagierten Frau im Einkaufszentrum Costanera; sein Körper verschmilzt auf groteske Weise mit ihrem und, gequält und verfolgt, kehrt er an den Ort zurück, um seinen eigenen Sprung in die Tiefe aufzunehmen.',
     
     // Contact
     'contact.title': 'Kontakt',
@@ -335,6 +359,12 @@ export const translations = {
     
     // Footer
     'footer.rights': 'Alle Rechte vorbehalten.',
+    
+    // Settings
+    'settings.theme': 'Design',
+    'settings.language': 'Sprache',
+    'settings.change-theme': 'Design ändern',
+    'settings.menu': 'Einstellungen'
   }
 } as const;
 
