@@ -2,6 +2,7 @@
 import BasicScripts from "@components/common/BasicScripts.astro";
 import "../styles/global.css";
 import ApplyColorMode from "@components/common/ApplyColorMode.astro";
+import AnimatedBackground from "@components/ui/AnimatedBackground.astro";
 import { ClientRouter } from "astro:transitions";
 import type { MetaData } from "@utils/types";
 
@@ -56,8 +57,9 @@ const description = metadata?.description || defaultDescription;
     <ClientRouter />
   </head>
   <body
-    class="antialiased text-default tracking-tight bg-page dark:bg-gradient-to-br from-[#000000] to-[#021530] transition-colors duration-400"
+    class="antialiased text-default tracking-tight bg-page dark:bg-[#010b1a]"
   >
+    <AnimatedBackground />
     <slot />
 
     <BasicScripts />

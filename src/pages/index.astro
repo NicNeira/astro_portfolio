@@ -309,16 +309,20 @@ const otherWorksSubtitle = t("other-works.subtitle");
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2
-          class="text-3xl md:text-4xl font-bold tracking-tight dark:text-white mb-4"
+          class="text-3xl md:text-4xl font-bold tracking-tight dark:text-white mb-4 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
         >
           {otherWorksTitle}
         </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        <p
+          class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+        >
           {otherWorksSubtitle}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+      >
         {
           extraWorksImages.map((image, index) => (
             <div

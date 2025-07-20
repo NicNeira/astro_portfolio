@@ -1,0 +1,369 @@
+---
+// Componente de fondo animado con shader WebGL2
+---
+
+<canvas
+  id="animated-background"
+  class="fixed inset-0 w-full h-full -z-10 opacity-[0.02] dark:opacity-[0.03] pointer-events-none"
+></canvas>
+
+<script>
+  /*********
+   * Adaptado de Matthias Hurrle (@atzedent)
+   * Modificado para tema claro/oscuro
+   */
+
+  let canvas: HTMLCanvasElement | null = null;
+  let gl: WebGL2RenderingContext | null = null;
+
+  function getCanvasAndContext() {
+    canvas = document.getElementById(
+      "animated-background"
+    ) as HTMLCanvasElement;
+    if (!canvas) {
+      console.warn("AnimatedBackground: Canvas not found");
+      return false;
+    }
+
+    gl = canvas.getContext("webgl2");
+    if (!gl) {
+      console.warn("AnimatedBackground: WebGL2 not supported");
+      return false;
+    }
+
+    return true;
+  }
+
+  const dpr = window.devicePixelRatio || 1;
+
+  const vertexSource = `#version 300 es
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+
+in vec2 position;
+
+void main(void) {
+    gl_Position = vec4(position, 0., 1.);
+}
+`;
+
+  const fragmentSource = `#version 300 es
+/*********
+* made by Matthias Hurrle (@atzedent)
+* modified for light/dark theme support
+*/
+
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+
+out vec4 fragColor;
+
+uniform vec2 resolution;
+uniform float time;
+uniform bool isDarkMode;
+
+#define S smoothstep
+#define T .112358+time
+
+float rnd(vec2 p) {
+	return fract(
+		sin(
+			dot(
+				p,
+        vec2(12.9898, 78.233)
+      )
+    )*43758.5453123
+  );
+}
+
+float noise(vec2 p) {
+	vec2 f=fract(p), i=floor(p);
+	float
+	a=rnd(i),
+	b=rnd(i+vec2(1,0)),
+	c=rnd(i+vec2(0,1)),
+	d=rnd(i+vec2(1,1));
+
+	vec2 u = f*f*(3.-2.*f);
+
+	return mix(a,b,u.x)+
+		(c-a)*u.y*(1.-u.x)+
+		(d-b)*u.y*u.x;
+}
+
+void main(void) {
+	vec2 uv = (
+		gl_FragCoord.xy -.5 * resolution.xy
+	)/min(resolution.x, resolution.y);
+
+	float t = T*.1;
+	vec3 col = vec3(0);
+	vec2 p = vec2(0);
+	p.x = noise(uv+vec2(0,1));
+	p.y = noise(uv+vec2(1,0));
+
+	p = 8.*(
+		vec2(
+			sin(t),
+			-cos(t)
+		)*.15-p
+	);
+
+	float s = .35;
+	
+	for(float i=.0;i<6.;i++) {
+		p.x += s*sin(2.*t-i*1.5*p.y)+t;
+		p.y += s*cos(2.*t+i*1.5*p.x)-t;
+	}
+
+	col+= sin(t+p.x+p.y);
+	col = pow(S(vec3(0),vec3(1),col), vec3(.4));
+	col = mix(vec3(.7,.6,.4)*col, col, col);
+
+	// Removido el efecto de animación desde el centro
+	// para mantener un patrón fluido constante 
+
+	// Adaptación para tema claro/oscuro
+	if (isDarkMode) {
+		// Tema oscuro: líneas blancas sobre fondo negro
+		col = col;
+	} else {
+		// Tema claro: líneas negras sobre fondo blanco  
+		col = 1.0 - col;
+	}
+
+	fragColor = vec4(col, 1.0);
+}
+`;
+
+  interface WebGLResources {
+    time: WebGLUniformLocation | null;
+    buffer: WebGLBuffer | null;
+    program: WebGLProgram | null;
+    resolution: WebGLUniformLocation | null;
+    isDarkMode: WebGLUniformLocation | null;
+    vertices: number[];
+  }
+
+  let resources: WebGLResources = {
+    time: null,
+    buffer: null,
+    program: null,
+    resolution: null,
+    isDarkMode: null,
+    vertices: [],
+  };
+
+  let animationId: number | null = null;
+  let isInitialized = false;
+
+  function resize() {
+    if (!canvas || !gl) return;
+
+    const { innerWidth: width, innerHeight: height } = window;
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
+    gl.viewport(0, 0, width * dpr, height * dpr);
+  }
+
+  function compile(shader: WebGLShader, source: string) {
+    if (!gl) return;
+
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(shader));
+    }
+  }
+
+  function isDarkTheme(): boolean {
+    // Verificar múltiples fuentes para asegurar detección correcta del tema
+    const htmlElement = document.documentElement;
+    const hasClass = htmlElement.classList.contains("dark");
+
+    // Fallback: verificar también el atributo data-theme si existe
+    const dataTheme = htmlElement.getAttribute("data-theme");
+
+    return hasClass || dataTheme === "dark";
+  }
+
+  function setup() {
+    if (!gl) return;
+
+    const vs = gl.createShader(gl.VERTEX_SHADER);
+    const fs = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!vs || !fs) return;
+
+    resources.program = gl.createProgram();
+    if (!resources.program) return;
+
+    compile(vs, vertexSource);
+    compile(fs, fragmentSource);
+
+    gl.attachShader(resources.program, vs);
+    gl.attachShader(resources.program, fs);
+    gl.linkProgram(resources.program);
+
+    if (!gl.getProgramParameter(resources.program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(resources.program));
+    }
+
+    resources.vertices = [
+      -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
+    ];
+
+    resources.buffer = gl.createBuffer();
+    if (!resources.buffer) return;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, resources.buffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array(resources.vertices),
+      gl.STATIC_DRAW
+    );
+
+    const position = gl.getAttribLocation(resources.program, "position");
+
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+    resources.time = gl.getUniformLocation(resources.program, "time");
+    resources.resolution = gl.getUniformLocation(
+      resources.program,
+      "resolution"
+    );
+    resources.isDarkMode = gl.getUniformLocation(
+      resources.program,
+      "isDarkMode"
+    );
+  }
+
+  function draw(now: number) {
+    if (!gl || !canvas || !resources.program || !resources.buffer) return;
+
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    gl.useProgram(resources.program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, resources.buffer);
+
+    gl.uniform1f(resources.time, now * 0.001);
+    gl.uniform2f(resources.resolution, canvas.width, canvas.height);
+    gl.uniform1i(resources.isDarkMode, isDarkTheme() ? 1 : 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, resources.vertices.length * 0.5);
+  }
+
+  function loop(now: number) {
+    if (!isInitialized) return;
+
+    draw(now);
+    animationId = requestAnimationFrame(loop);
+  }
+
+  function cleanup() {
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    isInitialized = false;
+  }
+
+  function init() {
+    try {
+      // Cleanup anterior si existe
+      cleanup();
+
+      setup();
+      resize();
+      isInitialized = true;
+      loop(0);
+    } catch (error) {
+      console.warn("AnimatedBackground: Error during initialization", error);
+      isInitialized = false;
+    }
+  }
+
+  function safeInit() {
+    // Esperar un poco para asegurar que el DOM y los temas estén listos
+    setTimeout(() => {
+      if (!isInitialized && getCanvasAndContext()) {
+        init();
+      } else {
+        // Reintentar una vez más si falla
+        setTimeout(() => {
+          if (!isInitialized && getCanvasAndContext()) {
+            init();
+          }
+        }, 200);
+      }
+    }, 100);
+  }
+
+  // Inicialización robusta
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", safeInit);
+  } else if (document.readyState === "interactive") {
+    // DOM listo pero recursos aún cargando
+    setTimeout(safeInit, 50);
+  } else {
+    // DOM completamente listo
+    safeInit();
+  }
+
+  // Redimensionar cuando cambie el tamaño de ventana
+  window.addEventListener("resize", () => {
+    if (canvas && gl) {
+      resize();
+    }
+  });
+
+  // Escuchar cambios de tema con mejor manejo
+  const themeObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (
+        mutation.type === "attributes" &&
+        mutation.attributeName === "class"
+      ) {
+        // El shader se actualiza automáticamente en el próximo frame con el nuevo tema
+      }
+    });
+  });
+
+  // Observar cambios en el elemento html para detectar cambios de tema
+  if (document.documentElement) {
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
+  // Limpiar antes de navegación
+  document.addEventListener("astro:before-preparation", cleanup);
+  document.addEventListener("astro:before-swap", cleanup);
+
+  // Reinicializar después de navegación
+  document.addEventListener("astro:page-load", () => {
+    setTimeout(() => {
+      if (getCanvasAndContext()) {
+        safeInit();
+      }
+    }, 100);
+  });
+
+  // Fallback para navegación manual
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!isInitialized) {
+      safeInit();
+    }
+  });
+</script>
