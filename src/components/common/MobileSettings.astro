@@ -1,0 +1,184 @@
+---
+import { Icon } from "astro-icon/components";
+import { languages, getLangFromUrl, useTranslations } from "@utils/i18n";
+
+const currentLang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+const t = useTranslations(currentLang);
+
+// Función para generar URLs de idiomas (igual que en SettingsButton)
+function getLocalizedPath(lang: string, currentPath: string) {
+  const pathSegments = currentPath.split("/").filter(Boolean);
+
+  if (pathSegments[0] && pathSegments[0] in languages) {
+    pathSegments[0] = lang;
+  } else if (lang !== "es") {
+    pathSegments.unshift(lang);
+  }
+
+  if (lang === "es") {
+    return (
+      "/" + pathSegments.filter((segment) => !(segment in languages)).join("/")
+    );
+  }
+
+  return "/" + pathSegments.join("/");
+}
+
+function getFlagEmoji(lang: string) {
+  switch (lang) {
+    case "es":
+      return "🇪🇸";
+    case "en":
+      return "🇺🇸";
+    case "de":
+      return "🇩🇪";
+    default:
+      return "🌐";
+  }
+}
+---
+
+<div class="w-full" data-mobile-settings-root>
+  <button
+    type="button"
+    class="w-full flex items-center justify-between px-4 py-3 rounded-lg text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+    data-mobile-settings-toggle
+    aria-expanded="false"
+    aria-controls="mobile-settings-panel"
+  >
+    <span class="flex items-center gap-2">
+      <Icon name="tabler:settings" class="w-5 h-5" />
+      <span class="font-medium">{t("settings.menu")}</span>
+    </span>
+    <Icon
+      name="tabler:chevron-down"
+      class="w-5 h-5 transition-transform duration-200"
+    />
+  </button>
+
+  <div
+    id="mobile-settings-panel"
+    class="mt-2 space-y-4 px-2 py-2 hidden"
+    role="region"
+  >
+    <!-- Tema -->
+    <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-200"
+          >{t("settings.theme")}</span
+        >
+        <button
+          type="button"
+          class="theme-toggle-button inline-flex items-center justify-center w-10 h-10 rounded-md bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          aria-label={t("settings.change-theme")}
+        >
+          <Icon name="tabler:sun" class="w-5 h-5 dark:hidden" />
+          <Icon
+            name="tabler:moon"
+            class="w-5 h-5 hidden dark:inline-block dark:text-white"
+          />
+        </button>
+      </div>
+    </div>
+
+    <!-- Idioma -->
+    <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+      <span
+        class="text-sm font-medium text-gray-700 dark:text-gray-200 block mb-2"
+        >{t("settings.language")}</span
+      >
+      <div class="space-y-1">
+        {
+          Object.entries(languages).map(([lang, name]) => (
+            <a
+              href={getLocalizedPath(lang, currentPath)}
+              class={`${
+                currentLang === lang
+                  ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              } group flex items-center px-3 py-2 text-sm rounded-md transition-colors cursor-pointer`}
+            >
+              <span class="text-lg mr-3">{getFlagEmoji(lang)}</span>
+              <span class="flex-1">{name}</span>
+              {currentLang === lang && (
+                <Icon
+                  name="tabler:check"
+                  class="w-4 h-4 text-indigo-600 dark:text-indigo-400"
+                />
+              )}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function applyTheme(theme: string): void {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }
+
+  function initMobileSettings() {
+    document.querySelectorAll("[data-mobile-settings-root]").forEach((root) => {
+      const container = root as HTMLElement;
+      if (container.dataset.initialized === "true") return;
+      container.dataset.initialized = "true";
+
+      const toggle = container.querySelector(
+        "[data-mobile-settings-toggle]"
+      ) as HTMLButtonElement | null;
+      const panel = container.querySelector(
+        "#mobile-settings-panel"
+      ) as HTMLElement | null;
+      if (!toggle || !panel) return;
+
+      toggle.addEventListener("click", (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        if (expanded) {
+          panel.classList.add("hidden");
+          toggle.setAttribute("aria-expanded", "false");
+          toggle
+            .querySelector("svg:last-child")
+            ?.classList.remove("rotate-180");
+        } else {
+          panel.classList.remove("hidden");
+          toggle.setAttribute("aria-expanded", "true");
+          toggle.querySelector("svg:last-child")?.classList.add("rotate-180");
+        }
+      });
+
+      panel.querySelectorAll(".theme-toggle-button").forEach((btn) => {
+        (btn as HTMLButtonElement).addEventListener(
+          "click",
+          (e: MouseEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const currentTheme = localStorage.getItem("theme") || "light";
+            applyTheme(currentTheme === "dark" ? "light" : "dark");
+          }
+        );
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMobileSettings);
+  } else {
+    initMobileSettings();
+  }
+  document.addEventListener("astro:page-load", initMobileSettings);
+</script>
+
+<style>
+  /* El panel es inline, sin posicionamiento absoluto para quedarse dentro del menú móvil */
+</style>

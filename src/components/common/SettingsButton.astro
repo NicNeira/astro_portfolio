@@ -6,6 +6,11 @@ const currentLang = getLangFromUrl(Astro.url);
 const currentPath = Astro.url.pathname;
 const t = useTranslations(currentLang);
 
+// ID único por instancia para accesibilidad sin colisiones en DOM
+const uid = Math.random().toString(36).slice(2, 8);
+const buttonId = `settings-menu-${uid}`;
+const dropdownId = `settings-dropdown-${uid}`;
+
 // Función para generar URLs de idiomas
 function getLocalizedPath(lang: string, currentPath: string) {
   const pathSegments = currentPath.split("/").filter(Boolean);
@@ -43,15 +48,16 @@ function getFlagEmoji(lang: string) {
 }
 ---
 
-<div class="relative inline-block text-left">
+<div class="relative inline-block text-left" data-settings-root>
   <div>
     <button
       type="button"
       class="settings-toggle-button inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 dark:text-gray-400 hover:cursor-pointer focus:outline-none transition-all duration-200"
-      id="settings-menu"
+      id={buttonId}
       aria-expanded="false"
       aria-haspopup="true"
       aria-label={t("settings.menu")}
+      aria-controls={dropdownId}
     >
       <Icon name="tabler:settings" class="w-5 h-5" />
     </button>
@@ -59,10 +65,10 @@ function getFlagEmoji(lang: string) {
 
   <div
     class="settings-dropdown origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700 focus:outline-none hidden"
-    id="settings-dropdown"
+    id={dropdownId}
     role="menu"
     aria-orientation="vertical"
-    aria-labelledby="settings-menu"
+    aria-labelledby={buttonId}
     tabindex="-1"
   >
     <div class="py-2" role="none">
@@ -123,8 +129,8 @@ function getFlagEmoji(lang: string) {
 </div>
 
 <script>
-  // Función para aplicar el tema
-  function applyTheme(theme) {
+  // Tema
+  function applyTheme(theme: string): void {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -134,104 +140,129 @@ function getFlagEmoji(lang: string) {
     }
   }
 
-  // Funcionalidad del dropdown de configuraciones
-  function initSettingsButton() {
-    const settingsButton = document.getElementById("settings-menu");
-    const settingsDropdown = document.getElementById("settings-dropdown");
-
-    if (!settingsButton || !settingsDropdown) {
-      console.error("Settings elements not found!");
-      return;
+  function closeDropdown(container: HTMLElement): void {
+    const btn = container.querySelector(
+      ".settings-toggle-button"
+    ) as HTMLButtonElement | null;
+    const dd = container.querySelector(
+      ".settings-dropdown"
+    ) as HTMLElement | null;
+    if (dd && !dd.classList.contains("hidden")) {
+      dd.classList.add("hidden");
+      btn?.setAttribute("aria-expanded", "false");
     }
+  }
 
-    // Remover listeners existentes para evitar duplicados
-    const oldButton = settingsButton.cloneNode(true);
-    settingsButton.parentNode.replaceChild(oldButton, settingsButton);
+  function openDropdown(container: HTMLElement): void {
+    const btn = container.querySelector(
+      ".settings-toggle-button"
+    ) as HTMLButtonElement | null;
+    const dd = container.querySelector(
+      ".settings-dropdown"
+    ) as HTMLElement | null;
+    if (dd && dd.classList.contains("hidden")) {
+      // Cerrar otros abiertos antes de abrir este
+      document
+        .querySelectorAll(
+          "[data-settings-root] .settings-dropdown:not(.hidden)"
+        )
+        .forEach((other: Element) => {
+          const c = (other as HTMLElement).closest("[data-settings-root]");
+          if (c && c !== container) closeDropdown(c as HTMLElement);
+        });
 
-    // Obtener la nueva referencia
-    const newSettingsButton = document.getElementById("settings-menu");
-
-    if (!newSettingsButton) {
-      console.error("Could not get new settings button reference");
-      return;
+      dd.classList.remove("hidden");
+      btn?.setAttribute("aria-expanded", "true");
     }
+  }
+
+  function initOne(container: HTMLElement): void {
+    if ((container as HTMLElement).dataset.initialized === "true") return;
+
+    const settingsButton = container.querySelector(
+      ".settings-toggle-button"
+    ) as HTMLButtonElement | null;
+    const settingsDropdown = container.querySelector(
+      ".settings-dropdown"
+    ) as HTMLElement | null;
+    if (!settingsButton || !settingsDropdown) return;
+
+    (container as HTMLElement).dataset.initialized = "true";
 
     // Toggle del dropdown de configuraciones
-    newSettingsButton.addEventListener("click", function (e) {
+    settingsButton.addEventListener("click", function (e: MouseEvent) {
       e.preventDefault();
       e.stopPropagation();
-
       const isHidden = settingsDropdown.classList.contains("hidden");
-
       if (isHidden) {
-        settingsDropdown.classList.remove("hidden");
-        newSettingsButton.setAttribute("aria-expanded", "true");
+        openDropdown(container as HTMLElement);
       } else {
-        settingsDropdown.classList.add("hidden");
-        newSettingsButton.setAttribute("aria-expanded", "false");
+        closeDropdown(container as HTMLElement);
       }
     });
 
-    // Funcionalidad del toggle de tema
+    // Toggle de tema
     const themeToggleButtons = settingsDropdown.querySelectorAll(
       ".theme-toggle-button"
     );
+    themeToggleButtons.forEach((button: Element) => {
+      (button as HTMLButtonElement).addEventListener(
+        "click",
+        function (e: MouseEvent) {
+          e.preventDefault();
+          e.stopPropagation();
+          const currentTheme = localStorage.getItem("theme") || "light";
+          applyTheme(currentTheme === "dark" ? "light" : "dark");
+        }
+      );
+    });
 
-    themeToggleButtons.forEach((button) => {
-      button.addEventListener("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+    // Cerrar al navegar por enlaces dentro del dropdown
+    settingsDropdown.querySelectorAll("a[href]").forEach((link: Element) => {
+      (link as HTMLAnchorElement).addEventListener("click", function () {
+        closeDropdown(container as HTMLElement);
+      });
+    });
+  }
 
-        const currentTheme = localStorage.getItem("theme") || "light";
+  function initSettingsButtons() {
+    document
+      .querySelectorAll("[data-settings-root]")
+      .forEach((container) => initOne(container as HTMLElement));
 
-        if (currentTheme === "dark") {
-          applyTheme("light");
-        } else {
-          applyTheme("dark");
+    // Añadir manejadores globales una sola vez
+    // @ts-ignore
+    if (!(window as any).__settingsButtonGlobalHandlersAdded) {
+      document.addEventListener("click", function (event: MouseEvent) {
+        // Cerrar todos si el clic es fuera de cualquier contenedor
+        const target = event.target as HTMLElement | null;
+        const insideContainer = target?.closest("[data-settings-root]");
+        if (!insideContainer) {
+          document
+            .querySelectorAll("[data-settings-root]")
+            .forEach((c) => closeDropdown(c as HTMLElement));
         }
       });
-    });
 
-    // Cerrar dropdown al hacer clic fuera
-    document.addEventListener("click", function (event) {
-      if (
-        event.target &&
-        !newSettingsButton.contains(event.target as Node) &&
-        !settingsDropdown.contains(event.target as Node)
-      ) {
-        settingsDropdown.classList.add("hidden");
-        newSettingsButton.setAttribute("aria-expanded", "false");
-      }
-    });
-
-    // Cerrar dropdown al presionar Escape
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        settingsDropdown.classList.add("hidden");
-        newSettingsButton.setAttribute("aria-expanded", "false");
-      }
-    });
-
-    // Cerrar dropdown al hacer clic en enlaces de idioma
-    const languageLinks = settingsDropdown.querySelectorAll("a[href]");
-    languageLinks.forEach((link) => {
-      link.addEventListener("click", function () {
-        settingsDropdown.classList.add("hidden");
-        newSettingsButton.setAttribute("aria-expanded", "false");
+      document.addEventListener("keydown", function (event: KeyboardEvent) {
+        if (event.key === "Escape") {
+          document
+            .querySelectorAll("[data-settings-root]")
+            .forEach((c) => closeDropdown(c as HTMLElement));
+        }
       });
-    });
+      // @ts-ignore
+      (window as any).__settingsButtonGlobalHandlersAdded = true;
+    }
   }
 
-  // Inicializar cuando el DOM esté listo
-  document.addEventListener("DOMContentLoaded", initSettingsButton);
-
-  // Reinicializar después de navegaciones de Astro
-  document.addEventListener("astro:page-load", initSettingsButton);
-
-  // Backup: inicializar inmediatamente si el DOM ya está listo
-  if (document.readyState !== "loading") {
-    setTimeout(initSettingsButton, 100);
+  // Inicializar
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSettingsButtons);
+  } else {
+    initSettingsButtons();
   }
+  document.addEventListener("astro:page-load", initSettingsButtons);
 </script>
 
 <style>

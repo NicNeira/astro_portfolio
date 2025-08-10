@@ -1,5 +1,6 @@
 ---
 import SettingsButton from "../components/common/SettingsButton.astro";
+import MobileSettings from "../components/common/MobileSettings.astro";
 import Button from "../components/ui/Button.astro";
 
 import { trimSlash } from "../utils/utils.js";
@@ -173,7 +174,7 @@ function getHomeUrl(lang: string) {
   <!-- Mobile Menu -->
   <div
     id="mobile-menu"
-    class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700 shadow-lg overflow-hidden"
+    class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700 shadow-lg overflow-y-auto overscroll-contain"
   >
     <div class="container mx-auto px-4 py-4 space-y-4">
       <!-- Mobile Navigation -->
@@ -256,8 +257,8 @@ function getHomeUrl(lang: string) {
             </div>
           )
         }
-        <div class="flex justify-center">
-          <SettingsButton />
+        <div class="">
+          <MobileSettings />
         </div>
       </div>
     </div>
@@ -461,6 +462,7 @@ function getHomeUrl(lang: string) {
   /* Mobile menu animation */
   #mobile-menu {
     transition: max-height 0.3s ease-out;
+    -webkit-overflow-scrolling: touch;
   }
 
   #mobile-menu.hidden {
@@ -470,7 +472,8 @@ function getHomeUrl(lang: string) {
   }
 
   #mobile-menu:not(.hidden) {
-    max-height: 100vh;
+    /* 4rem = altura del header (h-16). Usamos dvh para móviles */
+    max-height: calc(100dvh - 4rem);
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
