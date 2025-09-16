@@ -98,6 +98,7 @@ function getFlagEmoji(lang: string) {
                   ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300"
                   : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
               } group flex items-center px-3 py-2 text-sm rounded-md transition-colors cursor-pointer`}
+              data-lang-option={lang}
             >
               <span class="text-lg mr-3">{getFlagEmoji(lang)}</span>
               <span class="flex-1">{name}</span>
@@ -167,6 +168,18 @@ function getFlagEmoji(lang: string) {
             applyTheme(currentTheme === "dark" ? "light" : "dark");
           }
         );
+      });
+
+      panel.querySelectorAll("[data-lang-option]").forEach((link) => {
+        (link as HTMLElement).addEventListener("click", () => {
+          const lang = (link as HTMLElement).getAttribute("data-lang-option");
+          if (!lang) return;
+          try {
+            window.localStorage.setItem("preferredLanguage", lang);
+          } catch (_error) {
+            // ignore storage errors
+          }
+        });
       });
     });
   }

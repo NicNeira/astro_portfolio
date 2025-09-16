@@ -1,0 +1,74 @@
+---
+import { languages, defaultLang } from "@utils/i18n";
+
+const supportedLanguages = Object.keys(languages);
+---
+
+<script is:inline define:vars={{ supportedLanguages, defaultLanguage: defaultLang }}>
+  (() => {
+    if (typeof window === "undefined") return;
+
+    const supported = supportedLanguages;
+    const defaultLang = defaultLanguage;
+
+    const persistPreference = (lang) => {
+      try {
+        window.localStorage.setItem("preferredLanguage", lang);
+      } catch (_error) {
+        /* ignore storage errors */
+      }
+    };
+
+    const pathSegments = window.location.pathname.split("/").filter(Boolean);
+    const currentLang =
+      pathSegments.length > 0 && supported.includes(pathSegments[0])
+        ? pathSegments[0]
+        : null;
+
+    if (currentLang) {
+      persistPreference(currentLang);
+      return;
+    }
+
+    let preferred = null;
+
+    try {
+      const stored = window.localStorage.getItem("preferredLanguage");
+      if (stored && supported.includes(stored)) {
+        preferred = stored;
+      }
+    } catch (_error) {
+      preferred = null;
+    }
+
+    if (!preferred) {
+      const browserLanguages =
+        Array.isArray(navigator.languages) && navigator.languages.length
+          ? navigator.languages
+          : [navigator.language];
+
+      for (const lang of browserLanguages) {
+        if (!lang) continue;
+        const normalized = String(lang).toLowerCase().split("-")[0];
+        if (supported.includes(normalized)) {
+          preferred = normalized;
+          break;
+        }
+      }
+    }
+
+    if (!preferred) {
+      preferred = defaultLang;
+    }
+
+    if (preferred === defaultLang) {
+      persistPreference(defaultLang);
+      return;
+    }
+
+    const { pathname, search, hash } = window.location;
+    const redirectPath = pathname === "/" ? `/${preferred}` : `/${preferred}${pathname}`;
+
+    window.location.replace(`${redirectPath}${search || ""}${hash || ""}`);
+  })();
+</script>

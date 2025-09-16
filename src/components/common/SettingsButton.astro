@@ -110,6 +110,7 @@ function getFlagEmoji(lang: string) {
                 } group flex items-center px-3 py-2 text-sm rounded-md transition-colors duration-200 cursor-pointer`}
                 role="menuitem"
                 tabindex="-1"
+                data-lang-option={lang}
               >
                 <span class="text-lg mr-3">{getFlagEmoji(lang)}</span>
                 <span class="flex-1">{name}</span>
@@ -223,6 +224,20 @@ function getFlagEmoji(lang: string) {
         closeDropdown(container as HTMLElement);
       });
     });
+
+    settingsDropdown
+      .querySelectorAll("[data-lang-option]")
+      .forEach((link) => {
+        (link as HTMLElement).addEventListener("click", () => {
+          const lang = (link as HTMLElement).getAttribute("data-lang-option");
+          if (!lang) return;
+          try {
+            window.localStorage.setItem("preferredLanguage", lang);
+          } catch (_error) {
+            // ignore storage errors
+          }
+        });
+      });
   }
 
   function initSettingsButtons() {
