@@ -3,6 +3,7 @@ import BasicScripts from "@components/common/BasicScripts.astro";
 import "../styles/global.css";
 import ApplyColorMode from "@components/common/ApplyColorMode.astro";
 import AnimatedBackground from "@components/ui/AnimatedBackground.astro";
+import PreferredLanguageRedirect from "@components/common/PreferredLanguageRedirect.astro";
 import { ClientRouter } from "astro:transitions";
 import type { MetaData } from "@utils/types";
 
@@ -53,6 +54,7 @@ const description = metadata?.description || defaultDescription;
         : "index,follow"}
     />
 
+    <PreferredLanguageRedirect />
     <ApplyColorMode />
     <ClientRouter />
   </head>

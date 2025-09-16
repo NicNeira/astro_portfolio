@@ -75,6 +75,7 @@ function getLocalizedPath(lang: string, currentPath: string) {
             } group flex items-center px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
             role="menuitem"
             tabindex="-1"
+            data-lang-option={lang}
           >
             <span class="mr-3">
               {lang === "es" && "🇪🇸"}
@@ -133,6 +134,18 @@ function getLocalizedPath(lang: string, currentPath: string) {
       if (event.key === "Escape") {
         dropdown.classList.add("hidden");
       }
+    });
+
+    dropdown.querySelectorAll("[data-lang-option]").forEach((link) => {
+      (link as HTMLElement).addEventListener("click", () => {
+        const lang = (link as HTMLElement).getAttribute("data-lang-option");
+        if (!lang) return;
+        try {
+          window.localStorage.setItem("preferredLanguage", lang);
+        } catch (_error) {
+          // ignore storage errors
+        }
+      });
     });
   }
 
