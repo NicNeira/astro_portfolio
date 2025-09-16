@@ -2,14 +2,25 @@
 import { languages, defaultLang } from "@utils/i18n";
 
 const supportedLanguages = Object.keys(languages);
+const fallbackLanguage = "en" in languages ? "en" : defaultLang;
 ---
 
-<script is:inline define:vars={{ supportedLanguages, defaultLanguage: defaultLang }}>
+<script
+  is:inline
+  define:vars={{
+    supportedLanguages,
+    defaultLanguage: defaultLang,
+    fallbackLanguage,
+  }}
+>
   (() => {
     if (typeof window === "undefined") return;
 
     const supported = supportedLanguages;
     const defaultLang = defaultLanguage;
+    const fallbackLang = supported.includes(fallbackLanguage)
+      ? fallbackLanguage
+      : defaultLang;
 
     const persistPreference = (lang) => {
       try {
@@ -58,7 +69,7 @@ const supportedLanguages = Object.keys(languages);
     }
 
     if (!preferred) {
-      preferred = defaultLang;
+      preferred = fallbackLang;
     }
 
     if (preferred === defaultLang) {
@@ -69,6 +80,7 @@ const supportedLanguages = Object.keys(languages);
     const { pathname, search, hash } = window.location;
     const redirectPath = pathname === "/" ? `/${preferred}` : `/${preferred}${pathname}`;
 
+    persistPreference(preferred);
     window.location.replace(`${redirectPath}${search || ""}${hash || ""}`);
   })();
 </script>
