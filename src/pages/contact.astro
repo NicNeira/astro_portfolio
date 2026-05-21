@@ -3,11 +3,9 @@ import Layout from "@layouts/PageLayout.astro";
 import { Image } from "astro:assets";
 import ContactImage from "../assets/images/profile.jpg";
 import Button from "@components/ui/Button.astro";
+import { useTranslations } from "@utils/i18n";
 
-// Título y subtítulo de la página de contacto
-const contactTitle = "¡Trabajemos juntos!";
-const contactSubtitle =
-  "Completa el formulario a continuación y me pondré en contacto contigo lo antes posible.";
+const t = useTranslations("es");
 
 // Enlace para el form de Formspree (puedes crear uno gratuito en https://formspree.io)
 // Reemplaza "FORMSPREE_ID" con tu ID real después de registrarte
@@ -28,10 +26,10 @@ const metadata = {
         <h1
           class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-white"
         >
-          {contactTitle}
+          {t("contact.form.title")}
         </h1>
         <p class="text-xl text-muted dark:text-slate-400">
-          {contactSubtitle}
+          {t("contact.form.subtitle")}
         </p>
       </div>
 

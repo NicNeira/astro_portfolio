@@ -8,8 +8,10 @@ import Layout from "@layouts/PageLayout.astro";
 
 import ProfilePhoto from "../assets/images/profile.jpg";
 
+import { Image } from "astro:assets";
 import { getContentProjects, getExtraWorksImages } from "@utils/projectsData";
-import { getLangFromUrl, useTranslations } from "@utils/i18n";
+import { paintings, getPaintingThumbnail } from "@utils/paintingsData";
+import { getLangFromUrl, useTranslations, getTranslation } from "@utils/i18n";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -30,6 +32,16 @@ const portfolioSectionSubtitle = t("portfolio.subtitle");
 const extraWorksImages = getExtraWorksImages();
 const otherWorksTitle = t("other-works.title");
 const otherWorksSubtitle = t("other-works.subtitle");
+
+const featuredPaintings = paintings
+  .filter((p) => p.featured)
+  .map((p) => ({
+    ...p,
+    title: getTranslation(lang, `painting.${p.id}.title`),
+    thumbnail: getPaintingThumbnail(p.id),
+  }));
+const paintingsRoute = { es: "pinturas", en: "paintings", de: "gemalde" };
+const paintingsHref = `${lang === "es" ? "" : "/" + lang}/${paintingsRoute[lang]}`;
 ---
 
 <Layout metadata={metadata}>
@@ -303,6 +315,63 @@ const otherWorksSubtitle = t("other-works.subtitle");
       </Content>
     ))
   }
+
+  <!-- Paintings Preview Section *********** -->
+  <section class="py-16 bg-gray-50 dark:bg-slate-800/40" id="pinturas">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-10 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        <p class="text-sm font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-2">
+          goldenberry
+        </p>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight dark:text-white mb-4">
+          {t("paintings.home-section-title")}
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          {t("paintings.home-section-subtitle")}
+        </p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        {
+          featuredPaintings.map((p) =>
+            p.thumbnail ? (
+              <a
+                href={paintingsHref}
+                class="group block overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                <div class="aspect-square overflow-hidden">
+                  <Image
+                    src={p.thumbnail}
+                    alt={p.title}
+                    width={400}
+                    height={400}
+                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="bg-white dark:bg-slate-800 px-3 py-2">
+                  <p class="text-xs font-medium text-gray-800 dark:text-gray-200 truncate">
+                    {p.title}
+                  </p>
+                  <p class="text-xs text-blue-600 dark:text-blue-400 font-semibold">
+                    USD {p.price}
+                  </p>
+                </div>
+              </a>
+            ) : null
+          )
+        }
+      </div>
+      <div class="text-center intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        <a
+          href={paintingsHref}
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 font-semibold hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-slate-900 transition-all duration-200"
+        >
+          {t("paintings.view-all")}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- Other Works Section *********** -->
   <section class="py-16">

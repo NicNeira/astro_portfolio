@@ -6,23 +6,20 @@ const currentLang = getLangFromUrl(Astro.url);
 const currentPath = Astro.url.pathname;
 const t = useTranslations(currentLang);
 
-// Función para generar URLs de idiomas (igual que en SettingsButton)
+const pageSlugMap: Record<string, Record<string, string>> = {
+  pinturas:  { es: 'pinturas', en: 'paintings', de: 'gemalde' },
+  paintings: { es: 'pinturas', en: 'paintings', de: 'gemalde' },
+  gemalde:   { es: 'pinturas', en: 'paintings', de: 'gemalde' },
+};
+
 function getLocalizedPath(lang: string, currentPath: string) {
-  const pathSegments = currentPath.split("/").filter(Boolean);
-
-  if (pathSegments[0] && pathSegments[0] in languages) {
-    pathSegments[0] = lang;
-  } else if (lang !== "es") {
-    pathSegments.unshift(lang);
+  const segments = currentPath.split('/').filter(Boolean);
+  if (segments[0] && segments[0] in languages) segments.shift();
+  const mapped = segments.map(seg => pageSlugMap[seg]?.[lang] ?? seg);
+  if (lang === 'es') {
+    return mapped.length ? '/' + mapped.join('/') : '/';
   }
-
-  if (lang === "es") {
-    return (
-      "/" + pathSegments.filter((segment) => !(segment in languages)).join("/")
-    );
-  }
-
-  return "/" + pathSegments.join("/");
+  return mapped.length ? `/${lang}/` + mapped.join('/') : `/${lang}`;
 }
 
 function getFlagEmoji(lang: string) {
