@@ -38,7 +38,6 @@ export default defineConfig({
       cssMinify: 'esbuild',
       terserOptions: {
         compress: {
-          drop_console: true,
           drop_debugger: true,
           passes: 2,
           unsafe: true,

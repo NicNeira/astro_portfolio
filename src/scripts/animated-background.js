@@ -24,16 +24,10 @@ class AnimatedBackground {
 
   getCanvasAndContext() {
     this.canvas = document.getElementById("animated-background");
-    if (!this.canvas) {
-      console.warn("AnimatedBackground: Canvas not found");
-      return false;
-    }
+    if (!this.canvas) return false;
 
     this.gl = this.canvas.getContext("webgl2");
-    if (!this.gl) {
-      console.warn("AnimatedBackground: WebGL2 not supported");
-      return false;
-    }
+    if (!this.gl) return false;
 
     return true;
   }
@@ -57,7 +51,7 @@ class AnimatedBackground {
     this.gl.compileShader(shader);
 
     if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
-      console.error(this.gl.getShaderInfoLog(shader));
+      this.gl.getShaderInfoLog(shader);
     }
   }
 
@@ -86,7 +80,7 @@ class AnimatedBackground {
     this.gl.linkProgram(this.resources.program);
 
     if (!this.gl.getProgramParameter(this.resources.program, this.gl.LINK_STATUS)) {
-      console.error(this.gl.getProgramInfoLog(this.resources.program));
+      this.gl.getProgramInfoLog(this.resources.program);
     }
 
     this.resources.vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
@@ -148,8 +142,7 @@ class AnimatedBackground {
       this.resize();
       this.isInitialized = true;
       this.loop(0);
-    } catch (error) {
-      console.warn("AnimatedBackground: Error during initialization", error);
+    } catch {
       this.isInitialized = false;
     }
   }
