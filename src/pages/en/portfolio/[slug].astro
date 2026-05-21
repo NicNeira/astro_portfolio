@@ -2,7 +2,6 @@
 import Layout from "@layouts/PageLayout.astro";
 import { getSlugProjects } from "@utils/projectsData";
 import { useTranslations } from "@utils/i18n";
-import { Image } from "astro:assets";
 
 const lang = "en";
 const t = useTranslations(lang);
@@ -40,33 +39,18 @@ const metadata = {
       class="mb-8 transition-all duration-500 image-container max-w-3xl mx-auto"
       transition:name={`image-${project.id}`}
     >
-      {
-        project.video ? (
-          <div class="aspect-video w-full">
-            <iframe
-              src={project.video}
-              title={`Video of ${project.projectTitle}`}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; cc_load_policy=0"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-              class="w-full h-full rounded-lg shadow-lg"
-            />
-          </div>
-        ) : (
-          <div
-            class="aspect-video w-full overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
-            data-index="0"
-          >
-            <Image
-              src={project.images[0].src}
-              alt={project.images[0].alt}
-              width={project.images[0].width || 1920}
-              height={project.images[0].height || 1080}
-              class="w-full h-full object-cover"
-            />
-          </div>
-        )
-      }
+      <div
+        class="aspect-video w-full overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
+        data-index="0"
+      >
+        <img
+          src={project.images[0].src}
+          alt={project.images[0].alt}
+          width={project.images[0].width || 1920}
+          height={project.images[0].height || 1080}
+          class="w-full h-full object-cover"
+        />
+      </div>
     </div>
 
     <div
@@ -81,13 +65,13 @@ const metadata = {
     <h2 class="text-2xl font-bold mb-4 dark:text-white">Gallery</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
       {
-        (project.video ? project.images : project.images.slice(1)).map(
+        project.images.slice(1).map(
           (image, index) => (
             <div
               class="aspect-video overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image"
-              data-index={project.video ? index : index + 1}
+              data-index={index + 1}
             >
-              <Image
+              <img
                 src={image.src}
                 alt={image.alt}
                 width={image.width || 1920}

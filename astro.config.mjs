@@ -6,6 +6,9 @@ import compress from 'astro-compress';
 
 // https://astro.build/config
 export default defineConfig({
+  image: {
+    domains: ['res.cloudinary.com'],
+  },
   i18n: {
     defaultLocale: "es",
     locales: ["es", "en", "de"],
@@ -53,7 +56,6 @@ export default defineConfig({
         output: {
           manualChunks: {
             vendor: ['astro-icon'],
-            utils: ['tailwind-merge'],
           },
           chunkFileNames: '_astro/[name]-[hash].js',
           entryFileNames: '_astro/[name]-[hash].js',

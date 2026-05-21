@@ -6,9 +6,6 @@ import Skill from "@components/Skill.astro";
 import CallToAction from "@components/CallToAction.astro";
 import Layout from "@layouts/PageLayout.astro";
 
-import ProfilePhoto from "../../assets/images/profile.jpg";
-import AboutPhoto from "../../assets/images/about.jpg";
-
 import { Image } from "astro:assets";
 import { getContentProjects, getExtraWorksImages } from "@utils/projectsData";
 import { paintings, getPaintingThumbnail } from "@utils/paintingsData";
@@ -50,9 +47,9 @@ const paintingsHref = "/de/gemalde";
     title={profileName}
     subtitle={subTitle}
     image={{
-      src: ProfilePhoto,
+      src: "https://res.cloudinary.com/ds8bhx4d4/image/upload/q_auto,f_auto/profile_npqqoy",
       alt: "Porträt von Maximiliano Neira, Art Director und Filmemacher",
-      width: 400,
+      width: 1366,
       height: 400,
     }}
   >
@@ -94,7 +91,7 @@ const paintingsHref = "/de/gemalde";
     id="about"
     columns={3}
     video={{
-      src: "https://maxistorage.blob.core.windows.net/assets/reel.mp4",
+      src: "https://res.cloudinary.com/ds8bhx4d4/video/upload/f_mp4,q_auto/video-profile_ejrrej",
       alt: "About Me Video",
     }}
   >
@@ -237,6 +234,7 @@ const paintingsHref = "/de/gemalde";
           },
         ]}
         image={project.image}
+        imageHref={project.href}
         callToAction={{
           text: t("general.view-project"),
           icon: "tabler:chevron-right",
@@ -283,11 +281,11 @@ const paintingsHref = "/de/gemalde";
                 class="group block overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <div class="aspect-square overflow-hidden">
-                  <Image
+                  <img
                     src={p.thumbnail}
                     alt={p.title}
-                    width={400}
-                    height={400}
+                    width="400"
+                    height="400"
                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     loading="lazy"
                   />

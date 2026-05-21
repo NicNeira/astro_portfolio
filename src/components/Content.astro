@@ -17,6 +17,7 @@ const {
   columns,
   image = await Astro.slots.render("image"), // puede ser string, objeto o array de objetos
   video, // nuevo prop para videos
+  imageHref, // enlace al hacer click en la imagen
   isReversed = false,
   isAfterContent = false,
 
@@ -124,23 +125,31 @@ const hasVideo = isVideoObject || isVideoString;
               carouselId={`carousel-${crypto.randomUUID()}`}
             />
           ) : isImageObject ? (
-            <div class="w-full mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-              <div
-                class="relative m-auto w-full"
-                style={`max-width: ${Math.min(image.width || 600, 600)}px; aspect-ratio: ${(image.width || 600) / (image.height || 400)};`}
-              >
-                <div class="aspect-video relative overflow-hidden rounded-md">
-                  <Image
+            <div class="w-full mt-8 md:mt-0 intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+              <div class={`aspect-video relative overflow-hidden rounded-md${imageHref ? ' cursor-pointer' : ''}`}>
+                {imageHref ? (
+                  <a href={imageHref} class="block w-full h-full">
+                    <img
+                      class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                      src={image.src}
+                      alt={image.alt || ""}
+                      width={image.width || 1920}
+                      height={image.height || 1080}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                ) : (
+                  <img
                     class="w-full h-full object-cover object-center"
                     src={image.src}
                     alt={image.alt || ""}
-                    width={image.width || 600}
-                    height={image.height || 400}
+                    width={image.width || 1920}
+                    height={image.height || 1080}
                     loading="lazy"
                     decoding="async"
-                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                </div>
+                )}
               </div>
             </div>
           ) : isImageString ? (

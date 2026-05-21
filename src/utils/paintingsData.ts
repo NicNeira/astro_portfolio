@@ -1,5 +1,3 @@
-import type { ImageMetadata } from 'astro'
-
 export interface Painting {
   id: string
   price: number
@@ -29,20 +27,52 @@ export const paintings: Painting[] = [
   { id: 'ciclos', price: 180, technique: 'Mixto', height: 32, width: 23.5, year: 2026 },
 ]
 
-export const djiImages = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/pinturas/dji/*.jpg',
-  { eager: true }
-)
+const CLOUDINARY_BASE = 'https://res.cloudinary.com/ds8bhx4d4/image/upload/q_auto,f_auto'
 
-export const nikonImages = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/images/pinturas/nikon/*.png',
-  { eager: true }
-)
-
-export function getPaintingThumbnail(id: string): ImageMetadata {
-  return djiImages[`/src/assets/images/pinturas/dji/${id}.jpg`]?.default
+const DJI_IDS: Record<string, string> = {
+  'abismo-celeste':             'abismo-celeste-optimized_duhxyl',
+  'anatomia-del-silencio-i':   'anatomia-del-silencio-i-optimized_kuqjrx',
+  'anatomia-del-silencio-ii':  'anatomia-del-silencio-ii-optimized_dle7cs',
+  'anatomia-del-silencio-iii': 'anatomia-del-silencio-iii-optimized_jyohw8',
+  'bitacora-urbana':            'bitacora-urbana-optimized_mbkmlk',
+  'ciclos':                     'ciclos-optimized_wzc47j',
+  'conexiones-organicas':       'conexiones-organicas-optimized_t2d5bf',
+  'ecos-de-oro-y-azul':         'ecos-de-oro-y-azul-optimized_a9htyb',
+  'efigie-estudio-de-jodie':    'efigie-estudio-de-jodie-optimized_zaacli',
+  'el-espacio-entre-palabras':  'el-espacio-entre-palabras-optimized_swwlx0',
+  'estratos':                   'estratos-optimized_uxa5by',
+  'identidad-fragmentada':      'identidad-fragmentada-optimized_bstdpx',
+  'lexicon-del-ser':            'lexicon-del-ser-optimized_zptj5g',
+  'manifiesto-i':               'manifiesto-i-optimized_axquee',
+  'pulso-carmesi':              'pulso-carmesi-optimized_lcwlyn',
+  'verde-paris':                'verde-paris-optimized_mjqrno',
 }
 
-export function getPaintingFull(id: string): ImageMetadata {
-  return nikonImages[`/src/assets/images/pinturas/nikon/${id}.png`]?.default
+const NIKON_IDS: Record<string, string> = {
+  'abismo-celeste':             'abismo-celeste-optimized_xrxofr',
+  'anatomia-del-silencio-i':   'anatomia-del-silencio-i-optimized_bpaiaf',
+  'anatomia-del-silencio-ii':  'anatomia-del-silencio-ii-optimized_kb6k90',
+  'anatomia-del-silencio-iii': 'anatomia-del-silencio-iii-optimized_ip04bm',
+  'bitacora-urbana':            'bitacora-urbana-optimized_zsvqrk',
+  'ciclos':                     'ciclos-optimized_wop5ig',
+  'conexiones-organicas':       'conexiones-organicas-optimized_xw9adt',
+  'ecos-de-oro-y-azul':         'ecos-de-oro-y-azul-optimized_jtdumm',
+  'efigie-estudio-de-jodie':    'efigie-estudio-de-jodie-optimized_bagfvh',
+  'el-espacio-entre-palabras':  'el-espacio-entre-palabras-optimized_ndt8jf',
+  'estratos':                   'estratos-optimized_izjkia',
+  'identidad-fragmentada':      'identidad-fragmentada-optimized_bgh9br',
+  'lexicon-del-ser':            'lexicon-del-ser-optimized_pad04r',
+  'manifiesto-i':               'manifiesto-i-optimized_axpqye',
+  'pulso-carmesi':              'pulso-carmesi-optimized_b9hw1b',
+  'verde-paris':                'verde-paris-optimized_a4db8h',
+}
+
+export function getPaintingThumbnail(id: string): string {
+  const publicId = DJI_IDS[id]
+  return publicId ? `${CLOUDINARY_BASE}/${publicId}` : ''
+}
+
+export function getPaintingFull(id: string): string {
+  const publicId = NIKON_IDS[id]
+  return publicId ? `${CLOUDINARY_BASE}/${publicId}` : ''
 }
