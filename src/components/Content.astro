@@ -105,7 +105,10 @@ const hasVideo = isVideoObject || isVideoString;
                   <video
                     class="w-full h-full object-cover object-center"
                     controls
+                    muted
+                    playsinline
                     preload="metadata"
+                    data-autoplay-on-scroll
                     poster={
                       isVideoObject && video.poster ? video.poster : undefined
                     }
@@ -168,3 +171,25 @@ const hasVideo = isVideoObject || isVideoString;
     </div>
   </div>
 </WidgetWrapper>
+
+<script>
+  function setupVideoAutoplay() {
+    document.querySelectorAll<HTMLVideoElement>('video[data-autoplay-on-scroll]').forEach(video => {
+      if (video.dataset.observerAttached) return;
+      video.dataset.observerAttached = 'true';
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }, { threshold: 0.25 });
+      observer.observe(video);
+    });
+  }
+
+  setupVideoAutoplay();
+  document.addEventListener('astro:after-swap', setupVideoAutoplay);
+</script>

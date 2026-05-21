@@ -176,10 +176,6 @@ class AnimatedBackground {
       document.addEventListener("DOMContentLoaded", function () {
         self.safeInit();
       });
-    } else if (document.readyState === "interactive") {
-      setTimeout(function () {
-        self.safeInit();
-      }, 50);
     } else {
       self.safeInit();
     }
@@ -190,36 +186,15 @@ class AnimatedBackground {
       }
     });
 
-    var themeObserver = new MutationObserver(function () {
-      // Theme updates automatically on next frame
-    });
-
-    if (document.documentElement) {
-      themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ["class"]
-      });
-    }
-
-    document.addEventListener("astro:before-preparation", function () {
-      self.cleanup();
-    });
-
+    // Detener antes de que el DOM viejo sea reemplazado
     document.addEventListener("astro:before-swap", function () {
       self.cleanup();
     });
 
-    document.addEventListener("astro:page-load", function () {
-      setTimeout(function () {
-        if (self.getCanvasAndContext()) {
-          self.safeInit();
-        }
-      }, 100);
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      if (!self.isInitialized) {
-        self.safeInit();
+    // Re-inicializar con el canvas nuevo en cuanto el DOM está listo
+    document.addEventListener("astro:after-swap", function () {
+      if (self.getCanvasAndContext()) {
+        self.init();
       }
     });
   }

@@ -53,6 +53,20 @@ const description = metadata?.description || defaultDescription;
         : "index,follow"}
     />
 
+    <script is:inline>
+      (function () {
+        if (localStorage.getItem('langDetected')) return;
+        localStorage.setItem('langDetected', '1');
+        var supported = ['en', 'de'];
+        var lang = (navigator.language || '').slice(0, 2).toLowerCase();
+        if (!supported.includes(lang)) return;
+        var path = location.pathname;
+        var cur = path.startsWith('/en') ? 'en' : path.startsWith('/de') ? 'de' : 'es';
+        if (cur === lang) return;
+        var clean = path.replace(/^\/(en|de)/, '') || '/';
+        location.replace('/' + lang + clean);
+      })();
+    </script>
     <ApplyColorMode />
     <ClientRouter />
   </head>
