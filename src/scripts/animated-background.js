@@ -45,14 +45,16 @@ class AnimatedBackground {
   }
 
   compile(shader, source) {
-    if (!this.gl) return;
+    if (!this.gl) return false;
 
     this.gl.shaderSource(shader, source);
     this.gl.compileShader(shader);
 
     if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
-      this.gl.getShaderInfoLog(shader);
+      console.error("[AnimatedBackground] Shader compile error:", this.gl.getShaderInfoLog(shader));
+      return false;
     }
+    return true;
   }
 
   isDarkTheme() {
@@ -72,15 +74,16 @@ class AnimatedBackground {
     this.resources.program = this.gl.createProgram();
     if (!this.resources.program) return;
 
-    this.compile(vs, this.vertexSource);
-    this.compile(fs, this.fragmentSource);
+    if (!this.compile(vs, this.vertexSource)) return;
+    if (!this.compile(fs, this.fragmentSource)) return;
 
     this.gl.attachShader(this.resources.program, vs);
     this.gl.attachShader(this.resources.program, fs);
     this.gl.linkProgram(this.resources.program);
 
     if (!this.gl.getProgramParameter(this.resources.program, this.gl.LINK_STATUS)) {
-      this.gl.getProgramInfoLog(this.resources.program);
+      console.error("[AnimatedBackground] Program link error:", this.gl.getProgramInfoLog(this.resources.program));
+      return;
     }
 
     this.resources.vertices = [-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0];
