@@ -31,27 +31,7 @@ cssFiles.forEach(file => {
   }
 });
 
-// Optimización adicional de JS
-jsFiles.forEach(file => {
-  try {
-    const content = readFileSync(file, 'utf8');
-    // Remover console.logs y debugger statements adicionales
-    const optimized = content
-      .replace(/console\.(log|info|debug|warn)\([^)]*\);?/g, '') // Remover console statements
-      .replace(/debugger;?/g, '') // Remover debugger
-      .replace(/\/\*[\s\S]*?\*\//g, '') // Remover comentarios de bloque
-      .replace(/\/\/.*$/gm, '') // Remover comentarios de línea
-      .replace(/\s+/g, ' ') // Comprimir espacios
-      .trim();
-
-    if (optimized.length < content.length) {
-      writeFileSync(file, optimized);
-      console.log(`✅ JS optimizado: ${file} (${content.length - optimized.length} bytes ahorrados)`);
-    }
-  } catch (error) {
-    console.warn(`⚠️  Error optimizando JS ${file}:`, error.message);
-  }
-});
+// JS ya está minificado por Terser/Vite durante el build — no se procesa aquí.
 
 // 2. Agregar service worker registration con performance optimizada
 const htmlFiles = glob.sync('dist/**/*.html');
