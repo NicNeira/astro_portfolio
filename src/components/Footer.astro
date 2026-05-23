@@ -25,47 +25,9 @@ const {
 
 <footer style="border-top: 1px solid #2C2620; background: #0B0908;">
   <div
-    class="mx-auto px-6 md:px-16 flex justify-between items-center flex-wrap"
+    class="mx-auto px-6 md:px-16 flex items-center justify-center flex-wrap"
     style="max-width: 1440px; padding-top: 36px; padding-bottom: 36px; gap: 16px;"
   >
-    <a
-      href="/"
-      class="serif font-semibold"
-      style="font-size: 1rem; color: #E8E0D2; text-decoration: none;"
-      aria-label={`Ir a la página principal de ${SiteName}`}
-    >
-      {SiteName || "Maximiliano Neira"}
-    </a>
-
-    <div class="flex items-center" style="gap: 20px;">
-      {
-        secondaryLinks.map(({ text, href }) => (
-          <a
-            href={href}
-            class="transition-colors duration-200"
-            style="font-size: 0.75rem; color: #5E574E; text-decoration: none;"
-            set:html={text}
-          />
-        ))
-      }
-      {
-        socialLinks.map(({ ariaLabel, href, icon }) => (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={ariaLabel}
-            class="transition-colors duration-200"
-            style="font-size: 0.75rem; color: #5E574E; text-decoration: none;"
-          >
-            {icon && (
-              <Icon name={icon} class="w-5 h-5" aria-hidden="true" />
-            )}
-          </a>
-        ))
-      }
-    </div>
-
     <span style="font-size: 0.75rem; color: #5E574E;">
       © {new Date().getFullYear()} · Powered by <a
         href="https://www.linkedin.com/in/nicolas-neira-lopez/"

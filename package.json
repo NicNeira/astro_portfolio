@@ -1,7 +1,7 @@
 {
   "name": "maxi-portfolio",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/optimize.js",
@@ -11,7 +11,7 @@
   "dependencies": {
     "@iconify-json/tabler": "^1.2.18",
     "@tailwindcss/vite": "^4.1.7",
-    "astro": "^6.3.6",
+    "astro": "^5.12.9",
     "astro-compress": "^2.3.0",
     "astro-icon": "^1.1.5",
     "glob": "^11.0.2",
