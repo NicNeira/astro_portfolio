@@ -1,21 +1,15 @@
 ---
 import Hero from "@components/Hero.astro";
-import Content from "@components/Content.astro";
 import Steps from "@components/Steps.astro";
-import Skill from "@components/Skill.astro";
 import CallToAction from "@components/CallToAction.astro";
 import Layout from "@layouts/PageLayout.astro";
 
-import { Image } from "astro:assets";
 import { getContentProjects, getExtraWorksImages } from "@utils/projectsData";
 import { paintings, getPaintingThumbnail } from "@utils/paintingsData";
 import { useTranslations, getTranslation } from "@utils/i18n";
 
 const lang = "en";
 const t = useTranslations(lang);
-
-const profileName = t("hero.name");
-const subTitle = t("hero.subtitle");
 
 const metadata = {
   title: t("site.title"),
@@ -24,12 +18,7 @@ const metadata = {
 };
 
 const ContentProjects = getContentProjects(t, lang);
-const portfolioSectionTitle = t("portfolio.title");
-const portfolioSectionSubtitle = t("portfolio.subtitle");
-
 const extraWorksImages = getExtraWorksImages();
-const otherWorksTitle = t("other-works.title");
-const otherWorksSubtitle = t("other-works.subtitle");
 
 const featuredPaintings = paintings
   .filter((p) => p.featured)
@@ -38,329 +27,286 @@ const featuredPaintings = paintings
     title: getTranslation(lang, `painting.${p.id}.title`),
     thumbnail: getPaintingThumbnail(p.id),
   }));
+
 const paintingsHref = "/en/paintings";
+const contactHref = "/en/contact";
+
+const skills = [
+  {
+    title: t("skills.art-direction.title"),
+    desc: t("skills.art-direction.description"),
+    color: "#C47D3F",
+  },
+  {
+    title: t("skills.model-design.title"),
+    desc: t("skills.model-design.description"),
+    color: "#C45A3C",
+  },
+  {
+    title: t("skills.cinematography.title"),
+    desc: t("skills.cinematography.description"),
+    color: "#847B6F",
+  },
+];
 ---
 
 <Layout metadata={metadata}>
   <Hero
     id="hero"
-    title={profileName}
-    subtitle={subTitle}
+    title={t("hero.name")}
+    subtitle={t("hero.subtitle")}
     image={{
       src: "https://res.cloudinary.com/ds8bhx4d4/image/upload/q_auto,f_auto/profile_npqqoy",
       alt: "Portrait of Maximiliano Neira, art director and filmmaker",
-      width: 1366,
-      height: 400,
+      width: 600,
+      height: 800,
     }}
   >
-    <Fragment slot="paragraph">
-      {t("hero.description")}
-    </Fragment>
-
+    <Fragment slot="paragraph">{t("hero.description")}</Fragment>
     <Fragment slot="actions">
-      <div
-        class="flex justify-center w-full intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+      <a
+        href={`https://maxistorage.blob.core.windows.net/assets/cv/CV-EN.pdf`}
+        download="CV-Maximiliano-Neira-EN.pdf"
+        target="_blank"
+        class="hero-btn-primary"
       >
-        <a
-          href={`https://maxistorage.blob.core.windows.net/assets/cv/CV-${lang.toUpperCase()}.pdf`}
-          download={`CV-Maximiliano-Neira-${lang.toUpperCase()}.pdf`}
-          target="_blank"
-          class="inline-flex items-center justify-center px-2 py-1 text-sm font-medium text-white bg-blue-600 hover:bg-blue-800 rounded-lg shadow-lg transition-colors duration-200"
-        >
-          <svg
-            class="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            ></path>
-          </svg>
-          {t("hero.download-cv")}
-        </a>
-      </div>
+        {t("hero.download-cv")}
+      </a>
+      <a href="#porfolio" class="hero-btn-secondary">
+        {t("nav.portfolio")}
+      </a>
     </Fragment>
   </Hero>
 
-  <Content
+  <section
     id="about"
-    columns={3}
-    video={{
-      src: "https://res.cloudinary.com/ds8bhx4d4/video/upload/f_mp4,q_auto/video-profile_ejrrej",
-      alt: "About Me Video",
-    }}
+    style="background: rgba(11,9,8,0.85); padding: 80px clamp(24px, 4vw, 64px);"
   >
-    <Fragment slot="content">
-      <h1
-        class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
-        set:html={t("about.title")}
-      />
-      <p>
-        {t("about.description")}
-      </p>
-      <p class="mt-2">
-        {t("about.description-2")}
-      </p>
-    </Fragment>
-  </Content>
+    <div class="mx-auto intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" style="max-width: 1440px;">
+      <!-- Label + Heading -->
+      <div style="margin-bottom: 40px;">
+        <p class="section-label" style="margin: 0 0 12px;">About me</p>
+        <h2 class="serif" style="font-size: clamp(1.5rem, 2.8vw, 2.25rem); font-weight: 700; margin: 0; line-height: 1.1; color: #E8E0D2;">
+          {t("about.heading") || "Aesthetics"} as <span style="color: #C47D3F;">{t("about.heading-accent") || "language"}</span>
+        </h2>
+      </div>
+      <!-- Two columns: Text (left) | Video (right) -->
+      <div class="about-content" style="display: flex; gap: 48px; flex-wrap: wrap; margin-bottom: 56px; align-items: center;">
+        <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 20px;">
+          <p style="font-size: 1rem; line-height: 1.8; color: #847B6F; margin: 0;">{t("about.description")}</p>
+          <p style="font-size: 1rem; line-height: 1.8; color: #847B6F; margin: 0;">{t("about.description-2")}</p>
+        </div>
+        <div style="flex: 1; min-width: 280px; display: flex; align-items: flex-start;">
+          <div style="border-radius: 8px; overflow: hidden; width: 100%; max-width: 560px;">
+            <video class="w-full" style="display: block; border-radius: 8px;" controls muted playsinline preload="metadata" data-autoplay-on-scroll>
+              <source src="https://res.cloudinary.com/ds8bhx4d4/video/upload/f_mp4,q_auto/video-profile_ejrrej" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        {skills.map((s) => (
+          <div class="skill-card intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+            style={`padding: 28px 24px; background: #1A1714; border-radius: 10px; border-top: 3px solid ${s.color}; transition: background 0.25s, transform 0.25s;`}>
+            <h3 class="serif" style="font-size: 1.25rem; font-weight: 700; margin: 0 0 10px; color: #E8E0D2;">{s.title}</h3>
+            <p style="font-size: 1rem; line-height: 1.7; color: #847B6F; margin: 0;">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
 
   <Steps
     id="resume"
     title={t("experience.title")}
     items={[
-      {
-        title: `${t("experience.student.title")} <br /> <span class="font-normal">${t("experience.student.company")}</span> <br /> <span class="text-sm font-normal">${t("experience.student.period")}</span>`,
-        description: `${t("experience.student.description")} <br /> <a href="https://www.arcos.cl/carreras/cine/" target="_blank" class="text-primary hover:underline">arcos.cl</a>`,
-        icon: "tabler:school",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: `${t("experience.casa-hojas.title")} <br /> <span class="font-normal">${t("experience.casa-hojas.project")}</span> <br /> <span class="text-sm font-normal">${t("experience.casa-hojas.period")}</span>`,
-        description: t("experience.casa-hojas.description"),
-        icon: "tabler:palette",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: `${t("experience.ciudad-latente.title")} <br /> <span class="font-normal">${t("experience.ciudad-latente.project")}</span> <br /> <span class="text-sm font-normal">${t("experience.ciudad-latente.period")}</span>`,
-        description: t("experience.ciudad-latente.description"),
-        icon: "tabler:building-estate",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: `${t("experience.inhumano.title")} <br /> <span class="font-normal">${t("experience.inhumano.project")}</span> <br /> <span class="text-sm font-normal">${t("experience.inhumano.period")}</span>`,
-        description: t("experience.inhumano.description"),
-        icon: "tabler:movie",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: `${t("experience.retrato-oval.title")} <br /> <span class="font-normal">${t("experience.retrato-oval.project")}</span> <br /> <span class="text-sm font-normal">${t("experience.retrato-oval.period")}</span>`,
-        description: t("experience.retrato-oval.description"),
-        icon: "tabler:brush",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
+      { title: `${t("experience.student.title")} <br /><span class="font-normal serif" style="color:#C47D3F; font-size: 0.875rem;">${t("experience.student.company")}</span> <br /><span class="font-normal" style="color:#5E574E; font-size: 0.75rem; letter-spacing:0.1em; text-transform:uppercase;">${t("experience.student.period")}</span>`, description: `${t("experience.student.description")} · <a href="https://www.arcos.cl/carreras/cine/" target="_blank" style="color:#C47D3F;">arcos.cl</a>`, icon: "tabler:school" },
+      { title: `${t("experience.casa-hojas.title")} <br /><span class="font-normal serif" style="color:#C47D3F; font-size: 0.875rem;">${t("experience.casa-hojas.project")}</span> <br /><span class="font-normal" style="color:#5E574E; font-size: 0.75rem; letter-spacing:0.1em; text-transform:uppercase;">${t("experience.casa-hojas.period")}</span>`, description: t("experience.casa-hojas.description"), icon: "tabler:palette" },
+      { title: `${t("experience.ciudad-latente.title")} <br /><span class="font-normal serif" style="color:#C47D3F; font-size: 0.875rem;">${t("experience.ciudad-latente.project")}</span> <br /><span class="font-normal" style="color:#5E574E; font-size: 0.75rem; letter-spacing:0.1em; text-transform:uppercase;">${t("experience.ciudad-latente.period")}</span>`, description: t("experience.ciudad-latente.description"), icon: "tabler:building-estate" },
+      { title: `${t("experience.inhumano.title")} <br /><span class="font-normal serif" style="color:#C47D3F; font-size: 0.875rem;">${t("experience.inhumano.project")}</span> <br /><span class="font-normal" style="color:#5E574E; font-size: 0.75rem; letter-spacing:0.1em; text-transform:uppercase;">${t("experience.inhumano.period")}</span>`, description: t("experience.inhumano.description"), icon: "tabler:movie" },
+      { title: `${t("experience.retrato-oval.title")} <br /><span class="font-normal serif" style="color:#C47D3F; font-size: 0.875rem;">${t("experience.retrato-oval.project")}</span> <br /><span class="font-normal" style="color:#5E574E; font-size: 0.75rem; letter-spacing:0.1em; text-transform:uppercase;">${t("experience.retrato-oval.period")}</span>`, description: t("experience.retrato-oval.description"), icon: "tabler:brush" },
     ]}
     classes={{ container: "max-w-3xl" }}
   />
 
-  <!-- Skills -->
-  <Skill
-    id="skills"
-    title={t("skills.title")}
-    subtitle={t("skills.subtitle")}
-    columns={3}
-    defaultIcon="tabler:point-filled"
-    items={[
-      {
-        title: t("skills.art-direction.title"),
-        description: t("skills.art-direction.description"),
-        icon: "tabler:palette",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: t("skills.model-design.title"),
-        description: t("skills.model-design.description"),
-        icon: "tabler:3d-cube-sphere",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: t("skills.cinematography.title"),
-        description: t("skills.cinematography.description"),
-        icon: "tabler:camera",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: t("skills.services.title"),
-        description: t("skills.services.description"),
-        icon: "tabler:list-check",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-      {
-        title: t("skills.languages.title"),
-        description: t("skills.languages.description"),
-        icon: "tabler:language",
-        classes: {
-          title: "dark:text-white",
-          description: "dark:text-gray-400",
-        },
-      },
-    ]}
-  />
-
-  <!-- Projects -->
-  {
-    ContentProjects.map((project, index) => (
-      <Content
-        id={index === 0 ? "porfolio" : undefined}
-        title={index === 0 ? portfolioSectionTitle : undefined}
-        subtitle={index === 0 ? portfolioSectionSubtitle : undefined}
-        isReversed={true}
-        isAfterContent={index !== 0}
-        items={[
-          {
-            title: t("general.description"),
-            description: project.description,
-          },
-        ]}
-        image={project.image}
-        imageHref={project.href}
-        callToAction={{
-          text: t("general.view-project"),
-          icon: "tabler:chevron-right",
-          href: project.href,
-        }}
-      >
-        {" "}
-        <Fragment slot="content">
-          <h3
-            class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2"
-            set:html={project.projectTitleHTML}
-            transition:name={`title-${project.id}`}
-            transition:animate="fade"
-          />
-          <div transition:name={`description-${project.id}`} class="hidden" />
-        </Fragment>
-        <Fragment slot="bg">
-          <div class="absolute inset-0 bg-blue-50 dark:bg-transparent" />
-        </Fragment>
-      </Content>
-    ))
-  }
-
-  <!-- Paintings Preview Section *********** -->
-  <section class="py-16 bg-gray-50 dark:bg-slate-800/40" id="pinturas">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-10 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-        <p class="text-sm font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-2">
-          goldenberry
-        </p>
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight dark:text-white mb-4">
-          {t("paintings.home-section-title")}
-        </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          {t("paintings.home-section-subtitle")}
-        </p>
+  <!-- Paintings Preview -->
+  <section
+    id="paintings"
+    style="background: rgba(11,9,8,0.85); padding: 80px clamp(24px, 4vw, 64px);"
+  >
+    <div class="mx-auto intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" style="max-width: 1440px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 36px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+            <span class="accent-line"></span>
+            <span style="font-size: 0.75rem; letter-spacing: 0.08em; color: #C47D3F; font-weight: 500;">Goldenberry</span>
+          </div>
+          <h2 class="serif" style="font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; margin: 0; color: #E8E0D2;">{t("paintings.home-section-title")}</h2>
+        </div>
+        <a href={paintingsHref} class="paintings-cta-btn" style="font-size: 0.875rem; color: #C47D3F; font-weight: 500; padding: 10px 24px; border: 1px solid #C47D3F; border-radius: 6px; text-decoration: none;">{t("paintings.view-all")} →</a>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-        {
-          featuredPaintings.map((p) =>
-            p.thumbnail ? (
-              <a
-                href={paintingsHref}
-                class="group block overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-              >
-                <div class="aspect-square overflow-hidden">
-                  <img
-                    src={p.thumbnail}
-                    alt={p.title}
-                    width="400"
-                    height="400"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="bg-white dark:bg-slate-800 px-3 py-2">
-                  <p class="text-xs font-medium text-gray-800 dark:text-gray-200 truncate">
-                    {p.title}
-                  </p>
-                  <p class="text-xs text-blue-600 dark:text-blue-400 font-semibold">
-                    USD {p.price}
-                  </p>
-                </div>
-              </a>
-            ) : null
-          )
-        }
-      </div>
-      <div class="text-center intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-        <a
-          href={paintingsHref}
-          class="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 font-semibold hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-slate-900 transition-all duration-200"
-        >
-          {t("paintings.view-all")}
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Other Works Section *********** -->
-  <section class="py-16">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2
-          class="text-3xl md:text-4xl font-bold tracking-tight dark:text-white mb-4"
-        >
-          {otherWorksTitle}
-        </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          {otherWorksSubtitle}
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {
-          extraWorksImages.map((image, index) => (
-            <div
-              class="aspect-video overflow-hidden rounded-lg shadow-lg cursor-pointer gallery-image hover:scale-105 transition-transform duration-300"
-              data-index={index}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                width={image.width || 1920}
-                height={image.height || 1080}
-                class="w-full h-full object-cover"
-                loading="lazy"
-              />
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        {featuredPaintings.map((p) => p.thumbnail ? (
+          <a href={paintingsHref} class="painting-thumb" style="display: block; background: #1A1714; border-radius: 8px; overflow: hidden; text-decoration: none;">
+            <div style="aspect-ratio: 1; overflow: hidden;">
+              <img src={p.thumbnail} alt={p.title} width="400" height="400" class="w-full h-full object-cover painting-thumb-img" loading="lazy" />
             </div>
-          ))
-        }
+            <div style="padding: 14px 16px 16px;">
+              <p style="font-size: 0.875rem; font-weight: 500; margin: 0 0 6px; color: #E8E0D2;">{p.title}</p>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="font-size: 1rem; font-weight: 700; color: #C47D3F;">USD {p.price}</span>
+                <span style="font-size: 0.75rem; color: #5E574E;">{p.year}</span>
+              </div>
+            </div>
+          </a>
+        ) : null)}
       </div>
     </div>
   </section>
 
-  <!-- CallToAction Widget *********** -->
+  <section id="porfolio" style="background: rgba(11,9,8,0.85); padding: 80px clamp(24px, 4vw, 64px);">
+    <div class="mx-auto intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" style="max-width: 1440px;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+        <span class="accent-line"></span>
+        <span style="font-size: 0.75rem; letter-spacing: 0.08em; color: #C47D3F; font-weight: 500;">Portfolio</span>
+      </div>
+      <h2 class="serif" style="font-size: clamp(2.25rem, 3.5vw, 3rem); font-weight: 600; color: #E8E0D2; margin: 0 0 48px;">{t("portfolio.title")}</h2>
+      <div class="portfolio-grid">
+        {ContentProjects.map((p) => (
+          <a href={p.href} class="project-card" style="position: relative; border-radius: 8px; overflow: hidden; display: block; height: 320px; text-decoration: none;">
+            <img src={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} class="w-full h-full object-cover project-img" loading="lazy" transition:name={`image-${p.id}`} />
+            <div class="project-overlay" style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(11,9,8,0.92) 100%); transition: background 0.3s;"></div>
+            <div class="project-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 28px;">
+              <h3 class="serif" style="font-size: 1.5rem; font-weight: 600; margin: 0 0 8px; color: #E8E0D2; line-height: 1.2;" set:html={p.projectTitleHTML} />
+              <p style="font-size: 1rem; line-height: 1.6; color: #C4B8AA; margin: 0; max-width: 400px;">{p.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section style="background: rgba(11,9,8,0.85); padding: 80px clamp(24px, 4vw, 64px);">
+    <div class="mx-auto intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" style="max-width: 1440px;">
+      <p class="section-label" style="margin: 0 0 14px;">{t("other-works.title")}</p>
+      <div class="accent-line" style="margin-bottom: 40px;"></div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        {extraWorksImages.map((image, index) => (
+          <div class="other-work-img gallery-image" data-index={index} style="aspect-ratio: 16/10; overflow: hidden; border-radius: 4px; cursor: pointer;">
+            <img src={image.src} alt={image.alt} width={image.width || 1200} height={image.height || 800} class="w-full h-full object-cover other-img" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <CallToAction
     title={t("cta.title")}
     subtitle={t("cta.subtitle")}
-    actions={[
-      {
-        variant: "primary",
-        text: t("cta.button"),
-        href: "/en/contact",
-      },
-    ]}
+    actions={[{ variant: "primary", text: t("cta.button"), href: contactHref }]}
   />
+
+  <div id="lightbox" class="lightbox-overlay">
+    <div class="lightbox-container">
+      <button id="lightbox-close" class="lightbox-close" aria-label="Close">×</button>
+      <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Previous">‹</button>
+      <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Next">›</button>
+      <img id="lightbox-image" class="lightbox-image" alt="" />
+      <div class="lightbox-counter">
+        <span id="lightbox-current">1</span> / <span id="lightbox-total">{extraWorksImages.length}</span>
+      </div>
+    </div>
+  </div>
 </Layout>
+
+<style>
+  .hero-btn-primary { display: inline-flex; align-items: center; padding: 12px 28px; background: #C47D3F; color: #fff; font-size: 0.875rem; font-weight: 500; border-radius: 4px; text-decoration: none; transition: all 0.25s ease; }
+  .hero-btn-primary:hover { background: #D4924F; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(196,125,63,0.3); }
+  .hero-btn-secondary { display: inline-flex; align-items: center; padding: 12px 28px; background: transparent; color: #847B6F; font-size: 0.875rem; font-weight: 500; border: 1px solid #2C2620; border-radius: 4px; text-decoration: none; transition: all 0.25s ease; }
+  .hero-btn-secondary:hover { color: #E8E0D2; border-color: #5E574E; }
+  .skill-card:hover { background: #221F1A !important; transform: translateY(-2px); }
+  .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .portfolio-grid { grid-template-columns: 1fr; } }
+  .project-img { transition: transform 0.6s ease; }
+  .project-card:hover .project-img { transform: scale(1.05); }
+  .project-card:hover .project-overlay { background: linear-gradient(180deg, transparent 30%, rgba(11,9,8,0.97) 100%) !important; }
+  .project-info { transition: transform 0.3s ease; }
+  .project-card:hover .project-info { transform: translateY(-4px); }
+  .paintings-cta-btn:hover { background: rgba(196,125,63,0.1); }
+  .painting-thumb { transition: transform 0.3s; }
+  .painting-thumb:hover { transform: translateY(-3px); }
+  .painting-thumb-img { transition: transform 0.5s; }
+  .painting-thumb:hover .painting-thumb-img { transform: scale(1.06); }
+  .other-img { transition: transform 0.5s; }
+  .other-work-img:hover .other-img { transform: scale(1.05); }
+  .lightbox-overlay { position: fixed; inset: 0; background: transparent; z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+  .lightbox-overlay.active { background: rgba(0,0,0,0.92); opacity: 1; visibility: visible; }
+  .lightbox-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+  .lightbox-image { max-width: 70vw; max-height: 70vh; object-fit: contain; border-radius: 8px; transform: scale(0.85); opacity: 0; transition: all 0.35s ease; }
+  .lightbox-overlay.active .lightbox-image { transform: scale(1); opacity: 1; }
+  .lightbox-close { position: fixed; top: 24px; right: 28px; background: none; border: none; font-size: 2.5rem; color: #fff; cursor: pointer; z-index: 1001; opacity: 0; transform: translateY(-15px); transition: all 0.25s ease 0.1s; }
+  .lightbox-overlay.active .lightbox-close { opacity: 1; transform: translateY(0); }
+  .lightbox-close:hover { color: #C47D3F; }
+  .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; font-size: 2rem; color: #fff; cursor: pointer; z-index: 1001; width: 48px; height: 48px; border-radius: 50%; backdrop-filter: blur(10px); display: grid; place-items: center; opacity: 0; transition: all 0.25s ease 0.15s; }
+  .lightbox-overlay.active .lightbox-nav { opacity: 1; }
+  .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+  .lightbox-counter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); color: #fff; font-size: 0.875rem; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(10px); opacity: 0; transition: all 0.3s ease 0.15s; }
+  .lightbox-overlay.active .lightbox-counter { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (max-width: 768px) {
+    [style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+    .lightbox-image { max-width: 88vw; max-height: 60vh; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+  }
+</style>
+
+<script define:vars={{ images: extraWorksImages }}>
+  let currentIdx = 0;
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImage = document.getElementById("lightbox-image");
+  const lightboxCurrent = document.getElementById("lightbox-current");
+  const lightboxTotal = document.getElementById("lightbox-total");
+  if (lightboxTotal) lightboxTotal.textContent = images.length;
+  document.querySelectorAll(".gallery-image").forEach((el) => {
+    el.addEventListener("click", () => {
+      currentIdx = parseInt(el.getAttribute("data-index") || "0");
+      updateImage();
+      lightbox?.classList.add("active");
+      document.body.style.overflow = "hidden";
+    });
+  });
+  function updateImage() {
+    if (!lightboxImage || !lightboxCurrent) return;
+    lightboxImage.src = images[currentIdx].src;
+    lightboxImage.alt = images[currentIdx].alt;
+    lightboxCurrent.textContent = currentIdx + 1;
+  }
+  function close() { lightbox?.classList.remove("active"); setTimeout(() => { document.body.style.overflow = ""; }, 300); }
+  document.getElementById("lightbox-close")?.addEventListener("click", close);
+  document.getElementById("lightbox-prev")?.addEventListener("click", () => { currentIdx = (currentIdx - 1 + images.length) % images.length; updateImage(); });
+  document.getElementById("lightbox-next")?.addEventListener("click", () => { currentIdx = (currentIdx + 1) % images.length; updateImage(); });
+  lightbox?.addEventListener("click", (e) => { if (e.target === lightbox) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (!lightbox?.classList.contains("active")) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowRight") { currentIdx = (currentIdx + 1) % images.length; updateImage(); }
+    if (e.key === "ArrowLeft") { currentIdx = (currentIdx - 1 + images.length) % images.length; updateImage(); }
+  });
+</script>
+
+<script>
+  function setupVideoAutoplay() {
+    document.querySelectorAll('video[data-autoplay-on-scroll]').forEach(video => {
+      if ((video as HTMLElement).dataset.observerAttached) return;
+      (video as HTMLElement).dataset.observerAttached = 'true';
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) (video as HTMLVideoElement).play().catch(() => {}); else (video as HTMLVideoElement).pause(); });
+      }, { threshold: 0.25 });
+      observer.observe(video);
+    });
+  }
+  setupVideoAutoplay();
+  document.addEventListener('astro:after-swap', setupVideoAutoplay);
+</script>

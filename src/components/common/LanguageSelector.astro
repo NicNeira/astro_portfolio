@@ -2,6 +2,12 @@
 import { languages, getLangFromUrl } from "@utils/i18n";
 
 const currentLang = getLangFromUrl(Astro.url);
+
+const flagSVG: Record<string, string> = {
+  es: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="13" viewBox="0 0 20 13" style="border-radius:2px;display:block;"><rect width="20" height="13" fill="#D52B1E"/><rect width="20" height="6.5" fill="#fff"/><rect width="6.5" height="6.5" fill="#0039A6"/><polygon points="3.25,1.45 3.67,2.67 4.96,2.69 3.93,3.47 4.31,4.71 3.25,3.97 2.19,4.71 2.57,3.47 1.54,2.69 2.83,2.67" fill="#fff"/></svg>`,
+  en: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="11" viewBox="0 0 20 11" style="border-radius:2px;display:block;"><rect width="20" height="11" fill="#B22234"/><rect y="0.85" width="20" height="0.85" fill="#fff"/><rect y="2.54" width="20" height="0.85" fill="#fff"/><rect y="4.23" width="20" height="0.85" fill="#fff"/><rect y="5.92" width="20" height="0.85" fill="#fff"/><rect y="7.62" width="20" height="0.85" fill="#fff"/><rect y="9.31" width="20" height="0.85" fill="#fff"/><rect width="7.69" height="5.92" fill="#3C3B6E"/></svg>`,
+  de: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 5 3" style="border-radius:2px;display:block;"><rect width="5" height="1" fill="#000"/><rect y="1" width="5" height="1" fill="#DD0000"/><rect y="2" width="5" height="1" fill="#FFCE00"/></svg>`,
+};
 const currentPath = Astro.url.pathname;
 
 const pageSlugMap: Record<string, Record<string, string>> = {
@@ -24,64 +30,44 @@ function getLocalizedPath(lang: string, currentPath: string) {
 ---
 
 <div class="relative inline-block text-left">
-  <div>
-    <button
-      type="button"
-      class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-      id="language-menu"
-      aria-expanded="true"
-      aria-haspopup="true"
-    >
-      <span class="flex items-center">
-        <span class="mr-2">🌐</span>
-        {languages[currentLang]}
-      </span>
-      <svg
-        class="-mr-1 ml-2 h-5 w-5"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clip-rule="evenodd"></path>
-      </svg>
-    </button>
-  </div>
+  <button
+    type="button"
+    class="lang-btn flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none"
+    id="language-menu"
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label="Change language"
+    style="width: 36px; height: 36px; background: transparent; border: 1px solid #2C2620;"
+  >
+    <Fragment set:html={flagSVG[currentLang]} />
+  </button>
 
   <div
-    class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+    class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
     id="language-dropdown"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="language-menu"
     tabindex="-1"
+    style="background: #1A1714; border: 1px solid #2C2620;"
   >
     <div class="py-1" role="none">
       {
         Object.entries(languages).map(([lang, name]) => (
           <a
             href={getLocalizedPath(lang, currentPath)}
-            class={`${
-              currentLang === lang
-                ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
-                : "text-gray-700 dark:text-gray-200"
-            } group flex items-center px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
+            class={`group flex items-center px-4 py-2 text-sm transition-colors`}
             role="menuitem"
             tabindex="-1"
+            style={currentLang === lang ? "color: #E8E0D2; background: #2C2620;" : "color: #847B6F;"}
           >
-            <span class="mr-3">
-              {lang === "es" && "🇪🇸"}
-              {lang === "en" && "🇺🇸"}
-              {lang === "de" && "🇩🇪"}
-            </span>
+            <span class="mr-3" set:html={flagSVG[lang]} />
             {name}
             {currentLang === lang && (
               <span class="ml-auto">
                 <svg
-                  class="h-4 w-4 text-indigo-600"
+                  class="h-4 w-4"
+                  style="color: #C47D3F;"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -139,4 +125,9 @@ function getLocalizedPath(lang: string, currentPath: string) {
     initLanguageSelector();
   }
 </script>
+
+<style>
+  .lang-btn:hover { border-color: #5E574E; background: rgba(44,38,32,0.5) !important; }
+  [role="menuitem"]:hover { background: #2C2620; color: #E8E0D2 !important; }
+</style>
 

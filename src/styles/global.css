@@ -2,5 +2,106 @@
 @config "../../tailwind.config.js";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --aw-font-sans: 'Outfit', ui-sans-serif, system-ui;
+  --aw-font-serif: 'Cormorant Garamond', ui-serif, Georgia;
+  --aw-font-heading: 'Cormorant Garamond', ui-serif, Georgia;
 
+  --clr-bg:              #0B0908;
+  --clr-surface:         #1A1714;
+  --clr-surface-hover:   #221F1A;
+  --clr-accent:          #C47D3F;
+  --clr-accent-2:        #C45A3C;
+  --clr-accent-dim:      rgba(196,125,63,0.15);
+  --clr-text:            #E8E0D2;
+  --clr-text-muted:      #847B6F;
+  --clr-text-dim:        #5E574E;
+  --clr-border:          #2C2620;
+}
 
+/* ── Base ──────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--clr-bg) !important;
+  color: var(--clr-text);
+  font-family: 'Outfit', ui-sans-serif, system-ui;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Canvas WebGL background — asegurar que siempre sea sutil */
+#animated-background {
+  opacity: 0.08 !important;
+  pointer-events: none !important;
+}
+
+::selection {
+  background: rgba(196,125,63,0.35);
+  color: #fff;
+}
+
+::-webkit-scrollbar            { width: 6px; }
+::-webkit-scrollbar-track      { background: #0B0908; }
+::-webkit-scrollbar-thumb      { background: #2C2620; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C47D3F; }
+
+/* ── Tailwind utility overrides ────────────────────────────── */
+@layer base {
+  .bg-page { background-color: #0B0908 !important; }
+  .dark .bg-page { background-color: #0B0908 !important; }
+  .text-default { color: #E8E0D2; }
+  .dark .text-default { color: #E8E0D2; }
+  .text-muted { color: #847B6F; }
+  .dark .text-muted { color: #847B6F; }
+
+  /* Neutralize white section backgrounds */
+  .dark .bg-white { background-color: #1A1714; }
+  .dark .bg-gray-50 { background-color: #1A1714; }
+  .dark .bg-blue-50 { background-color: transparent; }
+
+  /* Links */
+  a { color: inherit; }
+
+  /* Primary colour (copper) */
+  .text-primary { color: #C47D3F; }
+  .dark .text-primary { color: #C47D3F; }
+  .bg-primary { background-color: #C47D3F; }
+  .border-primary { border-color: #C47D3F; }
+}
+
+/* ── Portfolio utility classes ─────────────────────────────── */
+.accent-line {
+  display: block;
+  width: 32px;
+  height: 3px;
+  background: var(--clr-accent);
+  border-radius: 2px;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--clr-accent);
+  font-weight: 500;
+}
+
+.serif { font-family: 'Cormorant Garamond', ui-serif, Georgia; }
+
+/* ── View Transition: evitar destello de fondo claro ─────── */
+/* Durante el crossfade, los snapshots se vuelven semi-transparentes;
+   este fondo cubre el canvas y body para que no se filtre luz. */
+::view-transition {
+  background-color: #0B0908;
+}
+
+/* ── Reveal animation (CSS-only fallback) ──────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,195 +1,164 @@
 ---
 import Layout from "@layouts/PageLayout.astro";
-import { Image } from "astro:assets";
-import ContactImage from "../../assets/images/profile.jpg";
-import Button from "@components/ui/Button.astro";
 import { useTranslations } from "@utils/i18n";
 
-const lang = "de";
-const t = useTranslations(lang);
-
-// Enlace para el form de Formspree (puedes crear uno gratuito en https://formspree.io)
-// Reemplaza "FORMSPREE_ID" con tu ID real después de registrarte
+const t = useTranslations("de");
 const web3Action = "https://api.web3forms.com/submit";
 
 const metadata = {
-  title: `${t("nav.contact")} - Maximiliano Neira`,
-  description:
-    "Kontaktieren Sie Maximiliano Neira für Art Direction, Kinematographie und kreative Kollaborationsprojekte. Art Director und Filmemacher in Santiago, Chile.",
+  title: "Kontakt - Maximiliano Neira",
+  description: "Kontaktieren Sie Maximiliano Neira für Art Direction, Kinematographie und kreative Kollaborationsprojekte.",
   canonical: "https://maximiliano-neira.com/de/contact",
 };
 ---
 
 <Layout metadata={metadata}>
-  <div class="py-16 md:py-20">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6">
-      <div class="text-center max-w-3xl mx-auto">
-        <h1
-          class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-white"
-        >
-          {t("contact.form.title")}
+  <div style="background: rgba(11,9,8,0.85); min-height: 100vh;">
+    <div
+      class="mx-auto px-6 md:px-16 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+      style="max-width: 1440px; padding-top: 80px; padding-bottom: 80px; display: flex; gap: 80px; flex-wrap: wrap;"
+    >
+      <!-- Left: Info -->
+      <div style="flex: 0 0 clamp(300px, 32%, 420px);">
+        <p style="font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C45A3C; margin: 0 0 16px; font-weight: 500;">Kontakt</p>
+        <h1 class="serif" style="font-size: clamp(2.25rem, 4vw, 3rem); font-weight: 700; margin: 0 0 20px; line-height: 1.1; color: #E8E0D2;">
+          Lass uns etwas<br />
+          <span style="color: #C47D3F;">Außergewöhnliches</span> schaffen
         </h1>
-        <p class="text-xl text-muted dark:text-slate-400">
+        <p style="font-size: 1rem; color: #847B6F; line-height: 1.75; margin: 0 0 40px;">
           {t("contact.form.subtitle")}
         </p>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="padding: 20px 24px; background: #1A1714; border-radius: 10px; display: flex; align-items: center; gap: 16px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(196,125,63,0.15); display: flex; align-items: center; justify-content: center; font-size: 1rem;">📍</div>
+            <div>
+              <p style="font-size: 0.75rem; color: #5E574E; margin: 0 0 2px;">Standort</p>
+              <p style="font-size: 0.875rem; font-weight: 500; margin: 0; color: #E8E0D2;">Frankfurt, Deutschland</p>
+            </div>
+          </div>
+          <div style="padding: 20px 24px; background: #1A1714; border-radius: 10px; display: flex; align-items: center; gap: 16px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(196,125,63,0.15); display: flex; align-items: center; justify-content: center; font-size: 1rem;">💼</div>
+            <div>
+              <p style="font-size: 0.75rem; color: #5E574E; margin: 0 0 2px;">Netzwerk</p>
+              <a href="https://www.linkedin.com/in/maximiliano-neira-a3b6341b2/" target="_blank" rel="noopener" style="font-size: 0.875rem; font-weight: 500; margin: 0; color: #C47D3F; text-decoration: none;">LinkedIn</a>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="flex flex-col items-center gap-8 md:gap-16 mt-12">
-        <!-- Formulario de Contacto -->
-        <div class="w-full max-w-2xl">
-          <!-- // Styling Requires Tailwind CSS -->
-          <form
-            action={web3Action}
-            method="POST"
-            id="form"
-            class="needs-validation"
-            data-astro-reload
-            novalidate
-          >
-            <!-- Add your Web3Forms Access Key -->
-            <input
-              type="hidden"
-              name="access_key"
-              value="13379e9b-bc8c-4475-9190-90f4a1d1e6c2"
-            />
-
-            <input
-              type="checkbox"
-              class="hidden"
-              style="display:none"
-              name="botcheck"
-            />
-            <div class="mb-5">
-              <input
-                type="text"
-                placeholder={t("contact.form.name.placeholder")}
-                required
-                class="w-full px-4 py-3 border placeholder:text-slate-400 rounded-md outline-none focus:ring-4 border-slate-300 focus:border-slate-600 ring-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-slate-700"
-                name="name"
-              />
-              <div
-                class="empty-feedback invalid-feedback text-red-400 text-sm mt-1"
-              >
-                {t("contact.form.name.error")}
-              </div>
-            </div>
-            <div class="mb-5">
-              <label for="email_address" class="sr-only"
-                >{t("contact.form.email.placeholder")}</label
-              ><input
-                id="email_address"
-                type="email"
-                placeholder={t("contact.form.email.placeholder")}
-                name="email"
-                required
-                class="w-full px-4 py-3 border placeholder:text-slate-400 rounded-md outline-none focus:ring-4 border-slate-300 focus:border-slate-600 ring-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-slate-700"
-              />
-              <div class="empty-feedback text-red-400 text-sm mt-1">
-                {t("contact.form.email.error")}
-              </div>
-              <div class="invalid-feedback text-red-400 text-sm mt-1">
-                {t("contact.form.email.invalid")}
-              </div>
-            </div>
-            <div class="mb-3">
-              <textarea
-                name="message"
-                required
-                placeholder={t("contact.form.message.placeholder")}
-                class="w-full px-4 py-3 border placeholder:text-slate-400 rounded-md outline-none h-36 focus:ring-4 border-slate-300 focus:border-slate-600 ring-slate-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white dark:placeholder:text-slate-500 dark:focus:ring-slate-700"
-              ></textarea>
-              <div
-                class="empty-feedback invalid-feedback text-red-400 text-sm mt-1"
-              >
-                {t("contact.form.message.error")}
-              </div>
-            </div>
-            <div class="flex justify-center w-full">
-              <Button type="submit" text={t("contact.form.send")} />
-            </div>
-            <div id="result" class="mt-3 text-center"></div>
-          </form>
+      <!-- Right: Form -->
+      <div style="flex: 1; min-width: 300px; padding-top: 40px;">
+        <div id="form-success" style="display: none; text-align: center; padding: 60px 0;">
+          <div style="font-size: 3rem; margin-bottom: 16px; color: #C47D3F;">✓</div>
+          <h2 class="serif" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 12px; color: #E8E0D2;">Nachricht gesendet</h2>
+          <p style="color: #847B6F;">Vielen Dank für Ihre Nachricht. Ich melde mich bald bei Ihnen.</p>
         </div>
+        <form action={web3Action} method="POST" id="contact-form" novalidate>
+          <input type="hidden" name="access_key" value="ba59ec70-e847-44ee-80da-9f4e469bb75b" />
+          <input type="checkbox" class="hidden" style="display:none" name="botcheck" />
+          <div style="display: flex; flex-direction: column; gap: 28px;">
+            <div class="form-field">
+              <label class="field-label">Vollständiger Name</label>
+              <input type="text" name="name" placeholder="Wie heißen Sie?" required class="field-input" />
+            </div>
+            <div class="form-field">
+              <label class="field-label">E-Mail-Adresse</label>
+              <input type="email" name="email" placeholder="email@beispiel.com" required class="field-input" />
+            </div>
+            <div class="form-field">
+              <label class="field-label">Ihre Nachricht</label>
+              <textarea name="message" placeholder="Erzählen Sie mir von Ihrer Idee oder Ihrem Projekt..." rows="5" required class="field-input" style="resize: vertical;"></textarea>
+            </div>
+            <button type="submit" id="submit-btn" class="submit-btn">
+              Nachricht senden
+            </button>
+            <div id="form-result" style="text-align: center; font-size: 0.875rem;"></div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-
-  <style>
-    .invalid-feedback,
-    .empty-feedback {
-      display: none;
-    }
-
-    .was-validated :placeholder-shown:invalid ~ .empty-feedback {
-      display: block;
-    }
-
-    .was-validated :not(:placeholder-shown):invalid ~ .invalid-feedback {
-      display: block;
-    }
-
-    .is-invalid,
-    .was-validated :invalid {
-      border-color: #dc3545;
-    }
-  </style>
-
-  <script is:inline>
-    // use astro:page-load event if you are using View Transitions
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-        const form = document.getElementById("form");
-        const result = document.getElementById("result");
-
-        form.addEventListener("submit", function (e) {
-          e.preventDefault();
-          form.classList.add("was-validated");
-          if (!form.checkValidity()) {
-            form.querySelectorAll(":invalid")[0].focus();
-            return;
-          }
-          const formData = new FormData(form);
-          const object = Object.fromEntries(formData);
-          const json = JSON.stringify(object);
-
-          result.innerHTML = "Wird gesendet...";
-
-          fetch("https://api.web3forms.com/submit", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: json,
-          })
-            .then(async (response) => {
-              let json = await response.json();
-              if (response.status == 200) {
-                result.classList.add("text-green-500");
-                result.innerHTML = json.message;
-              } else {
-                console.log(response);
-                result.classList.add("text-red-500");
-                result.innerHTML = json.message;
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-              result.innerHTML = "Etwas ist schief gelaufen!";
-            })
-            .then(function () {
-              form.reset();
-              form.classList.remove("was-validated");
-              setTimeout(() => {
-                result.style.display = "none";
-              }, 5000);
-            });
-        });
-      },
-      { once: true }
-    );
-  </script>
 </Layout>
 
+<style>
+  .field-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #5E574E;
+    margin-bottom: 8px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .field-input {
+    width: 100%;
+    padding: 14px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid #2C2620;
+    color: #E8E0D2;
+    font-size: 0.875rem;
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+  .field-input::placeholder { color: #5E574E; }
+  .field-input:focus { border-bottom-color: #C47D3F; }
+  .submit-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: #C47D3F;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: all 0.25s ease;
+    margin-top: 8px;
+  }
+  .submit-btn:hover {
+    background: #D4924F;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(196,125,63,0.3);
+  }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("contact-form") as HTMLFormElement;
+    const result = document.getElementById("form-result");
+    const success = document.getElementById("form-success");
+    const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wird gesendet...";
+      const formData = new FormData(form);
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(Object.fromEntries(formData)),
+        });
+        const json = await response.json();
+        if (response.ok) {
+          form.style.display = "none";
+          if (success) success.style.display = "block";
+        } else {
+          if (result) { result.textContent = json.message; result.style.color = "#C45A3C"; }
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Nachricht senden";
+        }
+      } catch {
+        if (result) { result.textContent = "Fehler beim Senden. Bitte versuchen Sie es erneut."; result.style.color = "#C45A3C"; }
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Nachricht senden";
+      }
+    });
+  });
+</script>

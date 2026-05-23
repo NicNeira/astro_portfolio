@@ -58,10 +58,8 @@ class AnimatedBackground {
   }
 
   isDarkTheme() {
-    var htmlElement = document.documentElement;
-    var hasClass = htmlElement.classList.contains("dark");
-    var dataTheme = htmlElement.getAttribute("data-theme");
-    return hasClass || dataTheme === "dark";
+    // El sitio es siempre dark mode — forzar siempre true
+    return true;
   }
 
   setup() {
@@ -182,14 +180,10 @@ class AnimatedBackground {
       }
     });
 
-    // Detener antes de que el DOM viejo sea reemplazado
-    document.addEventListener("astro:before-swap", function () {
-      self.cleanup();
-    });
-
-    // Re-inicializar con el canvas nuevo en cuanto el DOM está listo
+    // Con transition:persist, el canvas sobrevive la navegación.
+    // Solo reiniciar si por alguna razón el canvas fue removido.
     document.addEventListener("astro:after-swap", function () {
-      if (self.getCanvasAndContext()) {
+      if (!self.isInitialized && self.getCanvasAndContext()) {
         self.init();
       }
     });

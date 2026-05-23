@@ -1,7 +1,5 @@
 ---
-import WidgetWrapper from "@components/ui/WidgetWrapper.astro";
 import type { CallToAction, Widget } from "@utils/types";
-import Headline from "@components/ui/Headline.astro";
 import Button from "@components/ui/Button.astro";
 
 interface Props extends Widget {
@@ -15,48 +13,48 @@ interface Props extends Widget {
 const {
   title = await Astro.slots.render("title"),
   subtitle = await Astro.slots.render("subtitle"),
-  tagline = await Astro.slots.render("tagline"),
   actions = await Astro.slots.render("actions"),
-
   id,
-  isDark = false,
-  classes = {},
-  bg = await Astro.slots.render("bg"),
 } = Astro.props;
 ---
 
-<WidgetWrapper
+<section
   id={id}
-  isDark={isDark}
-  containerClass={`max-w-6xl mx-auto ${classes?.container ?? ""}`}
-  bg={bg}
+  class="relative scroll-mt-[72px]"
+  style="background: rgba(11,9,8,0.85);"
 >
-  <div class="max-w-3xl mx-auto text-center p-6">
-    <Headline
-      title={title}
-      subtitle={subtitle}
-      tagline={tagline}
-      classes={{
-        container: "mb-0 md:mb-0",
-        title:
-          "text-4xl md:text-4xl font-bold tracking-tighter mb-4 font-heading dark:text-white",
-        subtitle: "text-xl text-muted dark:text-slate-400",
-      }}
-    />
-    {
-      actions && (
-        <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 mt-6">
+  <div
+    class="mx-auto px-6 md:px-16 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+    style="max-width: 1440px; padding-top: 80px; padding-bottom: 80px;"
+  >
+    <div
+      class="text-center"
+      style="border-top: 1px solid #2C2620; padding-top: 56px;"
+    >
+      {title && (
+        <h2
+          class="serif"
+          style="font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; color: #E8E0D2; margin: 0 0 12px;"
+          set:html={title}
+        />
+      )}
+      {subtitle && (
+        <p
+          style="font-size: 0.875rem; color: #847B6F; margin: 0 0 28px;"
+          set:html={subtitle}
+        />
+      )}
+      {actions && (
+        <div class="flex justify-center gap-4 flex-wrap">
           {Array.isArray(actions) ? (
             actions.map((action) => (
-              <div class="flex w-full sm:w-auto">
-                <Button {...(action || {})} class="w-full sm:mb-0" />
-              </div>
+              <Button {...(action || {})} variant={action.variant || "primary"} />
             ))
           ) : (
             <Fragment set:html={actions} />
           )}
         </div>
-      )
-    }
+      )}
+    </div>
   </div>
-</WidgetWrapper>
+</section>
