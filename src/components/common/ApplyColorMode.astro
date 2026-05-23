@@ -1,8 +1,8 @@
 ---
-// TODO: This code is temporary
+// Force dark mode always — the portfolio design is dark-only
 ---
 
-<script is:inline define:vars={{ defaultTheme: "system" }}>
+<script is:inline define:vars={{ defaultTheme: "dark:only" }}>
   function applyTheme(theme) {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
@@ -12,7 +12,6 @@
     const matches = document.querySelectorAll(
       "[data-aw-toggle-color-scheme] > input"
     );
-
     if (matches && matches.length) {
       matches.forEach((elem) => {
         elem.checked = theme !== "dark";
@@ -32,6 +31,6 @@
   ) {
     applyTheme("dark");
   } else {
-    applyTheme("light");
+    applyTheme("dark");
   }
 </script>

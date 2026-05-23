@@ -24,12 +24,11 @@ const paintingsSlug: Record<string, string> = { es: 'pinturas', en: 'paintings',
   <slot name="header">
     <Header
       links={[
-        { text: t("nav.home"), href: `${basePrefix}/#` },
+        { text: t("nav.home"), href: `${basePrefix}/` },
         { text: t("about.title"), href: `${basePrefix}/#about` },
         { text: t("experience.title"), href: `${basePrefix}/#resume` },
-        { text: t("skills.title"), href: `${basePrefix}/#skills` },
+        { text: t("nav.paintings"), href: `${basePrefix}/#paintings` },
         { text: t("nav.portfolio"), href: `${basePrefix}/#porfolio` },
-        { text: t("nav.paintings"), href: `${basePrefix}/${paintingsSlug[lang]}` },
       ]}
       actions={[
         {

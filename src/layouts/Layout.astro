@@ -22,7 +22,7 @@ const description = metadata?.description || defaultDescription;
 ---
 
 <!doctype html>
-<html lang="es" class="2xl:text-[20px]">
+<html lang="es" class="2xl:text-[1.25rem]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -41,6 +41,11 @@ const description = metadata?.description || defaultDescription;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+
+    <!-- Fonts: Cormorant Garamond + Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
     <!-- Canonical URL -->
     {metadata?.canonical && <link rel="canonical" href={metadata.canonical} />}
@@ -71,10 +76,13 @@ const description = metadata?.description || defaultDescription;
     <ClientRouter />
   </head>
   <body
-    class="antialiased text-default tracking-tight bg-page dark:bg-[#010b1a]"
+    class="antialiased text-default tracking-tight"
+    style="background: #0B0908;"
   >
     <AnimatedBackground />
-    <slot />
+    <div style="position: relative; z-index: 1;">
+      <slot />
+    </div>
 
     <BasicScripts />
   </body>
