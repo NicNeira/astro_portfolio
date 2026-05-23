@@ -76,7 +76,7 @@ const skills = [
         </div>
         <div style="flex: 1; min-width: 280px; display: flex; align-items: flex-start;">
           <div style="border-radius: 8px; overflow: hidden; width: 100%; max-width: 560px;">
-            <video class="w-full" style="display: block; border-radius: 8px;" controls muted playsinline preload="metadata" data-autoplay-on-scroll>
+            <video class="w-full" style="display: block; border-radius: 8px;" controls muted playsinline preload="metadata" data-preview-start="3">
               <source src="https://res.cloudinary.com/ds8bhx4d4/video/upload/f_mp4,q_auto/video-profile_ejrrej" type="video/mp4" />
             </video>
           </div>
@@ -113,15 +113,12 @@ const skills = [
     style="background: rgba(11,9,8,0.85); padding: 80px clamp(24px, 4vw, 64px);"
   >
     <div class="mx-auto intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade" style="max-width: 1440px;">
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 36px; flex-wrap: wrap; gap: 16px;">
-        <div>
-          <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-            <span class="accent-line"></span>
-            <span style="font-size: 0.75rem; letter-spacing: 0.08em; color: #C47D3F; font-weight: 500;">Goldenberry</span>
-          </div>
-          <h2 class="serif" style="font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; margin: 0; color: #E8E0D2;">{t("paintings.home-section-title")}</h2>
+      <div style="margin-bottom: 36px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+          <span class="accent-line"></span>
+          <span style="font-size: 0.75rem; letter-spacing: 0.08em; color: #C47D3F; font-weight: 500;">Goldenberry</span>
         </div>
-        <a href={paintingsHref} class="paintings-cta-btn" style="font-size: 0.875rem; color: #C47D3F; font-weight: 500; padding: 10px 24px; border: 1px solid #C47D3F; border-radius: 6px; text-decoration: none;">{t("paintings.view-all")} →</a>
+        <h2 class="serif" style="font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 600; margin: 0; color: #E8E0D2;">{t("paintings.home-section-title")}</h2>
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
         {featuredPaintings.map((p) => p.thumbnail ? (
@@ -139,6 +136,9 @@ const skills = [
           </a>
         ) : null)}
       </div>
+      <div style="display: flex; justify-content: center; margin-top: 36px;">
+        <a href={paintingsHref} class="paintings-cta-btn" style="font-size: 0.875rem; color: #C47D3F; font-weight: 500; padding: 10px 24px; border: 1px solid #C47D3F; border-radius: 6px; text-decoration: none; transition: background 0.2s;">{t("paintings.view-all")} →</a>
+      </div>
     </div>
   </section>
 
@@ -153,10 +153,9 @@ const skills = [
         {ContentProjects.map((p) => (
           <a href={p.href} class="project-card" style="position: relative; border-radius: 8px; overflow: hidden; display: block; height: 320px; text-decoration: none;">
             <img src={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} class="w-full h-full object-cover project-img" loading="lazy" transition:name={`image-${p.id}`} />
-            <div class="project-overlay" style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(11,9,8,0.92) 100%); transition: background 0.3s;"></div>
+            <div class="project-overlay" style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, rgba(11,9,8,0.85) 60%, rgba(11,9,8,0.97) 100%); transition: background 0.3s;"></div>
             <div class="project-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 28px;">
-              <h3 class="serif" style="font-size: 1.5rem; font-weight: 600; margin: 0 0 8px; color: #E8E0D2; line-height: 1.2;" set:html={p.projectTitleHTML} />
-              <p style="font-size: 1rem; line-height: 1.6; color: #C4B8AA; margin: 0; max-width: 400px;">{p.description}</p>
+              <h3 class="serif" style="font-size: 1.5rem; font-weight: 600; margin: 0; color: #C47D3F; line-height: 1.2;" set:html={p.projectTitleHTML} />
             </div>
           </a>
         ))}
@@ -187,8 +186,8 @@ const skills = [
   <div id="lightbox" class="lightbox-overlay">
     <div class="lightbox-container">
       <button id="lightbox-close" class="lightbox-close" aria-label="Schließen">×</button>
-      <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Zurück">‹</button>
-      <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Weiter">›</button>
+      <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Zurück"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Weiter"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
       <img id="lightbox-image" class="lightbox-image" alt="" />
       <div class="lightbox-counter">
         <span id="lightbox-current">1</span> / <span id="lightbox-total">{extraWorksImages.length}</span>
@@ -207,7 +206,7 @@ const skills = [
   @media (max-width: 768px) { .portfolio-grid { grid-template-columns: 1fr; } }
   .project-img { transition: transform 0.6s ease; }
   .project-card:hover .project-img { transform: scale(1.05); }
-  .project-card:hover .project-overlay { background: linear-gradient(180deg, transparent 30%, rgba(11,9,8,0.97) 100%) !important; }
+  .project-card:hover .project-overlay { background: linear-gradient(180deg, transparent 20%, rgba(11,9,8,0.92) 65%, rgba(11,9,8,0.99) 100%) !important; }
   .project-info { transition: transform 0.3s ease; }
   .project-card:hover .project-info { transform: translateY(-4px); }
   .paintings-cta-btn:hover { background: rgba(196,125,63,0.1); }
@@ -222,15 +221,16 @@ const skills = [
   .lightbox-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
   .lightbox-image { max-width: 70vw; max-height: 70vh; object-fit: contain; border-radius: 8px; transform: scale(0.85); opacity: 0; transition: all 0.35s ease; }
   .lightbox-overlay.active .lightbox-image { transform: scale(1); opacity: 1; }
-  .lightbox-close { position: fixed; top: 24px; right: 28px; background: none; border: none; font-size: 2.5rem; color: #fff; cursor: pointer; z-index: 1001; opacity: 0; transform: translateY(-15px); transition: all 0.25s ease 0.1s; }
+  .lightbox-close { position: fixed; top: 24px; right: 28px; background: none; border: none; font-size: 2.5rem; color: #E8E0D2; cursor: pointer; z-index: 1001; opacity: 0; transform: translateY(-15px); transition: all 0.25s ease 0.1s; }
   .lightbox-overlay.active .lightbox-close { opacity: 1; transform: translateY(0); }
   .lightbox-close:hover { color: #C47D3F; }
-  .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; font-size: 2rem; color: #fff; cursor: pointer; z-index: 1001; width: 48px; height: 48px; border-radius: 50%; backdrop-filter: blur(10px); display: grid; place-items: center; opacity: 0; transition: all 0.25s ease 0.15s; }
+  .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(44,38,32,0.7); border: 1px solid #2C2620; font-size: 0; line-height: 1; color: #E8E0D2; cursor: pointer; z-index: 1001; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; opacity: 0; transition: all 0.25s ease 0.15s; }
   .lightbox-overlay.active .lightbox-nav { opacity: 1; }
-  .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+  .lightbox-nav:hover { background: rgba(196,125,63,0.25); border-color: #C47D3F; }
   .lightbox-prev { left: 16px; }
   .lightbox-next { right: 16px; }
-  .lightbox-counter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); color: #fff; font-size: 0.875rem; background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px; opacity: 0; transition: all 0.3s ease 0.15s; }
+
+  .lightbox-counter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); color: #847B6F; font-size: 0.875rem; background: rgba(11,9,8,0.85); padding: 8px 16px; border-radius: 20px; border: 1px solid #2C2620; opacity: 0; transition: all 0.3s ease 0.15s; }
   .lightbox-overlay.active .lightbox-counter { opacity: 1; transform: translateX(-50%) translateY(0); }
   @media (max-width: 768px) {
     [style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
@@ -241,45 +241,61 @@ const skills = [
 </style>
 
 <script define:vars={{ images: extraWorksImages }}>
-  let currentIdx = 0;
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImage = document.getElementById("lightbox-image");
-  const lightboxCurrent = document.getElementById("lightbox-current");
-  const lightboxTotal = document.getElementById("lightbox-total");
-  if (lightboxTotal) lightboxTotal.textContent = images.length;
-  document.querySelectorAll(".gallery-image").forEach((el) => {
-    el.addEventListener("click", () => {
-      currentIdx = parseInt(el.getAttribute("data-index") || "0");
+  function initHomeLightbox() {
+    if (window._homeLbAbort) window._homeLbAbort.abort();
+    window._homeLbAbort = new AbortController();
+    const { signal } = window._homeLbAbort;
+
+    let currentIdx = 0;
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCurrent = document.getElementById("lightbox-current");
+    const lightboxTotal = document.getElementById("lightbox-total");
+    if (!lightbox) return;
+    if (lightboxTotal) lightboxTotal.textContent = images.length;
+
+    function updateImage() {
       if (lightboxImage) { lightboxImage.src = images[currentIdx].src; lightboxImage.alt = images[currentIdx].alt; }
       if (lightboxCurrent) lightboxCurrent.textContent = currentIdx + 1;
-      lightbox?.classList.add("active");
-      document.body.style.overflow = "hidden";
+    }
+
+    document.querySelectorAll(".gallery-image").forEach((el) => {
+      el.addEventListener("click", () => {
+        currentIdx = parseInt(el.getAttribute("data-index") || "0");
+        updateImage();
+        lightbox.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }, { signal });
     });
-  });
-  function close() { lightbox?.classList.remove("active"); setTimeout(() => { document.body.style.overflow = ""; }, 300); }
-  document.getElementById("lightbox-close")?.addEventListener("click", close);
-  document.getElementById("lightbox-prev")?.addEventListener("click", () => { currentIdx = (currentIdx - 1 + images.length) % images.length; if (lightboxImage) { lightboxImage.src = images[currentIdx].src; } if (lightboxCurrent) lightboxCurrent.textContent = currentIdx + 1; });
-  document.getElementById("lightbox-next")?.addEventListener("click", () => { currentIdx = (currentIdx + 1) % images.length; if (lightboxImage) { lightboxImage.src = images[currentIdx].src; } if (lightboxCurrent) lightboxCurrent.textContent = currentIdx + 1; });
-  lightbox?.addEventListener("click", (e) => { if (e.target === lightbox) close(); });
-  document.addEventListener("keydown", (e) => {
-    if (!lightbox?.classList.contains("active")) return;
-    if (e.key === "Escape") close();
-    if (e.key === "ArrowRight") { currentIdx = (currentIdx + 1) % images.length; if (lightboxImage) lightboxImage.src = images[currentIdx].src; if (lightboxCurrent) lightboxCurrent.textContent = currentIdx + 1; }
-    if (e.key === "ArrowLeft") { currentIdx = (currentIdx - 1 + images.length) % images.length; if (lightboxImage) lightboxImage.src = images[currentIdx].src; if (lightboxCurrent) lightboxCurrent.textContent = currentIdx + 1; }
-  });
+
+    function close() { lightbox.classList.remove("active"); setTimeout(() => { document.body.style.overflow = ""; }, 300); }
+    document.getElementById("lightbox-close")?.addEventListener("click", close, { signal });
+    document.getElementById("lightbox-prev")?.addEventListener("click", () => { currentIdx = (currentIdx - 1 + images.length) % images.length; updateImage(); }, { signal });
+    document.getElementById("lightbox-next")?.addEventListener("click", () => { currentIdx = (currentIdx + 1) % images.length; updateImage(); }, { signal });
+    lightbox.addEventListener("click", (e) => { if (e.target === lightbox) close(); }, { signal });
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("active")) return;
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowRight") { currentIdx = (currentIdx + 1) % images.length; updateImage(); }
+      if (e.key === "ArrowLeft") { currentIdx = (currentIdx - 1 + images.length) % images.length; updateImage(); }
+    }, { signal });
+  }
+  initHomeLightbox();
+  document.addEventListener('astro:page-load', initHomeLightbox);
 </script>
 
 <script>
-  function setupVideoAutoplay() {
-    document.querySelectorAll('video[data-autoplay-on-scroll]').forEach(video => {
-      if ((video as HTMLElement).dataset.observerAttached) return;
-      (video as HTMLElement).dataset.observerAttached = 'true';
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) (video as HTMLVideoElement).play().catch(() => {}); else (video as HTMLVideoElement).pause(); });
-      }, { threshold: 0.25 });
-      observer.observe(video);
+  function setupVideoPreview() {
+    document.querySelectorAll('video[data-preview-start]').forEach(video => {
+      const v = video as HTMLVideoElement;
+      const startAt = parseFloat((v as HTMLElement).dataset.previewStart || '0');
+      if (v.readyState >= 1) {
+        v.currentTime = startAt;
+      } else {
+        v.addEventListener('loadedmetadata', () => { v.currentTime = startAt; }, { once: true });
+      }
     });
   }
-  setupVideoAutoplay();
-  document.addEventListener('astro:after-swap', setupVideoAutoplay);
+  setupVideoPreview();
+  document.addEventListener('astro:page-load', setupVideoPreview);
 </script>

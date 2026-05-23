@@ -56,8 +56,8 @@ const contactHref = "/en/contact";
   <div id="painting-lightbox" class="painting-lightbox-overlay">
     <div class="painting-lightbox-container">
       <button id="plb-close" class="plb-close" aria-label="Close">×</button>
-      <button id="plb-prev" class="plb-nav plb-prev" aria-label="Previous">‹</button>
-      <button id="plb-next" class="plb-nav plb-next" aria-label="Next">›</button>
+      <button id="plb-prev" class="plb-nav plb-prev" aria-label="Previous"></button>
+      <button id="plb-next" class="plb-nav plb-next" aria-label="Next"></button>
       <div class="plb-inner">
         <div class="plb-image-wrap"><img id="plb-image" class="plb-image" alt="" /></div>
         <div class="plb-info">
@@ -94,14 +94,16 @@ const contactHref = "/en/contact";
     .plb-meta-value { color: #E8E0D2; font-weight: 500; }
     .plb-contact-btn { display: block; text-align: center; padding: 10px 20px; background: #C47D3F; color: #fff; border-radius: 4px; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: background 0.2s; margin-top: auto; }
     .plb-contact-btn:hover { background: #D4924F; }
-    .plb-close { position: fixed; top: 24px; right: 28px; background: none; border: none; font-size: 2.25rem; color: #fff; cursor: pointer; z-index: 1001; opacity: 0; transform: translateY(-15px); transition: all 0.25s ease 0.1s; }
+    .plb-close { position: fixed; top: 24px; right: 28px; background: none; border: none; font-size: 2.25rem; color: #E8E0D2; cursor: pointer; z-index: 1001; opacity: 0; transform: translateY(-15px); transition: all 0.25s ease 0.1s; }
     .painting-lightbox-overlay.active .plb-close { opacity: 1; transform: translateY(0); }
     .plb-close:hover { color: #C47D3F; }
-    .plb-nav { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; font-size: 1.75rem; color: #fff; cursor: pointer; z-index: 1001; width: 48px; height: 48px; border-radius: 50%; backdrop-filter: blur(10px); display: grid; place-items: center; opacity: 0; transition: all 0.25s ease 0.15s; }
+    .plb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(44,38,32,0.7); border: 1px solid #2C2620; font-size: 0; line-height: 1; color: #E8E0D2; cursor: pointer; z-index: 1001; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; opacity: 0; transition: all 0.25s ease 0.15s; }
     .painting-lightbox-overlay.active .plb-nav { opacity: 1; }
-    .painting-lightbox-overlay.active .plb-nav:hover { background: rgba(255,255,255,0.2); }
+    .painting-lightbox-overlay.active .plb-nav:hover { background: rgba(196,125,63,0.25); border-color: #C47D3F; }
     .plb-prev { left: 16px; }
     .plb-next { right: 16px; }
+    .plb-prev::before { content: ''; display: block; width: 10px; height: 10px; border-left: 2px solid #E8E0D2; border-bottom: 2px solid #E8E0D2; transform: rotate(45deg) translateX(2px); }
+    .plb-next::before { content: ''; display: block; width: 10px; height: 10px; border-right: 2px solid #E8E0D2; border-bottom: 2px solid #E8E0D2; transform: rotate(-45deg) translateX(-2px); }
     @media (max-width: 768px) {
       .plb-inner { flex-direction: column; align-items: center; max-width: 92vw; gap: 1rem; padding-bottom: 1rem; }
       .plb-image { max-width: 88vw; max-height: 45vh; }

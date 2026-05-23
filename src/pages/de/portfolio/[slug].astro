@@ -56,7 +56,7 @@ const metadata = {
     <div class="mx-auto px-6 md:px-16" style="max-width: 1440px; padding-top: 64px; padding-bottom: 80px;">
 
       <!-- Description -->
-      <div style="max-width: 720px; margin-bottom: 64px;" transition:name={`description-${project.id}`}>
+      <div style="max-width: 720px; margin: 0 auto 64px;" transition:name={`description-${project.id}`}>
         <p style="font-size: 1rem; color: #847B6F; line-height: 1.85; margin: 0;">{project.description}</p>
       </div>
 
@@ -95,8 +95,8 @@ const metadata = {
   <div id="lightbox" class="lightbox-overlay">
     <div class="lightbox-container">
       <button id="lightbox-close" class="lightbox-close" aria-label="Schließen">×</button>
-      <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Vorheriges Bild">‹</button>
-      <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Nächstes Bild">›</button>
+      <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Vorheriges Bild"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Nächstes Bild"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
       <img id="lightbox-image" class="lightbox-image" alt="" />
       <div class="lightbox-counter">
         <span id="lightbox-current">1</span> / <span id="lightbox-total">{project.images.length}</span>
@@ -142,23 +142,24 @@ const metadata = {
     .lightbox-overlay.active .lightbox-image { transform: scale(1); opacity: 1; }
     .lightbox-close {
       position: fixed; top: 30px; right: 30px; background: none; border: none;
-      font-size: 2.5rem; color: white; cursor: pointer; z-index: 1001;
+      font-size: 2.5rem; color: #E8E0D2; cursor: pointer; z-index: 1001;
       opacity: 0; transform: translateY(-20px); transition: all 0.3s ease 0.1s;
     }
     .lightbox-overlay.active .lightbox-close { opacity: 1; transform: translateY(0); }
     .lightbox-close:hover { color: #C47D3F; }
     .lightbox-nav {
       position: fixed; top: 50%; transform: translateY(-50%);
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-      font-size: 2rem; color: white; cursor: pointer; z-index: 1001;
+      background: rgba(44,38,32,0.7); border: 1px solid #2C2620;
+      font-size: 0; line-height: 1; color: #E8E0D2; cursor: pointer; z-index: 1001;
       width: 50px; height: 50px; border-radius: 50%;
-      display: grid; place-items: center; font-family: monospace;
+      display: grid; place-items: center;
       opacity: 0; transition: all 0.3s ease 0.2s;
     }
     .lightbox-overlay.active .lightbox-nav { opacity: 1; }
-    .lightbox-overlay.active .lightbox-nav:hover { background: rgba(196,125,63,0.2); border-color: #C47D3F; transform: translateY(-50%) scale(1.1); }
+    .lightbox-overlay.active .lightbox-nav:hover { background: rgba(196,125,63,0.25); border-color: #C47D3F; transform: translateY(-50%) scale(1.1); }
     .lightbox-prev { left: 40px; }
     .lightbox-next { right: 40px; }
+
     .lightbox-counter {
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
       color: #847B6F; font-size: 0.875rem; font-family: 'Outfit', sans-serif;
@@ -170,7 +171,7 @@ const metadata = {
     @media (max-width: 768px) {
       .lightbox-image { max-width: 85vw; max-height: 60vh; }
       .lightbox-close { top: 20px; right: 20px; font-size: 1.875rem; }
-      .lightbox-nav { font-size: 1.5rem; width: 40px; height: 40px; }
+      .lightbox-nav { width: 40px; height: 40px; }
       .lightbox-prev { left: 16px; }
       .lightbox-next { right: 16px; }
       .lightbox-counter { bottom: 20px; font-size: 0.75rem; }
@@ -178,52 +179,61 @@ const metadata = {
   </style>
 
   <script define:vars={{ images: project.images }}>
-    let currentIndex = 0;
-    const lightbox = document.getElementById("lightbox");
-    const lightboxImg = document.getElementById("lightbox-image");
-    const lightboxCurrent = document.getElementById("lightbox-current");
-    const lightboxTotal = document.getElementById("lightbox-total");
-    const closeBtn = document.getElementById("lightbox-close");
-    const prevBtn = document.getElementById("lightbox-prev");
-    const nextBtn = document.getElementById("lightbox-next");
+    function initPortfolioLightbox() {
+      if (window._portfolioLbAbort) window._portfolioLbAbort.abort();
+      window._portfolioLbAbort = new AbortController();
+      const { signal } = window._portfolioLbAbort;
 
-    lightboxTotal.textContent = images.length;
+      let currentIndex = 0;
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-image");
+      const lightboxCurrent = document.getElementById("lightbox-current");
+      const lightboxTotal = document.getElementById("lightbox-total");
+      const closeBtn = document.getElementById("lightbox-close");
+      const prevBtn = document.getElementById("lightbox-prev");
+      const nextBtn = document.getElementById("lightbox-next");
 
-    document.querySelectorAll(".gallery-item").forEach((el) => {
-      el.addEventListener("click", () => openLightbox(parseInt(el.dataset.index)));
-    });
+      if (!lightbox || !closeBtn || !prevBtn || !nextBtn) return;
+      if (lightboxTotal) lightboxTotal.textContent = images.length;
 
-    function openLightbox(index) {
-      currentIndex = index;
-      showImage();
-      lightbox.classList.add("active");
-      document.body.style.overflow = "hidden";
+      document.querySelectorAll(".gallery-item").forEach((el) => {
+        el.addEventListener("click", () => openLightbox(parseInt(el.dataset.index)), { signal });
+      });
+
+      function openLightbox(index) {
+        currentIndex = index;
+        showImage();
+        lightbox.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove("active");
+        setTimeout(() => { document.body.style.overflow = ""; }, 300);
+      }
+
+      function showImage() {
+        const img = images[currentIndex];
+        lightboxImg.src = img.src.src || img.src;
+        lightboxImg.alt = img.alt;
+        lightboxCurrent.textContent = currentIndex + 1;
+      }
+
+      function next() { currentIndex = (currentIndex + 1) % images.length; showImage(); }
+      function prev() { currentIndex = (currentIndex - 1 + images.length) % images.length; showImage(); }
+
+      closeBtn.addEventListener("click", closeLightbox, { signal });
+      nextBtn.addEventListener("click", next, { signal });
+      prevBtn.addEventListener("click", prev, { signal });
+      lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); }, { signal });
+      document.addEventListener("keydown", (e) => {
+        if (!lightbox.classList.contains("active")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") next();
+        if (e.key === "ArrowLeft") prev();
+      }, { signal });
     }
-
-    function closeLightbox() {
-      lightbox.classList.remove("active");
-      setTimeout(() => { document.body.style.overflow = "auto"; }, 300);
-    }
-
-    function showImage() {
-      const img = images[currentIndex];
-      lightboxImg.src = img.src.src || img.src;
-      lightboxImg.alt = img.alt;
-      lightboxCurrent.textContent = currentIndex + 1;
-    }
-
-    function next() { currentIndex = (currentIndex + 1) % images.length; showImage(); }
-    function prev() { currentIndex = (currentIndex - 1 + images.length) % images.length; showImage(); }
-
-    closeBtn.addEventListener("click", closeLightbox);
-    nextBtn.addEventListener("click", next);
-    prevBtn.addEventListener("click", prev);
-    lightbox.addEventListener("click", (e) => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener("keydown", (e) => {
-      if (!lightbox.classList.contains("active")) return;
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-    });
+    initPortfolioLightbox();
+    document.addEventListener('astro:page-load', initPortfolioLightbox);
   </script>
 </Layout>

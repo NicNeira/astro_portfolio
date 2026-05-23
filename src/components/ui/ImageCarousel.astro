@@ -40,20 +40,23 @@ const nextBtnId = `next-${carouselId}`;
   <!-- Boton anterior -->
   <button
     id={prevBtnId}
-    class="absolute left-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center size-10 rounded-full bg-gray-800/50 hover:bg-gray-800/80 text-white"
+    class="carousel-nav-btn absolute left-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center size-10 rounded-full bg-gray-800/50 hover:bg-gray-800/80 text-white carousel-prev"
     aria-label="Imagen anterior"
-  >
-    ‹
-  </button>
+  ></button>
 
   <!-- Boton siguiente -->
   <button
     id={nextBtnId}
-    class="absolute right-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center size-10 rounded-full bg-gray-800/50 hover:bg-gray-800/80 text-white"
+    class="carousel-nav-btn absolute right-2 top-1/2 -translate-y-1/2 z-10 grid place-content-center size-10 rounded-full bg-gray-800/50 hover:bg-gray-800/80 text-white carousel-next"
     aria-label="Imagen siguiente"
-  >
-    ›
-  </button>
+  ></button>
+</section>
+
+<style>
+  .carousel-nav-btn { font-size: 0; line-height: 0; }
+  .carousel-prev::before { content: ''; display: block; width: 8px; height: 8px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(45deg) translateX(2px); }
+  .carousel-next::before { content: ''; display: block; width: 8px; height: 8px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translateX(-2px); }
+</style>
 </section>
 
 <!-- Script inyectado inline: solo se ejecuta en el navegador -->

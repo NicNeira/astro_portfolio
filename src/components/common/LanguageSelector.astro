@@ -88,42 +88,27 @@ function getLocalizedPath(lang: string, currentPath: string) {
 </div>
 
 <script>
-  // Funcionalidad del dropdown
+  let lsAbort: AbortController | null = null;
   function initLanguageSelector() {
+    if (lsAbort) lsAbort.abort();
+    lsAbort = new AbortController();
+    const { signal } = lsAbort;
     const button = document.getElementById("language-menu");
     const dropdown = document.getElementById("language-dropdown");
-
     if (!button || !dropdown) return;
-
     button.addEventListener("click", () => {
-      const isHidden = dropdown.classList.contains("hidden");
-      dropdown.classList.toggle("hidden", !isHidden);
-    });
-
-    // Cerrar dropdown al hacer clic fuera
+      dropdown.classList.toggle("hidden", !dropdown.classList.contains("hidden"));
+    }, { signal });
     document.addEventListener("click", (event) => {
-      if (
-        !button.contains(event.target as Node) &&
-        !dropdown.contains(event.target as Node)
-      ) {
+      if (!button.contains(event.target as Node) && !dropdown.contains(event.target as Node))
         dropdown.classList.add("hidden");
-      }
-    });
-
-    // Cerrar dropdown al presionar Escape
+    }, { signal });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        dropdown.classList.add("hidden");
-      }
-    });
+      if (event.key === "Escape") dropdown.classList.add("hidden");
+    }, { signal });
   }
-
-  // Inicializar cuando el DOM esté listo
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initLanguageSelector);
-  } else {
-    initLanguageSelector();
-  }
+  initLanguageSelector();
+  document.addEventListener("astro:page-load", initLanguageSelector);
 </script>
 
 <style>

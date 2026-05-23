@@ -180,10 +180,10 @@ class AnimatedBackground {
       }
     });
 
-    // Con transition:persist, el canvas sobrevive la navegación.
-    // Solo reiniciar si por alguna razón el canvas fue removido.
+    // Reinicializar siempre al hacer swap de página para recuperar contexto WebGL
     document.addEventListener("astro:after-swap", function () {
-      if (!self.isInitialized && self.getCanvasAndContext()) {
+      self.cleanup();
+      if (self.getCanvasAndContext()) {
         self.init();
       }
     });
