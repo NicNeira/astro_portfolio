@@ -1,12 +1,9 @@
 ---
-import SettingsButton from "../components/common/SettingsButton.astro";
-import MobileSettings from "../components/common/MobileSettings.astro";
+import LanguageSelector from "../components/common/LanguageSelector.astro";
 import Button from "../components/ui/Button.astro";
-
 import { trimSlash } from "../utils/utils.js";
 import ToggleMenu from "./common/ToggleMenu.astro";
 import Logo from "./Logo.astro";
-import { Icon } from "astro-icon/components";
 import { getLangFromUrl, defaultLang } from "../utils/i18n";
 
 interface ActionLink {
@@ -30,7 +27,7 @@ interface MenuLink {
 export interface Props {
   id?: string;
   links?: Array<MenuLink>;
-  actions?: Array<ActionLink>; // Usar la nueva interfaz ActionLink
+  actions?: Array<ActionLink>;
   isSticky?: boolean;
   isDark?: boolean;
   isFullWidth?: boolean;
@@ -43,129 +40,73 @@ const {
   links = [],
   actions = [],
   isSticky = false,
-  isDark = false,
   isFullWidth = false,
-  showRssFeed = false,
-  position = "center",
 } = Astro.props;
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
 const currentLang = getLangFromUrl(Astro.url);
 
-// Generar URL de home según el idioma actual
 function getHomeUrl(lang: string) {
-  if (lang === defaultLang) {
-    return "/";
-  }
-  return `/${lang}/`;
+  return lang === defaultLang ? "/" : `/${lang}/`;
 }
 ---
 
 <header
-  class:list={[
-    "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out",
-    "bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-transparent",
-  ]}
+  id={id}
+  class="fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ease-in-out"
+  style="background: rgba(11,9,8,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid transparent;"
   {...isSticky ? { "data-aw-sticky-header": true } : {}}
-  {...id ? { id } : {}}
 >
   <div
     class:list={[
-      "container mx-auto px-4 sm:px-6 lg:px-8",
-      { "max-w-7xl": !isFullWidth },
+      "mx-auto px-6 md:px-16",
+      { "max-w-[1440px]": !isFullWidth },
     ]}
   >
-    <div class="flex items-center justify-between h-16">
+    <div class="flex items-center justify-between" style="height: 68px;">
       <!-- Logo -->
-      <div class="flex-shrink-0">
-        <a
-          href={getHomeUrl(currentLang)}
-          class="flex items-center space-x-2 group"
-          aria-label="Ir al inicio"
-        >
-          <Logo />
-        </a>
-      </div>
+      <a
+        href={getHomeUrl(currentLang)}
+        class="flex items-center"
+        aria-label="Ir al inicio"
+      >
+        <Logo />
+      </a>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden md:block">
-        <ul class="flex items-center space-x-1">
-          {
-            links.map(({ text, href, links: subLinks }) => (
-              <li class="relative group">
-                {subLinks?.length ? (
-                  <div class="dropdown">
-                    <button
-                      class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
-                      aria-expanded="false"
-                    >
-                      {text}
-                      <Icon
-                        name="tabler:chevron-down"
-                        class="w-4 h-4 ml-1 transition-transform duration-200 group-hover:rotate-180"
-                      />
-                    </button>
-                    <div class="dropdown-menu absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0">
-                      <div class="py-2">
-                        {subLinks.map(({ text: text2, href: href2 }) => (
-                          <a
-                            href={href2}
-                            class:list={[
-                              "block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200",
-                              {
-                                "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400":
-                                  href2 === currentPath,
-                              },
-                            ]}
-                          >
-                            {text2}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <a
-                    href={href}
-                    class:list={[
-                      "px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
-                      {
-                        "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20":
-                          href === currentPath,
-                        "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800":
-                          href !== currentPath,
-                      },
-                    ]}
-                  >
-                    {text}
-                  </a>
-                )}
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-
-      <!-- Desktop Actions & Settings -->
-      <div class="hidden md:flex items-center space-x-3">
+      <nav class="hidden md:flex items-center" style="gap: 28px;">
         {
-          actions.map((action) => (
-            <Button
-              text={action.text}
-              href={action.href}
-              variant={action.variant || "primary"}
-              icon={action.icon}
-              target={action.target}
-              type={action.type}
-              class={`${action.class || ""} text-sm`}
-            />
+          links.map(({ text, href }) => (
+            <a
+              href={href}
+              class="nav-link text-sm transition-colors duration-200"
+              style={`font-weight: ${href === currentPath ? 500 : 400}; color: ${href === currentPath ? '#E8E0D2' : '#847B6F'};`}
+            >
+              {text}
+            </a>
           ))
         }
-        <SettingsButton />
+      </nav>
+
+      <!-- Desktop Actions -->
+      <div class="hidden md:flex items-center" style="gap: 16px;">
+        {
+          actions.map((action) => (
+            <a
+              href={action.href}
+              class="contact-btn text-sm font-medium transition-all duration-200"
+              style="color: #fff; background: #C47D3F; padding: 8px 24px; border-radius: 4px; text-decoration: none;"
+            >
+              {action.text}
+            </a>
+          ))
+        }
+        <LanguageSelector />
       </div>
 
       <!-- Mobile Menu Button -->
-      <div class="md:hidden" onclick="event.stopPropagation();">
+      <div class="md:hidden flex items-center gap-3">
+        <LanguageSelector />
         <ToggleMenu />
       </div>
     </div>
@@ -174,370 +115,172 @@ function getHomeUrl(lang: string) {
   <!-- Mobile Menu -->
   <div
     id="mobile-menu"
-    class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700 shadow-lg overflow-y-auto overscroll-contain"
+    class="hidden md:hidden"
+    style="background: rgba(11,9,8,0.98); backdrop-filter: blur(20px); border-top: 1px solid #2C2620;"
   >
-    <div class="container mx-auto px-4 py-4 space-y-4">
-      <!-- Mobile Navigation -->
+    <div class="px-6 py-6 space-y-1">
       {
-        links.length > 0 && (
-          <nav>
-            <ul class="space-y-1">
-              {links.map(({ text, href, links: subLinks }) => (
-                <li>
-                  {subLinks?.length ? (
-                    <div class="mobile-dropdown">
-                      <button
-                        type="button"
-                        class="flex items-center justify-between w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors duration-200"
-                      >
-                        {text}
-                        <Icon
-                          name="tabler:chevron-down"
-                          class="w-4 h-4 transition-transform duration-200"
-                        />
-                      </button>
-                      <div class="mobile-submenu hidden pl-4 mt-2 space-y-1">
-                        {subLinks.map(({ text: text2, href: href2 }) => (
-                          <a
-                            href={href2}
-                            class:list={[
-                              "block px-4 py-2 text-sm rounded-lg transition-colors duration-200",
-                              {
-                                "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20":
-                                  href2 === currentPath,
-                                "text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800":
-                                  href2 !== currentPath,
-                              },
-                            ]}
-                          >
-                            {text2}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <a
-                      href={href}
-                      class:list={[
-                        "flex items-center justify-center px-4 py-3 rounded-lg font-medium transition-colors duration-200",
-                        {
-                          "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20":
-                            href === currentPath,
-                          "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-800":
-                            href !== currentPath,
-                        },
-                      ]}
-                    >
-                      {text}
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )
+        links.map(({ text, href }) => (
+          <a
+            href={href}
+            class="block py-3 text-sm border-b transition-colors duration-200"
+            style={`color: ${href === currentPath ? '#C47D3F' : '#847B6F'}; border-color: #2C2620;`}
+          >
+            {text}
+          </a>
+        ))
       }
-
-      <!-- Mobile Actions & Settings -->
-      <div class="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-3">
-        {
-          actions.length > 0 && (
-            <div class="space-y-3">
-              {actions.map((action) => (
-                <Button
-                  text={action.text}
-                  href={action.href}
-                  variant={action.variant || "primary"}
-                  icon={action.icon}
-                  target={action.target}
-                  type={action.type}
-                  class={`w-full ${action.class || ""}`}
-                />
-              ))}
-            </div>
-          )
-        }
-        <div class="">
-          <MobileSettings />
-        </div>
-      </div>
+      {
+        actions.map((action) => (
+          <a
+            href={action.href}
+            class="block mt-4 py-3 text-center text-sm font-medium rounded"
+            style="background: #C47D3F; color: #fff; text-decoration: none;"
+          >
+            {action.text}
+          </a>
+        ))
+      }
     </div>
   </div>
 </header>
 
 <script>
   function initializeHeader() {
-    const header = document.querySelector("header");
+    const header = document.getElementById("header");
     const toggleButton = document.querySelector("[data-aw-toggle-menu]");
     const mobileMenu = document.getElementById("mobile-menu");
 
-    // Header scroll effect
     function updateHeaderOnScroll() {
       if (!header) return;
-
-      if (window.scrollY > 10) {
-        header.classList.add("border-gray-200", "dark:border-gray-700");
-        header.classList.remove("border-transparent");
+      if (window.scrollY > 30) {
+        header.style.borderBottomColor = "#2C2620";
       } else {
-        header.classList.remove("border-gray-200", "dark:border-gray-700");
-        header.classList.add("border-transparent");
+        header.style.borderBottomColor = "transparent";
       }
     }
 
-    // Initialize header state
     updateHeaderOnScroll();
-    window.addEventListener("scroll", updateHeaderOnScroll);
+    window.addEventListener("scroll", updateHeaderOnScroll, { passive: true });
 
-    // Mobile menu toggle
     if (toggleButton && mobileMenu) {
-      // Asegurar estado inicial correcto
       mobileMenu.classList.add("hidden");
-      toggleButton.classList.remove("expanded");
       toggleButton.setAttribute("aria-expanded", "false");
 
       toggleButton.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        e.stopImmediatePropagation(); // Prevenir otros listeners
-
         const isHidden = mobileMenu.classList.contains("hidden");
-
         if (isHidden) {
-          // Abrir menú
           mobileMenu.classList.remove("hidden");
-          mobileMenu.style.display = "block";
-          toggleButton.classList.add("expanded");
           toggleButton.setAttribute("aria-expanded", "true");
           document.body.style.overflow = "hidden";
         } else {
-          // Cerrar menú
           mobileMenu.classList.add("hidden");
-          toggleButton.classList.remove("expanded");
           toggleButton.setAttribute("aria-expanded", "false");
           document.body.style.overflow = "";
         }
       });
     }
 
-    // Mobile dropdown functionality
-    const mobileDropdowns = document.querySelectorAll(
-      ".mobile-dropdown button"
-    );
-
-    mobileDropdowns.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const submenu = button.nextElementSibling;
-        const icon = button.querySelector("svg");
-
-        if (submenu) {
-          submenu.classList.toggle("hidden");
-          icon?.classList.toggle("rotate-180");
-        }
-      });
-    });
-
-    // Close mobile menu when clicking on links
     const mobileLinks = mobileMenu?.querySelectorAll("a");
-
     mobileLinks?.forEach((link) => {
+      link.addEventListener("click", () => {
+        mobileMenu?.classList.add("hidden");
+        toggleButton?.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      });
+    });
+
+    // Smooth scroll for hash links on the same page
+    document.querySelectorAll('a[href*="#"]').forEach((link) => {
       link.addEventListener("click", (e) => {
-        if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
-          mobileMenu.classList.add("hidden");
-          toggleButton?.classList.remove("expanded");
-          toggleButton?.setAttribute("aria-expanded", "false");
-          document.body.style.overflow = "";
+        const href = link.getAttribute("href");
+        if (!href) return;
+        const url = new URL(href, window.location.origin);
+        const hash = url.hash;
+        if (!hash) return;
+        // Only handle if navigating to current page or root with hash
+        const isCurrentPage = url.pathname === window.location.pathname ||
+          (url.pathname === '/' && window.location.pathname === '/') ||
+          url.pathname + '/' === window.location.pathname ||
+          window.location.pathname + '/' === url.pathname;
+        if (isCurrentPage || url.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '')) {
+          const target = document.querySelector(hash);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.pushState(null, "", hash);
+          }
         }
       });
     });
 
-    // Close mobile menu when clicking outside (con delay para evitar conflictos)
     setTimeout(() => {
       document.addEventListener("click", (e) => {
-        // Verificar si el clic fue en el toggle button o su contenido
-        if (toggleButton?.contains(e.target as Node)) {
-          return;
-        }
-
-        if (
-          mobileMenu &&
-          !mobileMenu.contains(e.target as Node) &&
-          !mobileMenu.classList.contains("hidden")
-        ) {
+        if (toggleButton?.contains(e.target as Node)) return;
+        if (mobileMenu && !mobileMenu.contains(e.target as Node) && !mobileMenu.classList.contains("hidden")) {
           mobileMenu.classList.add("hidden");
-          toggleButton?.classList.remove("expanded");
           toggleButton?.setAttribute("aria-expanded", "false");
           document.body.style.overflow = "";
         }
       });
-    }, 100); // Delay de 100ms para evitar conflictos
+    }, 100);
 
-    // Handle window resize to ensure proper mobile menu state
     window.addEventListener("resize", () => {
-      const isMobile = window.innerWidth < 768; // md breakpoint
-
-      if (!isMobile && mobileMenu && !mobileMenu.classList.contains("hidden")) {
-        // Si cambiamos a desktop y el menú móvil está abierto, cerrarlo
+      if (window.innerWidth >= 768 && mobileMenu && !mobileMenu.classList.contains("hidden")) {
         mobileMenu.classList.add("hidden");
-        toggleButton?.classList.remove("expanded");
         toggleButton?.setAttribute("aria-expanded", "false");
         document.body.style.overflow = "";
       }
     });
-
-    // Desktop dropdown functionality with hover
-    const desktopDropdowns = document.querySelectorAll(".dropdown");
-
-    desktopDropdowns.forEach((dropdown) => {
-      const button = dropdown.querySelector("button");
-      const menu = dropdown.querySelector(".dropdown-menu");
-
-      if (button && menu) {
-        let timeout: NodeJS.Timeout;
-
-        dropdown.addEventListener("mouseenter", () => {
-          clearTimeout(timeout);
-          menu.classList.remove("opacity-0", "invisible", "translate-y-1");
-          menu.classList.add("opacity-100", "visible", "translate-y-0");
-          button.setAttribute("aria-expanded", "true");
-        });
-
-        dropdown.addEventListener("mouseleave", () => {
-          timeout = setTimeout(() => {
-            menu.classList.add("opacity-0", "invisible", "translate-y-1");
-            menu.classList.remove("opacity-100", "visible", "translate-y-0");
-            button.setAttribute("aria-expanded", "false");
-          }, 150);
-        });
-      }
-    });
   }
 
-  // Clean up function
   function cleanupHeader() {
     const mobileMenu = document.getElementById("mobile-menu");
     const toggleButton = document.querySelector("[data-aw-toggle-menu]");
-
     if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
       mobileMenu.classList.add("hidden");
-      toggleButton?.classList.remove("expanded");
       toggleButton?.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
     }
   }
 
-  // Initialize when DOM is loaded
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initializeHeader);
   } else {
     initializeHeader();
   }
 
-  // Re-initialize on page navigation (for SPA-like behavior)
   document.addEventListener("astro:page-load", () => {
     cleanupHeader();
     initializeHeader();
   });
 
-  // Cleanup on page unload
   document.addEventListener("astro:before-preparation", cleanupHeader);
 </script>
 
 <style>
-  /* Asegurar que el header sea visible en todas las resoluciones */
-  header {
-    display: block !important;
-    visibility: visible !important;
+  header { display: block !important; visibility: visible !important; }
+
+  .nav-link:hover { color: #E8E0D2 !important; }
+
+  .contact-btn:hover {
+    background: #D4924F !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(196,125,63,0.3);
   }
 
-  /* Smooth transitions for dropdowns */
-  .dropdown-menu {
-    transition:
-      opacity 0.2s ease-in-out,
-      visibility 0.2s ease-in-out,
-      transform 0.2s ease-in-out;
-  }
-
-  /* Mobile menu animation */
-  #mobile-menu {
-    transition: max-height 0.3s ease-out;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  #mobile-menu.hidden {
-    max-height: 0;
-    overflow: hidden;
-    display: none;
-  }
-
-  #mobile-menu:not(.hidden) {
-    /* 4rem = altura del header (h-16). Usamos dvh para móviles */
-    max-height: calc(100dvh - 4rem);
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    animation: slideDown 0.3s ease-out;
-  }
+  #mobile-menu.hidden { display: none; }
+  #mobile-menu:not(.hidden) { display: block !important; animation: slideDown 0.25s ease; }
 
   @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Asegurar que el menú móvil solo se muestre en mobile */
   @media (min-width: 768px) {
-    #mobile-menu {
-      display: none !important;
-    }
-  }
-
-  /* Asegurar que el toggle menu solo se muestre en mobile */
-  @media (min-width: 768px) {
-    [data-aw-toggle-menu] {
-      display: none !important;
-    }
-  }
-
-  /* Active link indicator */
-  .aw-link-active {
-    position: relative;
-  }
-
-  .aw-link-active::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 2px;
-    background: currentColor;
-    border-radius: 1px;
-  }
-
-  /* Focus styles for accessibility */
-  button:focus-visible,
-  a:focus-visible {
-    outline: 2px solid rgb(59 130 246);
-    outline-offset: 2px;
-  }
-
-  /* Prevenir parpadeo del header */
-  .container {
-    min-height: inherit;
-  }
-
-  /* Asegurar transiciones suaves */
-  .transition-all {
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 300ms;
+    #mobile-menu { display: none !important; }
+    [data-aw-toggle-menu] { display: none !important; }
   }
 </style>

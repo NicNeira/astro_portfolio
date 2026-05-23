@@ -1,169 +1,125 @@
 ---
-import { Image } from "astro:assets";
-
 const {
   title = await Astro.slots.render("title"),
   subtitle = await Astro.slots.render("subtitle"),
-  tagline,
-
-  content = await Astro.slots.render("content"),
-  actions = await Astro.slots.render("actions"),
-  image = await Astro.slots.render("image"),
+  image,
   paragraph = await Astro.slots.render("paragraph"),
-
+  actions = await Astro.slots.render("actions"),
   id,
-  bg = await Astro.slots.render("bg"),
 } = Astro.props;
 
-// Determinar el tipo de contenido de la imagen
-const isImageObject = typeof image === "object" && image !== null && image.src;
-const isImageString = typeof image === "string" && image.trim() !== "";
-const hasImage = isImageObject || isImageString;
+const isImageObject = typeof image === "object" && image !== null && (image as any).src;
 ---
 
-<div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-  <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
-  <div class="py-8 md:py-14">
-    {/* Contenedor principal para imagen y texto */}
-    {/* Aplicar flex-col-reverse para móvil y md:flex-row para escritorio */}
-    <div class="flex flex-col-reverse md:flex-row md:items-center md:gap-8">
-      {/* Columna de la imagen (izquierda en escritorio, abajo en móvil) */}
-      {
-        isImageObject ? (
-          <div class="w-full md:w-1/2 mt-8 md:mt-0 flex justify-center intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-            <div class="relative m-auto w-64 md:w-80">
-              <img
-                class="rounded-md w-full h-auto shadow-lg"
-                src={image.src}
-                alt={image.alt || ""}
-                width={image.width || 400}
-                height={image.height || 500}
-                loading="eager"
-                decoding="sync"
-                fetchpriority="high"
-              />
-            </div>
-          </div>
-        ) : isImageString ? (
-          <div class="w-full md:w-1/2 mt-8 md:mt-0 intersect-once intercept-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
-            <div
-              class="relative m-auto max-w-full md:max-w-none"
-              style="aspect-ratio: 5/4;"
-            >
-              <Fragment set:html={image} />
-            </div>
-          </div>
-        ) : null
-      }
+<section
+  id={id}
+  class="relative overflow-hidden"
+  style="min-height: 100vh;"
+>
+  <!-- Background Image -->
+  <div
+    class="absolute inset-0 z-0"
+    style="background-image: url('https://res.cloudinary.com/ds8bhx4d4/image/upload/v1779480705/Multimedia_oygnl3.jpg'); background-size: cover; background-position: center;"
+  ></div>
+  <div class="absolute inset-0 z-0" style="background: rgba(11,9,8,0.75);"></div>
 
-      {/* Columna del contenido (derecha en escritorio, arriba en móvil) */}
-      <div
-        class:list={["w-full md:w-1/2", { "text-center md:text-left": image }]}
-      >
-        {/* Alineación condicional */}
-        <div class:list={["pb-6 md:pb-10", { "max-w-5xl mx-auto": !image }]}>
-          {
-            tagline && (
-              <p
-                class:list={[
-                  "text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
-                  { "md:text-left": image },
-                ]}
-                set:html={tagline}
-              />
-            )
-          }
-          {
-            title && (
-              <h1
-                class:list={[
-                  "text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
-                  { "md:text-left": image },
-                ]}
-                set:html={title}
-              />
-            )
-          }
-          <div
-            class:list={[{ "max-w-3xl": !image, "mx-auto": !image || !image }]}
+  <!-- Content -->
+  <div
+    class="relative z-10 mx-auto px-6 md:px-16"
+    style="max-width: 1440px;"
+  >
+    <!-- Nav spacer -->
+    <div style="padding-top: 68px;"></div>
+
+    <div
+      class="flex flex-col lg:flex-row items-center lg:items-center justify-between"
+      style="min-height: calc(100vh - 68px); padding: 60px 0 80px; gap: 48px;"
+    >
+      <!-- Left: Text -->
+      <div style="max-width: 700px; flex: 1;" class="hero-text">
+        <span class="accent-line mb-6 block hero-reveal" style="animation-delay: 0s;"></span>
+
+        {title && (
+          <h1
+            class="serif hero-reveal"
+            style="font-size: clamp(3.5rem, 6vw, 5.5rem); font-weight: 600; line-height: 0.95; margin: 0 0 20px; letter-spacing: -0.01em; color: #E8E0D2; animation-delay: 0.1s;"
+            set:html={title}
+          />
+        )}
+
+        {subtitle && (
+          <p
+            class="hero-reveal"
+            style="font-size: 1rem; letter-spacing: 0.08em; color: #C47D3F; margin: 0 0 24px; font-weight: 400; animation-delay: 0.2s;"
+            set:html={subtitle}
+          />
+        )}
+
+        {paragraph && (
+          <p
+            class="hero-reveal"
+            style="font-size: 1.125rem; line-height: 1.8; color: #847B6F; max-width: 520px; margin: 0 0 36px; animation-delay: 0.3s;"
           >
-            {/* Ajuste de max-w y mx-auto si hay imagen */}
-            {
-              subtitle && (
-                <p
-                  class:list={[
-                    "text-xl text-muted  dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
-                    { "md:text-left": image },
-                  ]}
-                  set:html={subtitle}
-                />
-              )
-            }
+            <slot name="paragraph" />
+          </p>
+        )}
 
-            {/* Renderizar el párrafo si existe */}
-            {
-              paragraph && (
-                <div class="mt-4">
-                  <p
-                    class:list={[
-                      "text-muted dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade",
-                      { "md:text-left": image },
-                    ]}
-                  >
-                    <Fragment set:html={paragraph} />
-                  </p>
-                </div>
-              )
-            }
+        {actions && (
+          <div
+            class="flex gap-4 flex-wrap hero-reveal"
+            style="animation-delay: 0.4s;"
+          >
+            <slot name="actions" />
           </div>
-          {content && <Fragment set:html={content} />}
-          {/* Renderizar acciones si existen */}
-          {
-            actions && (
-              <div
-                class:list={[
-                  "mt-8 flex flex-col sm:flex-row sm:justify-center items-start sm:items-center sm:gap-4",
-                  {
-                    "md:justify-start": hasImage,
-                    "justify-center": !hasImage,
-                  },
-                ]}
-              >
-                <Fragment set:html={actions} />
-              </div>
-            )
-          }
-        </div>
+        )}
       </div>
+
+      <!-- Right: Profile Photo -->
+      {isImageObject && (
+        <div
+          class="hero-reveal flex justify-center lg:justify-end"
+          style="flex: 0 0 auto; animation-delay: 0.3s;"
+        >
+          <div
+            style="width: clamp(260px, 22vw, 340px); height: clamp(340px, 28vw, 440px); overflow: hidden; border-radius: 6px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);"
+          >
+            <img
+              src={(image as any).src}
+              alt={(image as any).alt || ""}
+              width={(image as any).width || 600}
+              height={(image as any).height || 800}
+              class="w-full h-full object-cover object-top"
+              style="filter: grayscale(15%);"
+              loading="eager"
+              transition:name="hero-portrait"
+            />
+          </div>
+        </div>
+      )}
     </div>
   </div>
-</div>
+</section>
 
 <style>
-  /* Evitar layout shift reservando espacio para imágenes */
-  .hero-image-container {
-    contain: layout style;
+  .hero-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeInUp 0.7s ease forwards;
   }
 
-  /* Skeleton loader para imágenes principales */
-  .hero-image-container::before {
-    content: "";
-    display: block;
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: skeleton 1.5s infinite;
-    position: absolute;
-    inset: 0;
-    border-radius: 0.375rem;
-    z-index: -1;
-  }
-
-  @keyframes skeleton {
-    0% {
-      background-position: 200% 0;
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    100% {
-      background-position: -200% 0;
+  }
+
+  /* Ensure reveals fire on page transitions too */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-reveal {
+      opacity: 1;
+      transform: none;
+      animation: none;
     }
   }
 </style>
