@@ -4,7 +4,7 @@ import Button from "../components/ui/Button.astro";
 import { trimSlash } from "../utils/utils.js";
 import ToggleMenu from "./common/ToggleMenu.astro";
 import Logo from "./Logo.astro";
-import { getLangFromUrl, defaultLang } from "../utils/i18n";
+import { getLangFromUrl, defaultLang, languages } from "../utils/i18n";
 
 interface ActionLink {
   text: string;
@@ -48,6 +48,25 @@ const currentLang = getLangFromUrl(Astro.url);
 
 function getHomeUrl(lang: string) {
   return lang === defaultLang ? "/" : `/${lang}/`;
+}
+
+const pageSlugMap: Record<string, Record<string, string>> = {
+  pinturas:  { es: 'pinturas', en: 'paintings', de: 'gemalde' },
+  paintings: { es: 'pinturas', en: 'paintings', de: 'gemalde' },
+  gemalde:   { es: 'pinturas', en: 'paintings', de: 'gemalde' },
+};
+
+function getMobileLangPath(lang: string, path: string) {
+  const segments = path.split('/').filter(Boolean);
+  if (segments[0] && segments[0] in languages) segments.shift();
+  const mapped = segments.map(seg => pageSlugMap[seg]?.[lang] ?? seg);
+  if (lang === 'es') return mapped.length ? '/' + mapped.join('/') : '/';
+  return mapped.length ? `/${lang}/` + mapped.join('/') : `/${lang}`;
+}
+
+function getLangFlag(lang: string) {
+  const flags: Record<string, string> = { es: '🇪🇸', en: '🇺🇸', de: '🇩🇪' };
+  return flags[lang] || '🌐';
 }
 ---
 
@@ -141,6 +160,26 @@ function getHomeUrl(lang: string) {
           </a>
         ))
       }
+      <!-- Language selector inside mobile menu -->
+      <div class="pt-4 mt-2 border-t" style="border-color: #2C2620;">
+        <p class="text-xs mb-3" style="color: #847B6F;">Idioma / Language</p>
+        <div class="flex items-center gap-2 flex-wrap">
+          {
+            Object.entries(languages).map(([lang, name]) => (
+              <a
+                href={getMobileLangPath(lang, currentPath)}
+                class="flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors"
+                style={currentLang === lang
+                  ? "background: #2C2620; color: #E8E0D2;"
+                  : "color: #847B6F;"}
+              >
+                <span>{getLangFlag(lang)}</span>
+                <span>{name}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </div>
 </header>

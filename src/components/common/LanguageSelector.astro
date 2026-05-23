@@ -18,9 +18,7 @@ const pageSlugMap: Record<string, Record<string, string>> = {
 
 function getLocalizedPath(lang: string, currentPath: string) {
   const segments = currentPath.split('/').filter(Boolean);
-  // Quitar prefijo de idioma si existe
   if (segments[0] && segments[0] in languages) segments.shift();
-  // Mapear slugs conocidos a su equivalente en el idioma destino
   const mapped = segments.map(seg => pageSlugMap[seg]?.[lang] ?? seg);
   if (lang === 'es') {
     return mapped.length ? '/' + mapped.join('/') : '/';
@@ -29,11 +27,11 @@ function getLocalizedPath(lang: string, currentPath: string) {
 }
 ---
 
-<div class="relative inline-block text-left">
+<div class="relative inline-block text-left" data-lang-selector>
   <button
     type="button"
     class="lang-btn flex items-center justify-center rounded-full transition-all duration-200 focus:outline-none"
-    id="language-menu"
+    data-lang-trigger
     aria-expanded="false"
     aria-haspopup="true"
     aria-label="Change language"
@@ -44,12 +42,11 @@ function getLocalizedPath(lang: string, currentPath: string) {
 
   <div
     class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-    id="language-dropdown"
+    data-lang-dropdown
     role="menu"
     aria-orientation="vertical"
-    aria-labelledby="language-menu"
     tabindex="-1"
-    style="background: #1A1714; border: 1px solid #2C2620;"
+    style="background: #1A1714; border: 1px solid #2C2620; z-index: 100;"
   >
     <div class="py-1" role="none">
       {
@@ -88,31 +85,48 @@ function getLocalizedPath(lang: string, currentPath: string) {
 </div>
 
 <script>
-  let lsAbort: AbortController | null = null;
-  function initLanguageSelector() {
-    if (lsAbort) lsAbort.abort();
-    lsAbort = new AbortController();
-    const { signal } = lsAbort;
-    const button = document.getElementById("language-menu");
-    const dropdown = document.getElementById("language-dropdown");
-    if (!button || !dropdown) return;
-    button.addEventListener("click", () => {
-      dropdown.classList.toggle("hidden", !dropdown.classList.contains("hidden"));
-    }, { signal });
-    document.addEventListener("click", (event) => {
-      if (!button.contains(event.target as Node) && !dropdown.contains(event.target as Node))
-        dropdown.classList.add("hidden");
-    }, { signal });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") dropdown.classList.add("hidden");
-    }, { signal });
+  function initLanguageSelectors() {
+    document.querySelectorAll('[data-lang-selector]').forEach((selector) => {
+      const el = selector as HTMLElement;
+      // Abort previous listeners if reinitializing
+      const prev = (el as any).__lsAbort as AbortController | undefined;
+      if (prev) prev.abort();
+      const abort = new AbortController();
+      (el as any).__lsAbort = abort;
+      const { signal } = abort;
+
+      const button = el.querySelector('[data-lang-trigger]') as HTMLElement | null;
+      const dropdown = el.querySelector('[data-lang-dropdown]') as HTMLElement | null;
+      if (!button || !dropdown) return;
+
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = dropdown.classList.contains('hidden');
+        dropdown.classList.toggle('hidden', !isHidden);
+        button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+      }, { signal });
+
+      document.addEventListener('click', (event) => {
+        if (!el.contains(event.target as Node)) {
+          dropdown.classList.add('hidden');
+          button.setAttribute('aria-expanded', 'false');
+        }
+      }, { signal });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          dropdown.classList.add('hidden');
+          button.setAttribute('aria-expanded', 'false');
+        }
+      }, { signal });
+    });
   }
-  initLanguageSelector();
-  document.addEventListener("astro:page-load", initLanguageSelector);
+
+  initLanguageSelectors();
+  document.addEventListener('astro:page-load', initLanguageSelectors);
 </script>
 
 <style>
   .lang-btn:hover { border-color: #5E574E; background: rgba(44,38,32,0.5) !important; }
   [role="menuitem"]:hover { background: #2C2620; color: #E8E0D2 !important; }
 </style>
-

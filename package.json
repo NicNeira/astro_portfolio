@@ -11,6 +11,7 @@
   "dependencies": {
     "@iconify-json/tabler": "^1.2.18",
     "@tailwindcss/vite": "^4.1.7",
+    "@vercel/analytics": "^2.0.1",
     "astro": "^5.12.9",
     "astro-compress": "^2.3.0",
     "astro-icon": "^1.1.5",
