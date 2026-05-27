@@ -3,11 +3,18 @@ import { languages, getLangFromUrl } from "@utils/i18n";
 
 const currentLang = getLangFromUrl(Astro.url);
 
+const flagEmoji: Record<string, string> = {
+  es: '🇨🇱',
+  en: '🇺🇸',
+  de: '🇩🇪',
+};
+
 const flagSVG: Record<string, string> = {
   es: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="13" viewBox="0 0 20 13" style="border-radius:2px;display:block;"><rect width="20" height="13" fill="#D52B1E"/><rect width="20" height="6.5" fill="#fff"/><rect width="6.5" height="6.5" fill="#0039A6"/><polygon points="3.25,1.45 3.67,2.67 4.96,2.69 3.93,3.47 4.31,4.71 3.25,3.97 2.19,4.71 2.57,3.47 1.54,2.69 2.83,2.67" fill="#fff"/></svg>`,
   en: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="11" viewBox="0 0 20 11" style="border-radius:2px;display:block;"><rect width="20" height="11" fill="#B22234"/><rect y="0.85" width="20" height="0.85" fill="#fff"/><rect y="2.54" width="20" height="0.85" fill="#fff"/><rect y="4.23" width="20" height="0.85" fill="#fff"/><rect y="5.92" width="20" height="0.85" fill="#fff"/><rect y="7.62" width="20" height="0.85" fill="#fff"/><rect y="9.31" width="20" height="0.85" fill="#fff"/><rect width="7.69" height="5.92" fill="#3C3B6E"/></svg>`,
   de: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 5 3" style="border-radius:2px;display:block;"><rect width="5" height="1" fill="#000"/><rect y="1" width="5" height="1" fill="#DD0000"/><rect y="2" width="5" height="1" fill="#FFCE00"/></svg>`,
 };
+
 const currentPath = Astro.url.pathname;
 
 const pageSlugMap: Record<string, Record<string, string>> = {
@@ -35,13 +42,16 @@ function getLocalizedPath(lang: string, currentPath: string) {
     aria-expanded="false"
     aria-haspopup="true"
     aria-label="Change language"
-    style="width: 36px; height: 36px; background: transparent; border: 1px solid #2C2620;"
+    style="width: 36px; height: 36px; background: transparent; border: 1px solid #2C2620; cursor: pointer;"
   >
-    <Fragment set:html={flagSVG[currentLang]} />
+    <!-- Desktop: SVG flag -->
+    <span class="flag-svg hidden md:flex items-center justify-center" set:html={flagSVG[currentLang]} />
+    <!-- Mobile: emoji flag -->
+    <span class="flag-emoji md:hidden" style="font-size: 1.25rem; line-height: 1;">{flagEmoji[currentLang]}</span>
   </button>
 
   <div
-    class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+    class="origin-top-right absolute right-0 mt-2 w-44 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
     data-lang-dropdown
     role="menu"
     aria-orientation="vertical"
@@ -53,18 +63,21 @@ function getLocalizedPath(lang: string, currentPath: string) {
         Object.entries(languages).map(([lang, name]) => (
           <a
             href={getLocalizedPath(lang, currentPath)}
-            class={`group flex items-center px-4 py-2 text-sm transition-colors`}
+            class="group flex items-center px-4 py-2 text-sm transition-colors"
             role="menuitem"
             tabindex="-1"
             style={currentLang === lang ? "color: #E8E0D2; background: #2C2620;" : "color: #847B6F;"}
           >
-            <span class="mr-3" set:html={flagSVG[lang]} />
+            <!-- Desktop: SVG flag -->
+            <span class="flag-svg mr-3 hidden md:flex items-center" set:html={flagSVG[lang]} />
+            <!-- Mobile: emoji flag -->
+            <span class="flag-emoji mr-3 md:hidden" style="font-size: 1.1rem;">{flagEmoji[lang]}</span>
             {name}
             {currentLang === lang && (
               <span class="ml-auto">
                 <svg
                   class="h-4 w-4"
-                  style="color: #C47D3F;"
+                  style="color: #D4AF37;"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                   fill="currentColor"
@@ -88,7 +101,6 @@ function getLocalizedPath(lang: string, currentPath: string) {
   function initLanguageSelectors() {
     document.querySelectorAll('[data-lang-selector]').forEach((selector) => {
       const el = selector as HTMLElement;
-      // Abort previous listeners if reinitializing
       const prev = (el as any).__lsAbort as AbortController | undefined;
       if (prev) prev.abort();
       const abort = new AbortController();

@@ -1,4 +1,4 @@
----
+﻿---
 import Layout from "@layouts/PageLayout.astro";
 import { getSlugProjects } from "@utils/projectsData";
 import { useTranslations } from "@utils/i18n";
@@ -41,7 +41,7 @@ const metadata = {
       />
       <div style="position: absolute; inset: 0; background: linear-gradient(to top, #0B0908 0%, rgba(11,9,8,0.35) 55%, transparent 100%);"></div>
       <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: clamp(24px, 4vw, 60px) clamp(20px, 5vw, 80px) clamp(32px, 5vw, 52px);">
-        <p style="font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C45A3C; margin: 0 0 12px; font-weight: 500;">Project</p>
+        <p style="font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #B89020; margin: 0 0 12px; font-weight: 500;">Project</p>
         <h1
           class="serif"
           style="font-size: clamp(2rem, 5vw, 3.75rem); font-weight: 700; color: #E8E0D2; margin: 0; line-height: 1.1;"
@@ -122,7 +122,7 @@ const metadata = {
       transition: all 0.25s ease;
       font-family: 'Outfit', sans-serif;
     }
-    .back-btn:hover { border-color: #C47D3F; color: #E8E0D2; }
+    .back-btn:hover { border-color: #D4AF37; color: #E8E0D2; }
 
     .lightbox-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -146,7 +146,7 @@ const metadata = {
       opacity: 0; transform: translateY(-20px); transition: all 0.3s ease 0.1s;
     }
     .lightbox-overlay.active .lightbox-close { opacity: 1; transform: translateY(0); }
-    .lightbox-close:hover { color: #C47D3F; }
+    .lightbox-close:hover { color: #D4AF37; }
     .lightbox-nav {
       position: fixed; top: 50%; transform: translateY(-50%);
       background: rgba(44,38,32,0.7); border: 1px solid #2C2620;
@@ -156,7 +156,7 @@ const metadata = {
       opacity: 0; transition: all 0.3s ease 0.2s;
     }
     .lightbox-overlay.active .lightbox-nav { opacity: 1; }
-    .lightbox-overlay.active .lightbox-nav:hover { background: rgba(196,125,63,0.25); border-color: #C47D3F; transform: translateY(-50%) scale(1.1); }
+    .lightbox-overlay.active .lightbox-nav:hover { background: rgba(212,175,55,0.25); border-color: #D4AF37; transform: translateY(-50%) scale(1.1); }
     .lightbox-prev { left: 40px; }
     .lightbox-next { right: 40px; }
 

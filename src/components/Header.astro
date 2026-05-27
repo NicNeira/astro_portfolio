@@ -1,4 +1,4 @@
----
+﻿---
 import LanguageSelector from "../components/common/LanguageSelector.astro";
 import Button from "../components/ui/Button.astro";
 import { trimSlash } from "../utils/utils.js";
@@ -114,7 +114,7 @@ function getLangFlag(lang: string) {
             <a
               href={action.href}
               class="contact-btn text-sm font-medium transition-all duration-200"
-              style="color: #fff; background: #C47D3F; padding: 8px 24px; border-radius: 4px; text-decoration: none;"
+              style="color: #fff; background: #D4AF37; padding: 8px 24px; border-radius: 4px; text-decoration: none;"
             >
               {action.text}
             </a>
@@ -142,8 +142,8 @@ function getLangFlag(lang: string) {
         links.map(({ text, href }) => (
           <a
             href={href}
-            class="block py-3 text-sm border-b transition-colors duration-200"
-            style={`color: ${href === currentPath ? '#C47D3F' : '#847B6F'}; border-color: #2C2620;`}
+            class="block py-3 text-sm text-center border-b transition-colors duration-200"
+            style={`color: ${href === currentPath ? '#D4AF37' : '#847B6F'}; border-color: #2C2620;`}
           >
             {text}
           </a>
@@ -154,32 +154,12 @@ function getLangFlag(lang: string) {
           <a
             href={action.href}
             class="block mt-4 py-3 text-center text-sm font-medium rounded"
-            style="background: #C47D3F; color: #fff; text-decoration: none;"
+            style="background: #D4AF37; color: #fff; text-decoration: none;"
           >
             {action.text}
           </a>
         ))
       }
-      <!-- Language selector inside mobile menu -->
-      <div class="pt-4 mt-2 border-t" style="border-color: #2C2620;">
-        <p class="text-xs mb-3" style="color: #847B6F;">Idioma / Language</p>
-        <div class="flex items-center gap-2 flex-wrap">
-          {
-            Object.entries(languages).map(([lang, name]) => (
-              <a
-                href={getMobileLangPath(lang, currentPath)}
-                class="flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors"
-                style={currentLang === lang
-                  ? "background: #2C2620; color: #E8E0D2;"
-                  : "color: #847B6F;"}
-              >
-                <span>{getLangFlag(lang)}</span>
-                <span>{name}</span>
-              </a>
-            ))
-          }
-        </div>
-      </div>
     </div>
   </div>
 </header>
@@ -285,12 +265,10 @@ function getLangFlag(lang: string) {
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initializeHeader);
-  } else {
-    initializeHeader();
-  }
-
+  // astro:page-load fires on initial load AND on every navigation with ClientRouter.
+  // Using only this event prevents the double-init that caused the menu to be
+  // unresponsive on first load (DOMContentLoaded + astro:page-load ran initializeHeader
+  // twice, attaching two click handlers that toggled each other immediately).
   document.addEventListener("astro:page-load", () => {
     cleanupHeader();
     initializeHeader();
@@ -305,9 +283,9 @@ function getLangFlag(lang: string) {
   .nav-link:hover { color: #E8E0D2 !important; }
 
   .contact-btn:hover {
-    background: #D4924F !important;
+    background: #E0C040 !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(196,125,63,0.3);
+    box-shadow: 0 4px 16px rgba(212,175,55,0.3);
   }
 
   #mobile-menu.hidden { display: none; }
