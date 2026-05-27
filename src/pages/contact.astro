@@ -1,4 +1,4 @@
----
+﻿---
 import Layout from "@layouts/PageLayout.astro";
 import { useTranslations } from "@utils/i18n";
 
@@ -20,27 +20,27 @@ const metadata = {
     >
       <!-- Left: Info -->
       <div style="flex: 0 0 clamp(300px, 32%, 420px);">
-        <p style="font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #C45A3C; margin: 0 0 16px; font-weight: 500;">Contacto</p>
+        <p style="font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #B89020; margin: 0 0 16px; font-weight: 500;">Contacto</p>
         <h1 class="serif" style="font-size: clamp(2.25rem, 4vw, 3rem); font-weight: 700; margin: 0 0 20px; line-height: 1.1; color: #E8E0D2;">
           Creemos algo<br />
-          <span style="color: #C47D3F;">extraordinario</span>
+          <span style="color: #D4AF37;">extraordinario</span>
         </h1>
         <p style="font-size: 1rem; color: #847B6F; line-height: 1.75; margin: 0 0 40px;">
           {t("contact.form.subtitle")}
         </p>
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="padding: 20px 24px; background: #1A1714; border-radius: 10px; display: flex; align-items: center; gap: 16px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(196,125,63,0.15); display: flex; align-items: center; justify-content: center; font-size: 1rem;">📍</div>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: center; font-size: 1rem;">📍</div>
             <div>
               <p style="font-size: 0.75rem; color: #5E574E; margin: 0 0 2px;">Ubicación</p>
               <p style="font-size: 0.875rem; font-weight: 500; margin: 0; color: #E8E0D2;">Frankfurt, Alemania</p>
             </div>
           </div>
           <div style="padding: 20px 24px; background: #1A1714; border-radius: 10px; display: flex; align-items: center; gap: 16px;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(196,125,63,0.15); display: flex; align-items: center; justify-content: center; font-size: 1rem;">💼</div>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(212,175,55,0.15); display: flex; align-items: center; justify-content: center; font-size: 1rem;">💼</div>
             <div>
               <p style="font-size: 0.75rem; color: #5E574E; margin: 0 0 2px;">Redes</p>
-              <a href="https://www.linkedin.com/in/maximiliano-neira-a3b6341b2/" target="_blank" rel="noopener" style="font-size: 0.875rem; font-weight: 500; margin: 0; color: #C47D3F; text-decoration: none;">LinkedIn</a>
+              <a href="https://www.linkedin.com/in/maximiliano-neira-a3b6341b2/" target="_blank" rel="noopener" style="font-size: 0.875rem; font-weight: 500; margin: 0; color: #D4AF37; text-decoration: none;">LinkedIn</a>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@ const metadata = {
       <!-- Right: Form -->
       <div style="flex: 1; min-width: 300px; padding-top: 40px;">
         <div id="form-success" style="display: none; text-align: center; padding: 60px 0;">
-          <div style="font-size: 3rem; margin-bottom: 16px; color: #C47D3F;">✓</div>
+          <div style="font-size: 3rem; margin-bottom: 16px; color: #D4AF37;">✓</div>
           <h2 class="serif" style="font-size: 1.75rem; font-weight: 600; margin-bottom: 12px; color: #E8E0D2;">Mensaje enviado</h2>
           <p style="color: #847B6F;">Gracias por contactarme. Responderé pronto.</p>
         </div>
@@ -103,11 +103,11 @@ const metadata = {
     transition: border-color 0.2s;
   }
   .field-input::placeholder { color: #5E574E; }
-  .field-input:focus { border-bottom-color: #C47D3F; }
+  .field-input:focus { border-bottom-color: #D4AF37; }
   .submit-btn {
     width: 100%;
     padding: 14px 20px;
-    background: #C47D3F;
+    background: #D4AF37;
     color: #fff;
     font-size: 0.875rem;
     font-weight: 600;
@@ -119,9 +119,9 @@ const metadata = {
     margin-top: 8px;
   }
   .submit-btn:hover {
-    background: #D4924F;
+    background: #E0C040;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(196,125,63,0.3);
+    box-shadow: 0 4px 16px rgba(212,175,55,0.3);
   }
   .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 </style>
@@ -150,12 +150,12 @@ const metadata = {
           form.style.display = "none";
           if (success) success.style.display = "block";
         } else {
-          if (result) { result.textContent = json.message; result.style.color = "#C45A3C"; }
+          if (result) { result.textContent = json.message; result.style.color = "#B89020"; }
           submitBtn.disabled = false;
           submitBtn.textContent = "Enviar mensaje";
         }
       } catch {
-        if (result) { result.textContent = "Error al enviar. Intenta de nuevo."; result.style.color = "#C45A3C"; }
+        if (result) { result.textContent = "Error al enviar. Intenta de nuevo."; result.style.color = "#B89020"; }
         submitBtn.disabled = false;
         submitBtn.textContent = "Enviar mensaje";
       }

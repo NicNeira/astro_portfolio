@@ -1,4 +1,4 @@
----
+﻿---
 import { twMerge } from "tailwind-merge";
 import type { Item } from "@utils/types";
 
@@ -22,7 +22,7 @@ const { container: containerClass = "" } = classes;
         <!-- Dot -->
         <div
           class="absolute timeline-dot"
-          style={`left: -37px; top: 6px; width: 11px; height: 11px; border-radius: 50%; background: ${index === 0 ? '#C47D3F' : '#1A1714'}; border: 2px solid #C47D3F; transition: box-shadow 0.3s;`}
+          style={`left: -37px; top: 6px; width: 11px; height: 11px; border-radius: 50%; background: ${index === 0 ? '#D4AF37' : '#1A1714'}; border: 2px solid #D4AF37; transition: box-shadow 0.3s;`}
         ></div>
 
         {title && (
@@ -46,6 +46,6 @@ const { container: containerClass = "" } = classes;
 
 <style>
   .timeline-item:hover .timeline-dot {
-    box-shadow: 0 0 12px rgba(196,125,63,0.4);
+    box-shadow: 0 0 12px rgba(212,175,55,0.4);
   }
 </style>

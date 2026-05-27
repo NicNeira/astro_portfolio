@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @config "../../tailwind.config.js";
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -11,9 +11,9 @@
   --clr-bg:              #0B0908;
   --clr-surface:         #1A1714;
   --clr-surface-hover:   #221F1A;
-  --clr-accent:          #C47D3F;
-  --clr-accent-2:        #C45A3C;
-  --clr-accent-dim:      rgba(196,125,63,0.15);
+  --clr-accent:          #D4AF37;
+  --clr-accent-2:        #B89020;
+  --clr-accent-dim:      rgba(212,175,55,0.15);
   --clr-text:            #E8E0D2;
   --clr-text-muted:      #847B6F;
   --clr-text-dim:        #5E574E;
@@ -41,14 +41,14 @@ body {
 }
 
 ::selection {
-  background: rgba(196,125,63,0.35);
+  background: rgba(212,175,55,0.35);
   color: #fff;
 }
 
 ::-webkit-scrollbar            { width: 6px; }
 ::-webkit-scrollbar-track      { background: #0B0908; }
 ::-webkit-scrollbar-thumb      { background: #2C2620; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #C47D3F; }
+::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
 
 /* ── Tailwind utility overrides ────────────────────────────── */
 @layer base {
@@ -67,11 +67,11 @@ body {
   /* Links */
   a { color: inherit; }
 
-  /* Primary colour (copper) */
-  .text-primary { color: #C47D3F; }
-  .dark .text-primary { color: #C47D3F; }
-  .bg-primary { background-color: #C47D3F; }
-  .border-primary { border-color: #C47D3F; }
+  /* Primary colour (gold) */
+  .text-primary { color: #D4AF37; }
+  .dark .text-primary { color: #D4AF37; }
+  .bg-primary { background-color: #D4AF37; }
+  .border-primary { border-color: #D4AF37; }
 }
 
 /* ── Portfolio utility classes ─────────────────────────────── */

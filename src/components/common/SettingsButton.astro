@@ -99,7 +99,7 @@ function getFlagEmoji(lang: string) {
                 href={getLocalizedPath(lang, currentPath)}
                 class={`${
                   currentLang === lang
-                    ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300"
+                    ? "bg-[#2C2620] text-[#D4AF37]"
                     : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 } group flex items-center px-3 py-2 text-sm rounded-md transition-colors duration-200 cursor-pointer`}
                 role="menuitem"
@@ -110,7 +110,7 @@ function getFlagEmoji(lang: string) {
                 {currentLang === lang && (
                   <Icon
                     name="tabler:check"
-                    class="w-4 h-4 text-indigo-600 dark:text-indigo-400"
+                    class="w-4 h-4 text-[#D4AF37]"
                   />
                 )}
               </a>

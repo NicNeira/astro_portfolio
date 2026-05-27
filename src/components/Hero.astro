@@ -1,4 +1,4 @@
----
+﻿---
 const {
   title = await Astro.slots.render("title"),
   subtitle = await Astro.slots.render("subtitle"),
@@ -17,10 +17,7 @@ const isImageObject = typeof image === "object" && image !== null && (image as a
   style="min-height: 100vh;"
 >
   <!-- Background Image -->
-  <div
-    class="absolute inset-0 z-0"
-    style="background-image: url('https://res.cloudinary.com/ds8bhx4d4/image/upload/v1779480705/Multimedia_oygnl3.jpg'); background-size: cover; background-position: center;"
-  ></div>
+  <div class="hero-bg absolute inset-0 z-0"></div>
   <div class="absolute inset-0 z-0" style="background: rgba(11,9,8,0.75);"></div>
 
   <!-- Content -->
@@ -28,11 +25,11 @@ const isImageObject = typeof image === "object" && image !== null && (image as a
     class="relative z-10 mx-auto px-6 md:px-16"
     style="max-width: 1440px;"
   >
-    <!-- Nav spacer -->
-    <div style="padding-top: 68px;"></div>
+    <!-- Nav spacer: compensates for fixed header (68px) minus main pt-12 (48px) -->
+    <div class="hero-nav-spacer"></div>
 
     <div
-      class="flex flex-col lg:flex-row items-center lg:items-center justify-between"
+      class="hero-content flex flex-col lg:flex-row items-center lg:items-center justify-between"
       style="min-height: calc(100vh - 68px); padding: 60px 0 80px; gap: 48px;"
     >
       <!-- Left: Text -->
@@ -50,7 +47,7 @@ const isImageObject = typeof image === "object" && image !== null && (image as a
         {subtitle && (
           <p
             class="hero-reveal"
-            style="font-size: 1rem; letter-spacing: 0.08em; color: #C47D3F; margin: 0 0 24px; font-weight: 400; animation-delay: 0.2s;"
+            style="font-size: 1rem; letter-spacing: 0.08em; color: #D4AF37; margin: 0 0 24px; font-weight: 400; animation-delay: 0.2s;"
             set:html={subtitle}
           />
         )}
@@ -66,7 +63,7 @@ const isImageObject = typeof image === "object" && image !== null && (image as a
 
         {actions && (
           <div
-            class="flex gap-4 flex-wrap hero-reveal"
+            class="flex gap-4 flex-wrap hero-reveal justify-center md:justify-start"
             style="animation-delay: 0.4s;"
           >
             <slot name="actions" />
@@ -120,6 +117,33 @@ const isImageObject = typeof image === "object" && image !== null && (image as a
       opacity: 1;
       transform: none;
       animation: none;
+    }
+  }
+
+  /* Desktop background */
+  .hero-bg {
+    background-image: url('https://res.cloudinary.com/ds8bhx4d4/image/upload/v1779480705/Multimedia_oygnl3.jpg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Desktop nav spacer */
+  .hero-nav-spacer { padding-top: 20px; }
+
+  /* Mobile: portrait-optimized Cloudinary crop + reduced top spacing */
+  @media (max-width: 768px) {
+    .hero-bg {
+      background-image: url('https://res.cloudinary.com/ds8bhx4d4/image/upload/c_fill,g_auto,w_800,h_1600/v1779480705/Multimedia_oygnl3.jpg');
+      background-size: cover;
+      background-position: center top;
+    }
+
+    /* main already has pt-12 (48px); add remaining gap + small breathing room below header */
+    .hero-nav-spacer { padding-top: 20px; }
+
+    .hero-content {
+      padding-top: 20px !important;
+      padding-bottom: 48px !important;
     }
   }
 </style>
